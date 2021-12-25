@@ -1,0 +1,33 @@
+player_weapons.png
+size: 144, 130
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+rusty_sword_down
+  rotate: false
+  xy: 0, 0
+  size: 128, 32
+  orig: 128, 32
+  offset: 0, 0
+  index: -1
+rusty_sword_left
+  rotate: false
+  xy: 0, 32
+  size: 144, 32
+  orig: 144, 32
+  offset: 0, 0
+  index: -1
+rusty_sword_right
+  rotate: false
+  xy: 0, 64
+  size: 144, 32
+  orig: 144, 32
+  offset: 0, 0
+  index: -1
+rusty_sword_up
+  rotate: false
+  xy: 0, 96
+  size: 136, 34
+  orig: 136, 34
+  offset: 0, 0
+  index: -1
