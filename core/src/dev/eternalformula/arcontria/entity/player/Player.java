@@ -10,12 +10,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.Array;
 
-import dev.eternalformula.arcontria.ArcontriaGame;
 import dev.eternalformula.arcontria.entity.LivingEntity;
-import dev.eternalformula.arcontria.gfx.particles.DamageTextParticle;
 import dev.eternalformula.arcontria.input.Controllable;
+import dev.eternalformula.arcontria.level.GameLevel;
+import dev.eternalformula.arcontria.physics.B2DUtil;
 import dev.eternalformula.arcontria.util.EFConstants;
 
 public class Player extends LivingEntity implements Controllable {
@@ -68,7 +69,8 @@ public class Player extends LivingEntity implements Controllable {
 	 * @param 
 	 */
 	
-	private Player(String name, UUID uuid) {
+	private Player(GameLevel level, String name, UUID uuid) {
+		super(level);
 		this.name = name;
 		this.uuid = uuid;
 		this.speed = BASE_SPEED;
@@ -77,11 +79,14 @@ public class Player extends LivingEntity implements Controllable {
 		this.sound = Gdx.audio.newSound(Gdx.files.internal("sfx/footsteps/grass2.ogg"));
 		this.meleeSound = Gdx.audio.newSound(Gdx.files.internal("sfx/weapons/swing-air-woosh.wav"));
 		
+		this.width = 1f;
+		this.height = 2f;
+		
 		init();
 	}
 	
-	public static Player create(String name, UUID uuid) {
-		return new Player(name, uuid);
+	public static Player create(GameLevel level, String name, UUID uuid) {
+		return new Player(level, name, uuid);
 	}
 	
 	private void init() {
@@ -184,6 +189,9 @@ public class Player extends LivingEntity implements Controllable {
 		this.currentAnimation = idleDown;
 		this.direction = 4;
 		this.isMoving = false;
+		
+		// Physics stuff :)
+		this.body = B2DUtil.createBodyForEntity(level.getWorld(), this, BodyType.DynamicBody);
 	}
 	
 	@Override
@@ -209,6 +217,14 @@ public class Player extends LivingEntity implements Controllable {
 		this.location.y -= speed * delta;
 		isMoving = true;
 	}
+	
+	public void move(float delta, float horizontalVelocity, float verticalVelocity) {
+		body.setLinearVelocity(horizontalVelocity, verticalVelocity);
+		isMoving = true;
+		
+		this.location.x += horizontalVelocity * delta;
+		this.location.y += verticalVelocity * delta;
+	}
 
 	@Override
 	public void handleInput(float delta) {
@@ -222,23 +238,34 @@ public class Player extends LivingEntity implements Controllable {
 			}
 		}
 		
+		float horizontalForce = 0;
+		float verticalForce = 0;
+		
 		if (Gdx.input.isKeyPressed(Input.Keys.W)) {
 			direction = 1;
-			moveUp(delta);
+			verticalForce = speed;
 		}
 		else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
 			direction = 4;
-			moveDown(delta);
+			verticalForce = -speed;
 		}
 		
 		if (Gdx.input.isKeyPressed(Input.Keys.A)) {
 			direction = 2;
-			moveLeft(delta);
+			horizontalForce = -speed;
 		}
 		else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
 			direction = 3;
-			moveRight(delta);
+			horizontalForce = speed;
 		}
+		
+		if (Math.abs(horizontalForce) > 0 || Math.abs(verticalForce) > 0) {
+			move(delta, horizontalForce, verticalForce);
+		}
+		else {
+			body.setLinearVelocity(0f, 0f);
+		}
+		
 		
 		if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
 			isAttacking = true;

@@ -1,6 +1,7 @@
 package dev.eternalformula.arcontria.entity.hostile;
 
 import dev.eternalformula.arcontria.entity.LivingEntity;
+import dev.eternalformula.arcontria.level.GameLevel;
 
 public abstract class HostileEntity extends LivingEntity {
 	
@@ -9,8 +10,8 @@ public abstract class HostileEntity extends LivingEntity {
 	
 	
 	// idea: entitybuilder class?
-	public HostileEntity(LivingEntity target) {
-		super();
+	public HostileEntity(GameLevel level, LivingEntity target) {
+		super(level);
 		this.target = target;
 	}
 	

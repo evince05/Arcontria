@@ -1,7 +1,29 @@
 package dev.eternalformula.arcontria.level.maps;
 
+import static com.badlogic.gdx.graphics.g2d.Batch.C1;
+import static com.badlogic.gdx.graphics.g2d.Batch.C2;
+import static com.badlogic.gdx.graphics.g2d.Batch.C3;
+import static com.badlogic.gdx.graphics.g2d.Batch.C4;
+import static com.badlogic.gdx.graphics.g2d.Batch.U1;
+import static com.badlogic.gdx.graphics.g2d.Batch.U2;
+import static com.badlogic.gdx.graphics.g2d.Batch.U3;
+import static com.badlogic.gdx.graphics.g2d.Batch.U4;
+import static com.badlogic.gdx.graphics.g2d.Batch.V1;
+import static com.badlogic.gdx.graphics.g2d.Batch.V2;
+import static com.badlogic.gdx.graphics.g2d.Batch.V3;
+import static com.badlogic.gdx.graphics.g2d.Batch.V4;
+import static com.badlogic.gdx.graphics.g2d.Batch.X1;
+import static com.badlogic.gdx.graphics.g2d.Batch.X2;
+import static com.badlogic.gdx.graphics.g2d.Batch.X3;
+import static com.badlogic.gdx.graphics.g2d.Batch.X4;
+import static com.badlogic.gdx.graphics.g2d.Batch.Y1;
+import static com.badlogic.gdx.graphics.g2d.Batch.Y2;
+import static com.badlogic.gdx.graphics.g2d.Batch.Y3;
+import static com.badlogic.gdx.graphics.g2d.Batch.Y4;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.TextureMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -11,11 +33,10 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
 import dev.eternalformula.arcontria.util.EFConstants;
 
-import static com.badlogic.gdx.graphics.g2d.Batch.*;
-
 // https://www.badlogicgames.com/forum/viewtopic.php?t=16368#p74103
 // better solution: render to framebuffer and scale that one?
 public class OrthogonalTiledMapRendererBleeding extends OrthogonalTiledMapRenderer {
+	
     public OrthogonalTiledMapRendererBleeding(TiledMap map, float unitScale) {
         super(map, unitScale);
     }
@@ -187,8 +208,8 @@ public class OrthogonalTiledMapRendererBleeding extends OrthogonalTiledMapRender
 		if (object instanceof TextureMapObject) {
 			TextureMapObject texObj = (TextureMapObject) object;
 			batch.draw(texObj.getTextureRegion(),
-					(float) Math.floor(texObj.getX() / EFConstants.PPM), 
-					(float) Math.floor(texObj.getY() / EFConstants.PPM), 
+					(texObj.getX() / EFConstants.PPM), 
+					(texObj.getY() / EFConstants.PPM), 
 					texObj.getOriginX(), texObj.getOriginY(), 
 					texObj.getTextureRegion().getRegionWidth() / EFConstants.PPM, 
 					texObj.getTextureRegion().getRegionHeight() / EFConstants.PPM, 

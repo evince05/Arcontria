@@ -6,20 +6,20 @@ import dev.eternalformula.arcontria.level.GameLevel;
 
 public class DaylightHandler {
 	
-	private static final Color DARKEST_NIGHT_COLOR = new Color(58f / 255f, 35f / 255f, 82f / 255f, 1.0f); // 32, 21, 66
+	public static final Color DARKEST_NIGHT_COLOR = new Color(58f / 255f, 35f / 255f, 82f / 255f, 1.0f); // 32, 21, 66
 	public static final Color STRONGEST_SUNLIGHT_COLOR = new Color(214f / 255f, 138f / 255f, 45f / 255f, 1.0f);
 	
 	// A full day is 3000f in length. 2437.5f is roughly 7:30PM
-	private static final float SUNSET_START_TIME = 2437.5f;
+	public static final float SUNSET_START_TIME = 2437.5f;
 	
 	// A full day is 3000f in length. 2562.5f is roughly 8:30PM
-	private static final float SUNSET_END_TIME = 2562.5f;
+	public static final float SUNSET_END_TIME = 2562.5f;
 	
 	// A full day is 3000f in length. 812.5f is roughly 6:30AM
-	private static final float SUNRISE_START_TIME = 812.5f;
+	public static final float SUNRISE_START_TIME = 812.5f;
 	
 	// A full day is 3000f in length. 937.5f is roughly 7:30AM
-	private static final float SUNRISE_END_TIME = 937.5f;
+	public static final float SUNRISE_END_TIME = 937.5f;
 	
 	public static final float FULL_DAY_LENGTH = 3000f;
 	
@@ -54,6 +54,9 @@ public class DaylightHandler {
 	// The time elapsed during a color transition.
 	private float elapsedTransitionTime;
 	
+	// If the time is during the day.
+	private boolean day;
+	
 	/**
 	 * Creates a new DaylightHandler with the time set to the default start time (9:00AM in-game).
 	 * @param level The GameLevel which this DaylightHandler is managing.
@@ -74,6 +77,8 @@ public class DaylightHandler {
 		
 		this.shouldCalculateRates = true;
 		this.isHalfwayDone = false;
+		
+		this.day = true;
 	}
 	
 	/**
@@ -98,9 +103,9 @@ public class DaylightHandler {
 			currentTime = 0f;
 		}
 		
-		if (currentTime >= SUNSET_START_TIME + TIME_INCREMENT_STEP && 
+		if (currentTime >= SUNSET_START_TIME + TIME_INCREMENT_STEP &&
 				currentTime <= SUNSET_END_TIME + TIME_INCREMENT_STEP || 
-				(currentTime >= SUNRISE_START_TIME + TIME_INCREMENT_STEP && 
+				(currentTime >= SUNRISE_START_TIME + TIME_INCREMENT_STEP &&
 				currentTime <= SUNRISE_END_TIME + TIME_INCREMENT_STEP)) {
 			calculateCurrentColor();
 		}
@@ -120,6 +125,7 @@ public class DaylightHandler {
 			// Change rate variables need to be recalculated.
 			
 			if (!isSunRising) {
+				day = false;
 				this.transitionTime = SUNSET_END_TIME - SUNSET_START_TIME;
 				
 				this.transitionRateR = (STRONGEST_SUNLIGHT_COLOR.r * 255f - 255f) / transitionTime * 2f;
@@ -142,9 +148,9 @@ public class DaylightHandler {
 			isHalfwayDone = true;
 
 			if (isSunRising) {
-				this.transitionRateR = (1.0f - DARKEST_NIGHT_COLOR.r) * 255f / transitionTime * 2f;
-				this.transitionRateG = (1.0f - DARKEST_NIGHT_COLOR.g) * 255f / transitionTime * 2f;
-				this.transitionRateB = (1.0f - DARKEST_NIGHT_COLOR.b) * 255f / transitionTime * 2f;
+				this.transitionRateR = (1.0f - currentColor.r) * 255f / transitionTime * 2f;
+				this.transitionRateG = (1.0f - currentColor.g) * 255f / transitionTime * 2f;
+				this.transitionRateB = (1.0f - currentColor.b) * 255f / transitionTime * 2f;
 			}
 			else {
 				this.transitionRateR = (DARKEST_NIGHT_COLOR.r * 255f - currentColor.r * 255f) / transitionTime * 2f;
@@ -167,6 +173,7 @@ public class DaylightHandler {
 
 			if (currentTime >= SUNRISE_END_TIME) {
 				isFinished = true;
+				day = true;
 				// updates the color so that any small difference is accounted for.
 				currentColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
 			}
@@ -175,11 +182,12 @@ public class DaylightHandler {
 			if (currentTime >= SUNSET_END_TIME) {
 				isFinished = true;
 				// updates the color so that any small difference is accounted for.
-				currentColor = DARKEST_NIGHT_COLOR;
+				currentColor = new Color(DARKEST_NIGHT_COLOR.r, 
+						DARKEST_NIGHT_COLOR.g, DARKEST_NIGHT_COLOR.b, DARKEST_NIGHT_COLOR.a);
 			}
 		}
 		if (isFinished) {
-			System.out.println("Color transition finished at " + getFormattedWorldTime());
+			elapsedTransitionTime = 0f;
 			transitionTime = 0f;
 			transitionRateR = 0f;
 			transitionRateG = 0f;
@@ -242,5 +250,17 @@ public class DaylightHandler {
 	
 	public void setWorldTime(float worldTime) {
 		this.currentTime = worldTime;
+	}
+	
+	/**
+	 * Debug
+	 */
+	
+	public Color getDrawColor() {
+		return currentColor;
+	}
+	
+	public boolean isDay() {
+		return day;
 	}
 }

@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
 import dev.eternalformula.arcontria.entity.LivingEntity;
+import dev.eternalformula.arcontria.level.GameLevel;
 
 public class Skeleton extends LivingEntity {
 
@@ -24,7 +25,8 @@ public class Skeleton extends LivingEntity {
 	private static final float BASE_SPEED = 0.8f;
 	private TextureAtlas atlas;
 	
-	public Skeleton() {
+	public Skeleton(GameLevel level) {
+		super(level);
 		this.location = new Vector2(10f, 10f);
 		this.speed = BASE_SPEED;
 		

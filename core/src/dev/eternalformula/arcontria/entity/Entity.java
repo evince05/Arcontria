@@ -4,10 +4,16 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+
+import dev.eternalformula.arcontria.level.GameLevel;
 
 public abstract class Entity {
 	
 	protected Animation<TextureRegion> currentAnimation;
+	
+	// Physics Stuff! :)
+	protected Body body;
 	
 	/**
 	 * Determines whether the entity should be rendered.
@@ -15,6 +21,14 @@ public abstract class Entity {
 	protected boolean visible;
 	
 	protected Vector2 location;
+	protected float width;
+	protected float height;
+	
+	protected GameLevel level;
+	
+	protected Entity(GameLevel level) {
+		this.level = level;
+	}
 	
 	public float getX() {
 		return location.x;
@@ -32,12 +46,28 @@ public abstract class Entity {
 		this.location.y = y;
 	}
 	
+	public float getWidth() {
+		return width;
+	}
+	
+	public void setWidth(float width) {
+		this.width = width;
+	}
+	
+	public float getHeight() {
+		return height;
+	}
+	
+	public void setHeight(float height) {
+		this.height = height;
+	}
+	
 	public Vector2 getLocation() {
 		return location;
 	}
 	
 	public void setLocation(Vector2 location) {
-		this.location = location;
+		this.body.setTransform(location, 0);
 	}
 	
 	public Animation<TextureRegion> getCurrentAnimation() {
@@ -52,6 +82,10 @@ public abstract class Entity {
 		return visible;
 	}
 	
+	public Body getBody() {
+		return body;
+	}
+	
 	/**
 	 * Sets the visibility of the entity.
 	 * @param visible True if the entity should be rendered, otherwise false.
@@ -63,6 +97,13 @@ public abstract class Entity {
 	
 	public abstract void draw(SpriteBatch batch, float delta);
 	
-	public abstract void update(float delta);
+	public void update(float delta) {
+		
+		if (body != null) {
+			this.location.x = body.getPosition().x - width / 2f;
+			this.location.y = body.getPosition().y - height / 2f;
+		}
+		
+	}
 
 }

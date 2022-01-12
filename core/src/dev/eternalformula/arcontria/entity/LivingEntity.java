@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import dev.eternalformula.arcontria.level.GameLevel;
 import dev.eternalformula.arcontria.util.EFConstants;
 
 public abstract class LivingEntity extends Entity {
@@ -16,6 +17,10 @@ public abstract class LivingEntity extends Entity {
 	 */
 	protected float speed;
 	private float elapsedTime;
+	
+	public LivingEntity(GameLevel level) {
+		super(level);
+	}
 	
 	public void heal(float amount) {
 		if (health + amount >= maxHealth) {
@@ -46,6 +51,7 @@ public abstract class LivingEntity extends Entity {
 
 	@Override
 	public void update(float delta) {
+		super.update(delta);
 	}
 
 	public float getHealth() {

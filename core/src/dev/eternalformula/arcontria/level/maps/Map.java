@@ -48,14 +48,17 @@ public class Map {
 		this.mapHeight = Float.valueOf(map.getProperties().get("height", int.class));
 		Map.zSort(map);
 		
-		System.out.println("Creating Grid with Size " + Strings.vec2(mapWidth, mapHeight));
 		this.nodeGrid = new PathNode[(int) mapHeight][(int) mapWidth];
 		for (int row = 0; row < mapHeight; row++) {
 			for (int col = 0; col < mapWidth; col++) {
 				nodeGrid[row][col] = new PathNode(true, new Vector2(col, row), col, row);
 			}
 		}
-		setBlockedTiles();
+		
+		MapUtil.parseTiledObjectLayer(level.getWorld(), map.getLayers().get("Collisions").getObjects());
+		
+		// Create Lights
+		createLights();
 	}
 	
 	/**
@@ -189,6 +192,20 @@ public class Map {
 		}
 	}
 	
+	private void createLights() {
+		for (MapLayer layer : map.getLayers()) {
+			if (layer.getObjects().getCount() > 0) {
+				//System.out.println("Obj Count: " + layer.getObjects().getCount());
+				for (int i = 0; i < layer.getObjects().getCount(); i++) {
+					//System.out.println("Class: " + layer.getObjects().get(i).getClass());
+				}
+			}
+			else {
+				continue;
+			}
+		}
+	}
+	
 	public void draw(float delta) {
 		debugRenderer.setProjectionMatrix(level.getScene().getViewport().getCamera().combined);
 		debugRenderer.setAutoShapeType(true);
@@ -234,8 +251,8 @@ public class Map {
 				Sort.instance().sort(texObjs, new MapComparator());
 				
 				List<MapObject> objectsToRemove = new ArrayList<>();
-				for (int i = 0; i < layer.getObjects().getCount(); i++) {
-					objectsToRemove.add(layer.getObjects().get(i));
+				for (int i = 0; i < texObjs.size; i++) {
+					objectsToRemove.add(texObjs.get(i));
 				}
 				for (MapObject mapObj : objectsToRemove) {
 					layer.getObjects().remove(mapObj);

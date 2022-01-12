@@ -4,20 +4,18 @@ import java.util.UUID;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
 
+import box2dLight.PointLight;
 import dev.eternalformula.arcontria.entity.Entity;
-import dev.eternalformula.arcontria.entity.hostile.Skeleton;
 import dev.eternalformula.arcontria.entity.player.Player;
 import dev.eternalformula.arcontria.gfx.particles.DamageTextParticle;
 import dev.eternalformula.arcontria.level.maps.Map;
 import dev.eternalformula.arcontria.level.maps.MapRenderer;
-import dev.eternalformula.arcontria.util.EFConstants;
-import dev.eternalformula.arcontria.util.Strings;
+import dev.eternalformula.arcontria.level.maps.TemplateTmxMapLoader;
 
 public class TestLevel extends GameLevel {
 	
@@ -30,10 +28,10 @@ public class TestLevel extends GameLevel {
 	
 	public TestLevel(GameScene scene) {
 		super(scene);
-		player = Player.create("Elliott", UUID.randomUUID());
+		player = Player.create(this, "Elliott", UUID.randomUUID());
 		entities.add(player);
 		
-		this.map = new Map(this, new TmxMapLoader().load("data/levels/maps/map.tmx"));
+		this.map = new Map(this, new TemplateTmxMapLoader(this).load("data/levels/maps/map.tmx"));
 		this.mapRenderer = new MapRenderer(map);
 		this.viewportWidth = scene.getViewport().getWorldWidth();
 		this.viewportHeight = scene.getViewport().getWorldHeight();
@@ -42,7 +40,7 @@ public class TestLevel extends GameLevel {
 		
 		this.dtp = new DamageTextParticle(new Vector2(20f, 15f), 100);
 		
-		player.setLocation(new Vector2(4, 17.375f));
+		player.setLocation(new Vector2(10, 17.375f));
 		setupCamera();
 			
 	}
@@ -98,18 +96,6 @@ public class TestLevel extends GameLevel {
 	@Override
 	public void draw(SpriteBatch batch, float delta) {
 		super.draw(batch, delta);
-		
-		mapRenderer.draw(batch);
-		
-		if (this.isDebugEnabled()) {
-			batch.end();
-			map.draw(delta);
-			batch.begin();
-		}
-		
-		for (Entity e : entities) {
-			e.draw(batch, delta);
-		}
 	}
 
 	@Override
@@ -150,9 +136,6 @@ public class TestLevel extends GameLevel {
 		else {
 			cameraPos.y = playerPos.y;
 		}
-		
-		System.out.println("Camera Pos: " + Strings.vec2(cameraPos.x, cameraPos.y));
-		System.out.println(map.getHeight() - viewportHeight / 2f);
 		scene.getViewport().getCamera().position.set(cameraPos, 0f);
 	}
 }

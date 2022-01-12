@@ -3,6 +3,7 @@ package dev.eternalformula.arcontria;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Version;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
@@ -18,6 +19,8 @@ public class ArcontriaGame extends ApplicationAdapter {
 	public void create () {
 		scene = new GameScene();
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
+		
+		System.out.println("Running GDX Version " + Version.VERSION);
 		GAME = this;
 	}
 
