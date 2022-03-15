@@ -2,27 +2,27 @@ package dev.eternalformula.arcontria.level;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.Array;
 
 import box2dLight.RayHandler;
 import dev.eternalformula.arcontria.entity.Entity;
+import dev.eternalformula.arcontria.entity.player.Player;
 import dev.eternalformula.arcontria.gfx.lighting.DaylightHandler;
-import dev.eternalformula.arcontria.gfx.particles.Particle;
-import dev.eternalformula.arcontria.gfx.particles.ParticleManager;
+import dev.eternalformula.arcontria.gfx.particles.ParticleHandler;
 import dev.eternalformula.arcontria.level.maps.Map;
 import dev.eternalformula.arcontria.level.maps.MapRenderer;
-import dev.eternalformula.arcontria.util.EFConstants;
+import dev.eternalformula.arcontria.objects.loottables.DynamicLootTable;
+import dev.eternalformula.arcontria.objects.loottables.LootTableBuilder;
+import dev.eternalformula.arcontria.physics.WorldContactListener;
 import dev.eternalformula.arcontria.util.EFDebug;
-import dev.eternalformula.arcontria.util.Strings;
 
 public abstract class GameLevel {
 	
@@ -31,11 +31,13 @@ public abstract class GameLevel {
 	protected List<Entity> entities;
 	private List<Entity> entitiesToRemove;
 	
+	protected Player player;
+	
 	protected Map map;
 	protected MapRenderer mapRenderer;
 	
 	protected DaylightHandler daylightHandler;
-	protected ParticleManager particleManager;
+	protected ParticleHandler particleHandler;
 	
 	protected World world;
 	protected Box2DDebugRenderer b2dr;
@@ -52,16 +54,21 @@ public abstract class GameLevel {
 		this.entities = new ArrayList<Entity>();
 		this.entitiesToRemove = new ArrayList<Entity>();
 		this.daylightHandler = new DaylightHandler(this);
-		this.particleManager = new ParticleManager();
+		this.particleHandler = new ParticleHandler(this);
 		
 		// physics :)
 		this.world = new World(new Vector2(0f, 0f), false);
+		world.setContactListener(new WorldContactListener());
+		
 		this.rayHandler = new RayHandler(world);
 		rayHandler.setAmbientLight(1.0f);
 		this.b2dr = new Box2DDebugRenderer();
 		
 		this.music = Gdx.audio.newMusic(Gdx.files.internal("music/alpha.mp3"));
 		music.setVolume(0.35f);
+		
+		DynamicLootTable dlt = LootTableBuilder.loadFromFile("data/tables/dlt.json");
+		dlt.selectItems().forEach((i) -> { EFDebug.info(i.toDebugString()); } );
 	}
 	
 	public List<Entity> getEntities() {
@@ -89,6 +96,10 @@ public abstract class GameLevel {
 		}
 	}
 	
+	public Map getMap() {
+		return map;
+	}
+	
 	public void setMap(Map map) {
 		this.map = map;
 		mapRenderer.setMap(map);
@@ -106,12 +117,16 @@ public abstract class GameLevel {
 		return mapRenderer;
 	}
 	
-	public RayHandler getRayHandler() {
-		return rayHandler;
-	}
-	
 	public DaylightHandler getDaylightHandler() {
 		return daylightHandler;
+	}
+	
+	public ParticleHandler getParticleHandler() {
+		return particleHandler;
+	}
+	
+	public RayHandler getRayHandler() {
+		return rayHandler;
 	}
 	
 	public abstract void resize(int width, int height);
@@ -121,11 +136,12 @@ public abstract class GameLevel {
 		world.dispose();
 		b2dr.dispose();
 		rayHandler.dispose();
+		particleHandler.dispose();
 	}
 	
 	public void update(float delta) {
 		daylightHandler.update();
-		particleManager.update(delta);
+		particleHandler.update(delta);
 		world.step(1 / 60f, 6, 2);
 		
 		// Lights
@@ -136,6 +152,8 @@ public abstract class GameLevel {
 			timeDebugAccumulator -= 1f;
 			System.out.println("[DEBUG] World Time: " + daylightHandler.getFormattedWorldTime()
 				+ " (running " + Gdx.graphics.getFramesPerSecond() + "FPS)");
+			System.out.println("[DEBUG] Physics Body Count: " + world.getBodyCount());
+			EFDebug.debug("Particle Count: " + particleHandler.getActiveParticles().size());
 		}
 		
 		if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
@@ -160,10 +178,15 @@ public abstract class GameLevel {
 	
 	public void draw(SpriteBatch batch, float delta) {
 		daylightHandler.draw();
-		particleManager.draw(batch, delta);
 		
 		batch.begin();
 		mapRenderer.draw(batch);
+		
+		for (Entity e : entities) {
+			e.draw(batch, delta);
+		}
+		
+		particleHandler.draw(batch, delta);
 		
 		if (this.isDebugEnabled()) {
 			batch.end();
@@ -171,9 +194,8 @@ public abstract class GameLevel {
 			batch.begin();
 		}
 		
-		for (Entity e : entities) {
-			e.draw(batch, delta);
-		}
+		// TODO: entity drawing should go here
+		
 		batch.end();
 		
 		if (EFDebug.debugBox2D) {
@@ -181,13 +203,23 @@ public abstract class GameLevel {
 		}
 		
 		rayHandler.render();
-	}
-	
-	public void spawnParticle(Particle p) {
-		particleManager.spawnParticle(p);
+		
+		/*
+		scene.getUiBatch().begin();
+		particleHandler.draw(scene.getUiBatch(), delta);
+		scene.getUiBatch().end();
+		*/
 	}
 	
 	public boolean isDebugEnabled() {
 		return debugEnabled;
+	}
+	
+	public Player getPlayer() {
+		return player;
+	}
+	
+	public void setPlayer(Player player) {
+		this.player = player;
 	}
 }

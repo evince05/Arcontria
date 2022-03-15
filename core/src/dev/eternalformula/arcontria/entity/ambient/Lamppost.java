@@ -7,12 +7,14 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 
 import box2dLight.PointLight;
 import dev.eternalformula.arcontria.entity.Entity;
 import dev.eternalformula.arcontria.gfx.lighting.DaylightHandler;
 import dev.eternalformula.arcontria.level.GameLevel;
+import dev.eternalformula.arcontria.physics.PhysicsConstants;
 import dev.eternalformula.arcontria.util.EFConstants;
 
 public class Lamppost extends Entity {
@@ -32,15 +34,15 @@ public class Lamppost extends Entity {
 		
 		this.lamppostType = type;
 		this.texRegion = region;
-		this.location = new Vector2(x / EFConstants.PPM, y / EFConstants.PPM);
+		this.location = new Vector2(x, y);
 		this.lightColor = new Color(169 / 255f, 119 / 255f, 50 / 255f, 1f);
 		
 		this.lightBody = createLightBody();
+		lightBody.setActive(false);
 		light = new PointLight(level.getRayHandler(), 150, lightColor, 8, 0, 0);
 		light.setSoftnessLength(0f);
 		light.setXray(true);
 		light.attachToBody(lightBody);
-		
 	}
 	
 	private Body createLightBody() {
@@ -57,6 +59,7 @@ public class Lamppost extends Entity {
 			shape.setAsBox(0.125f, 0.125f);//, 
 					//new Vector2(location.x + 0.5f, location.y), 0f);
 		}
+		
 		body.createFixture(shape, 1.0f);
 		shape.dispose();
 		return body;

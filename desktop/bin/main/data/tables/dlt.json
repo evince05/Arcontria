@@ -1,0 +1,27 @@
+{
+	"chancetype": "independent",
+	"tables": [
+	{
+		"table1":
+		{
+			"dropChance": 1.0,
+			"dropAmount": 1,
+			
+			"items": [
+				{"material": "apple", "amount": 3, "weight": 0.25},
+				{"material": "bread", "amount": 3, "weight": 0.25},
+				{"material": "cookie", "amount": 1, "weight": 0.50}
+			]
+		},
+		"table2":
+		{
+			"dropChance": 0.25,
+			"dropAmount": 1,
+			"items": [
+				{"material": "rusty_sword", "amount": 1, "weight": 0.75},
+				{"material": "arcontria", "amount": 1, "weight": 0.25}
+			]
+		}
+	}
+	]
+}

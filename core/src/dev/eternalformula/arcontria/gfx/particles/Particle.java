@@ -15,6 +15,6 @@ public abstract class Particle {
 		this.position = position;
 	}
 	
-	public abstract void update(float delta);
-	public abstract void draw(SpriteBatch batch, float delta);
+	public abstract void update(ParticleHandler handler, float delta);
+	public abstract void draw(ParticleHandler handler, SpriteBatch batch, float delta);
 }

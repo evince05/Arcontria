@@ -4,13 +4,12 @@ import java.util.UUID;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 
-import box2dLight.PointLight;
 import dev.eternalformula.arcontria.entity.Entity;
+import dev.eternalformula.arcontria.entity.hostile.Skeleton;
 import dev.eternalformula.arcontria.entity.player.Player;
 import dev.eternalformula.arcontria.gfx.particles.DamageTextParticle;
 import dev.eternalformula.arcontria.level.maps.Map;
@@ -19,26 +18,25 @@ import dev.eternalformula.arcontria.level.maps.TemplateTmxMapLoader;
 
 public class TestLevel extends GameLevel {
 	
-	private Player player;
-	
 	private float viewportWidth;
 	private float viewportHeight;
-	
-	private DamageTextParticle dtp;
+	private Skeleton skeleton;
 	
 	public TestLevel(GameScene scene) {
 		super(scene);
-		player = Player.create(this, "Elliott", UUID.randomUUID());
-		entities.add(player);
 		
 		this.map = new Map(this, new TemplateTmxMapLoader(this).load("data/levels/maps/map.tmx"));
 		this.mapRenderer = new MapRenderer(map);
 		this.viewportWidth = scene.getViewport().getWorldWidth();
 		this.viewportHeight = scene.getViewport().getWorldHeight();
 	
-		//entities.add(new Skeleton());
+		player = Player.create(this, "Elliott", UUID.randomUUID());
+		entities.add(player);
 		
-		this.dtp = new DamageTextParticle(new Vector2(20f, 15f), 100);
+		this.skeleton = new Skeleton(this);
+		
+		System.out.println("TODO: Remove comment @ TestLevel.java:43 to re-add skeleton");
+		//entities.add(skeleton);
 		
 		player.setLocation(new Vector2(10, 17.375f));
 		setupCamera();
@@ -48,8 +46,6 @@ public class TestLevel extends GameLevel {
 	@Override
 	public void update(float delta) {
 		super.update(delta);
-		
-		dtp.update(delta);
 		
 		for (Entity e : entities) {
 			e.update(delta);
@@ -78,7 +74,11 @@ public class TestLevel extends GameLevel {
 		
 		//System.out.println("Camera Pos: " + Strings.vec2(cameraPos));
 		
-		map.getLevel().getScene().getViewport().getCamera().position.set(cameraPos, 0f);
+		scene.getViewport().getCamera().position.set(cameraPos, 0f);
+		float uiPosX = cameraPos.x * 16f;
+		float uiPosY = cameraPos.y * 16f;
+		
+		scene.getUiViewport().getCamera().position.set(new Vector3(uiPosX, uiPosY, 0f));
 		player.handleInput(delta);
 		
 		// Handle entity clearing.

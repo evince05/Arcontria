@@ -11,6 +11,8 @@ import dev.eternalformula.arcontria.level.GameScene;
 
 public class ArcontriaGame extends ApplicationAdapter {
 	
+	public static final String TAG = ArcontriaGame.class.getName();
+	
 	private GameScene scene;
 	
 	public static ArcontriaGame GAME;
@@ -20,7 +22,7 @@ public class ArcontriaGame extends ApplicationAdapter {
 		scene = new GameScene();
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 		
-		System.out.println("Running GDX Version " + Version.VERSION);
+		Gdx.app.debug(TAG, "Entering Debug Mode!");
 		GAME = this;
 	}
 

@@ -1,0 +1,9 @@
+{
+	"table": {
+		"items": [
+			{"material": "apple", "amount": 3, "weight": 0.33},
+			{"material": "bread", "amount": 2, "weight": 0.42},
+			{"material": "cookie", "amount": 4, "weight": 0.10}
+		]
+	}
+}

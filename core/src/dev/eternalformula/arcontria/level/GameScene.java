@@ -11,13 +11,17 @@ import dev.eternalformula.arcontria.gfx.EGFXUtil;
 public class GameScene { // extends GameState???
 	
 	private ScreenViewport viewport;
+	private ScreenViewport uiViewport;
 	private SpriteBatch batch;
+	private SpriteBatch uiBatch;
 	
 	protected GameLevel level;
 	
 	public GameScene() {
 		this.batch = new SpriteBatch();
 		this.viewport = new ScreenViewport();
+		this.uiViewport = new ScreenViewport();
+		this.uiBatch = new SpriteBatch();
 		viewport.setUnitsPerPixel(EGFXUtil.DEFAULT_UPP);
 		viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		
@@ -28,6 +32,7 @@ public class GameScene { // extends GameState???
 	public void update(float delta) {
 		level.update(delta);
 		viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		uiViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		
 		if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
 			ArcontriaGame.GAME.resize(320, 180);
@@ -56,8 +61,8 @@ public class GameScene { // extends GameState???
 	}
 	
 	public void draw(float delta) {
-
 		batch.setProjectionMatrix(viewport.getCamera().combined);
+		uiBatch.setProjectionMatrix(uiViewport.getCamera().combined);
 		level.draw(batch, delta);
 	}
 	
@@ -70,8 +75,16 @@ public class GameScene { // extends GameState???
 		return viewport;
 	}
 	
+	public ScreenViewport getUiViewport() {
+		return uiViewport;
+	}
+	
 	public SpriteBatch getBatch() {
 		return batch;
+	}
+	
+	public SpriteBatch getUiBatch() {
+		return uiBatch;
 	}
 	
 	public void resize(int width, int height) {
@@ -80,6 +93,7 @@ public class GameScene { // extends GameState???
 		// TODO: Add perfect scaling check
 		float upp = (width / EGFXUtil.DEFAULT_WIDTH);
 		viewport.setUnitsPerPixel(EGFXUtil.DEFAULT_UPP / upp);
+		uiViewport.setUnitsPerPixel(upp);
 	}
 	
 	public GameLevel getLevel() {

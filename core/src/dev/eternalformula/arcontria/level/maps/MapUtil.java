@@ -8,12 +8,15 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 
 import dev.eternalformula.arcontria.physics.B2DUtil;
+import dev.eternalformula.arcontria.physics.PhysicsConstants;
 import dev.eternalformula.arcontria.util.EFConstants;
+import dev.eternalformula.arcontria.util.EFDebug;
 
 public class MapUtil {
 	
@@ -40,15 +43,21 @@ public class MapUtil {
 			Body body;
 			BodyDef bdef = new BodyDef();
 			body = world.createBody(bdef);
-			body.createFixture(shape, 1.0f);
+			
+			FixtureDef fdef = new FixtureDef();
+			fdef.shape = shape;
+			fdef.density = 1.0f;
+			
+			// It is assumed that each of these are mapbounds
+			fdef.filter.categoryBits = PhysicsConstants.BIT_MAP_BOUNDS;
+			
+			body.createFixture(fdef);
 			shape.dispose();
 		}
 	}
 	
 	private static PolygonShape createPolygon(PolygonMapObject object) {
-		System.out.println("Creating polygon.");
 		float[] vertices = object.getPolygon().getTransformedVertices();
-		System.out.println("Found " + vertices.length + " vertices");
 		
 		for (int i = 0; i < vertices.length; i++) {
 			vertices[i] /= EFConstants.PPM;
@@ -60,6 +69,7 @@ public class MapUtil {
 	}
 	
 	private static PolygonShape createRectangle(RectangleMapObject object) {
+		EFDebug.debug("Actually creating shape (MapUtil.java:72)");
 		PolygonShape shape = new PolygonShape();
 		Rectangle rect = object.getRectangle();
 		shape.setAsBox(rect.width / EFConstants.PPM / 2f, rect.height / EFConstants.PPM / 2f,

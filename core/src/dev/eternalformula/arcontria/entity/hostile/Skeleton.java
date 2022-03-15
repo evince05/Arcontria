@@ -5,12 +5,15 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.Array;
 
-import dev.eternalformula.arcontria.entity.LivingEntity;
 import dev.eternalformula.arcontria.level.GameLevel;
+import dev.eternalformula.arcontria.physics.B2DUtil;
+import dev.eternalformula.arcontria.physics.PhysicsConstants.PhysicsCategory;
+import dev.eternalformula.arcontria.physics.boxes.EntityHitbox;
 
-public class Skeleton extends LivingEntity {
+public class Skeleton extends HostileEntity {
 
 	private Animation<TextureRegion> walkUp;
 	private Animation<TextureRegion> walkLeft;
@@ -22,16 +25,23 @@ public class Skeleton extends LivingEntity {
 	private Animation<TextureRegion> idleRight;
 	private Animation<TextureRegion> idleDown;
 	
-	private static final float BASE_SPEED = 0.8f;
+	private static final float BASE_SPEED = 1.8f;
 	private TextureAtlas atlas;
 	
+	
+	
 	public Skeleton(GameLevel level) {
-		super(level);
+		super(level, level.getPlayer(), new Vector2(14f, 18f));
 		this.location = new Vector2(10f, 10f);
 		this.speed = BASE_SPEED;
 		
 		this.health = 25f;
 		this.maxHealth = 25f;
+		
+		this.width = 1f;
+		this.height = 2f;
+		
+		this.body = B2DUtil.createEntityCollider(level.getWorld(), this, BodyType.DynamicBody, PhysicsCategory.ENTITY_COLLIDER);
 		
 		init();
 	}
@@ -41,7 +51,7 @@ public class Skeleton extends LivingEntity {
 				("textures/entities/skeleton/base_skeleton/base_skeleton.atlas"));
 		
 		Array<TextureRegion> frames = new Array<>();
-		TextureRegion region = atlas.findRegion("down");
+		TextureRegion region = atlas.findRegion("walkdown");
 		
 		for (int i = 0; i < 4; i++) {
 			frames.add(new TextureRegion(region, i * 16, 0, 16, 32));
@@ -50,35 +60,57 @@ public class Skeleton extends LivingEntity {
 		idleDown = new Animation<TextureRegion>(1f, frames.get(0));
 		frames.clear();
 		
-		region = atlas.findRegion("up");
+		region = atlas.findRegion("walkup");
 		for (int i = 0; i < 4; i++) {
 			frames.add(new TextureRegion(region, i * 16, 0, 16, 32));
 		}
 		walkUp = new Animation<TextureRegion>(0.125f, frames);
 		idleUp = new Animation<TextureRegion>(1f, frames.get(0));
 		frames.clear();
+		
+		region = atlas.findRegion("walkleft");
+		for (int i = 0; i < 4; i++) {
+			frames.add(new TextureRegion(region, i * 16, 0, 16, 32));
+		}
+		walkLeft = new Animation<TextureRegion>(0.125f, frames);
+		idleLeft = new Animation<TextureRegion>(1f, frames.get(0));
 		frames.clear();
-		currentAnimation = idleDown;
-	}
-	
-	@Override
-	public void moveLeft(float delta) {
-	}
-
-	@Override
-	public void moveRight(float delta) {
-	}
-
-	@Override
-	public void moveUp(float delta) {
-	}
-
-	@Override
-	public void moveDown(float delta) {
+		
+		region = atlas.findRegion("walkright");
+		for (int i = 0; i < 4; i++) {
+			frames.add(new TextureRegion(region, i * 16, 0, 16, 32));
+		}
+		walkRight = new Animation<TextureRegion>(0.125f, frames);
+		idleRight = new Animation<TextureRegion>(1f, frames.get(0));
+		frames.clear();
+		currentAnimation = walkRight;
+		
+		direction = 3;
 	}
 	
 	public void dispose() {
 		atlas.dispose();
+	}
+	
+	@Override
+	public void update(float delta) {
+		super.update(delta);
+		
+		// Animation Control
+		if (isMoving) {
+			if (direction == 1) {
+				currentAnimation = walkUp;
+			}
+			else if (direction == 2) {
+				currentAnimation = walkLeft;
+			}
+			else if (direction == 3) {
+				currentAnimation = walkRight;
+			}
+			else {
+				currentAnimation = walkDown;
+			}
+		}
 	}
 
 }

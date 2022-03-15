@@ -5,12 +5,20 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import dev.eternalformula.arcontria.level.GameLevel;
+import dev.eternalformula.arcontria.physics.boxes.Box;
 import dev.eternalformula.arcontria.util.EFConstants;
 
 public abstract class LivingEntity extends Entity {
 	
 	protected float health;
 	protected float maxHealth;
+	
+	protected int direction; // 1 = up; 2 = left; 3 = right; 4 = down;
+	protected boolean isMoving;
+	
+	// PHYSICS :)
+	protected Box hitbox;
+	protected Box colliderBox;
 	
 	/**
 	 * Default speed is 0f.
@@ -20,6 +28,7 @@ public abstract class LivingEntity extends Entity {
 	
 	public LivingEntity(GameLevel level) {
 		super(level);
+		this.direction = 4;
 	}
 	
 	public void heal(float amount) {
@@ -78,9 +87,12 @@ public abstract class LivingEntity extends Entity {
 		this.speed = speed;
 	}
 	
-	public abstract void moveLeft(float delta);
-	public abstract void moveRight(float delta);
-	public abstract void moveUp(float delta);
-	public abstract void moveDown(float delta);
+	public void move(float delta, float horizontalVelocity, float verticalVelocity) {
+		body.setLinearVelocity(horizontalVelocity, verticalVelocity);
+		isMoving = true;
+		
+		this.location.x += horizontalVelocity * delta;
+		this.location.y += verticalVelocity * delta;
+	}
 
 }

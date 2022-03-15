@@ -13,10 +13,13 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.Array;
 
+import dev.eternalformula.arcontria.ArcontriaGame;
 import dev.eternalformula.arcontria.entity.LivingEntity;
+import dev.eternalformula.arcontria.gfx.particles.DamageTextParticle;
 import dev.eternalformula.arcontria.input.Controllable;
 import dev.eternalformula.arcontria.level.GameLevel;
 import dev.eternalformula.arcontria.physics.B2DUtil;
+import dev.eternalformula.arcontria.physics.PhysicsConstants.PhysicsCategory;
 import dev.eternalformula.arcontria.util.EFConstants;
 
 public class Player extends LivingEntity implements Controllable {
@@ -44,13 +47,10 @@ public class Player extends LivingEntity implements Controllable {
 	private Animation<TextureRegion> weaponAnimationRight;
 	
 	private Animation<TextureRegion> weaponAnimation;
-	
-	private int direction; // 1 = up; 2 = left; 3 = right; 4 = down;
 
 	private String name;
 	private UUID uuid;
 	
-	private boolean isMoving;
 	private boolean isAttacking;
 	
 	private float attackingTime;
@@ -191,39 +191,7 @@ public class Player extends LivingEntity implements Controllable {
 		this.isMoving = false;
 		
 		// Physics stuff :)
-		this.body = B2DUtil.createBodyForEntity(level.getWorld(), this, BodyType.DynamicBody);
-	}
-	
-	@Override
-	public void moveLeft(float delta) {
-		this.location.x -= speed * delta;
-		isMoving = true;
-	}
-
-	@Override
-	public void moveRight(float delta) {
-		this.location.x += speed * delta;
-		isMoving = true;
-	}
-
-	@Override
-	public void moveUp(float delta) {
-		this.location.y += speed * delta;
-		isMoving = true;
-	}
-
-	@Override
-	public void moveDown(float delta) {
-		this.location.y -= speed * delta;
-		isMoving = true;
-	}
-	
-	public void move(float delta, float horizontalVelocity, float verticalVelocity) {
-		body.setLinearVelocity(horizontalVelocity, verticalVelocity);
-		isMoving = true;
-		
-		this.location.x += horizontalVelocity * delta;
-		this.location.y += verticalVelocity * delta;
+		this.body = B2DUtil.createEntityCollider(level.getWorld(), this, BodyType.DynamicBody, PhysicsCategory.PLAYER_COLLIDER);
 	}
 
 	@Override
@@ -272,7 +240,8 @@ public class Player extends LivingEntity implements Controllable {
 			setWeaponAnimation();
 			meleeSound.play(0.3f);
 			
-			//ArcontriaGame.GAME.getScene().getLevel().spawnParticle(new DamageTextParticle(location, 10));
+			Vector2 particleLocation = new Vector2(location.x + 0.5f, location.y + 1f);
+			ArcontriaGame.GAME.getScene().getLevel().getParticleHandler().spawnParticle(new DamageTextParticle(particleLocation, 10));
 		}
 		
 		if (isMoving) {

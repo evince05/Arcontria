@@ -8,11 +8,14 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.ChainShape;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
 import dev.eternalformula.arcontria.entity.Entity;
+import dev.eternalformula.arcontria.physics.PhysicsConstants.PhysicsCategory;
 import dev.eternalformula.arcontria.util.EFConstants;
+import dev.eternalformula.arcontria.util.EFDebug;
 import dev.eternalformula.arcontria.util.Strings;
 
 /**
@@ -22,17 +25,63 @@ import dev.eternalformula.arcontria.util.Strings;
 
 public class B2DUtil {
 	
-	public static Body createBodyForEntity(World world, Entity e, BodyType bodyType) {
+	public static Body createEntityCollider(World world, Entity e, 
+			BodyType bodyType, PhysicsCategory category) {
+		
 		Body body;
 		BodyDef def = new BodyDef();
 		def.type = bodyType;
-		def.position.set(e.getLocation());
+		def.position.set(new Vector2(e.getLocation().x, e.getLocation().y));
 		def.fixedRotation = true;
 		body = world.createBody(def);
 		
 		PolygonShape shape = new PolygonShape();
 		shape.setAsBox(e.getWidth() / 2f, e.getHeight() / 2f);
-		body.createFixture(shape, 1.0f);
+		
+		FixtureDef fdef = new FixtureDef();
+		fdef.shape = shape;
+		fdef.density = 1.0f;
+		
+		// TODO: Assign physics category.
+		fdef.filter.categoryBits = category.getCBits();
+		fdef.filter.maskBits = category.getMBits();
+		//fdef.filter.groupIndex = category.getGIndex();
+		body.createFixture(fdef);
+		shape.dispose();
+		return body;
+	}
+	
+	/**
+	 * Creates a basic static body.
+	 * @param world An instance of the Box2D world.
+	 * @param centerX The x location of the center of the body (world units)
+	 * @param centerY The y location of the center of the body (world units)
+	 * @param width The width of the body (world units)
+	 * @param height The height of the body (world units)
+	 * @param category The PhysicsCategory of the body.
+	 */
+	
+	public static Body createBody(World world, float centerX, float centerY,
+			float width, float height, PhysicsCategory category) {
+		EFDebug.info("Creating basic static body!");
+		Body body;
+		BodyDef def = new BodyDef();
+		def.type = BodyType.StaticBody;
+		def.position.set(centerX, centerY);
+		def.fixedRotation = true;
+		body = world.createBody(def);
+		
+		PolygonShape shape = new PolygonShape();
+		shape.setAsBox(width / 2f, height / 2f);
+		
+		FixtureDef fdef = new FixtureDef();
+		fdef.shape = shape;
+		fdef.density = 1.0f;
+		fdef.filter.categoryBits = category.getCBits();
+		fdef.filter.maskBits = category.getMBits();
+		fdef.filter.groupIndex = category.getGIndex();
+		
+		body.createFixture(fdef);
 		shape.dispose();
 		return body;
 	}
@@ -41,11 +90,12 @@ public class B2DUtil {
 	 * Creates Box2D body for entity with bodyType set to static.
 	 */
 	
-	public static Body createBodyForEntity(World world, Entity e) {
-		return createBodyForEntity(world, e, BodyType.StaticBody);
+	public static Body createEntityCollider(World world, Entity e, PhysicsCategory category) {
+		return createEntityCollider(world, e, BodyType.StaticBody, category);
 	}
 	
 	public static ChainShape createPolyline(PolylineMapObject mapObj) {
+		EFDebug.info("Creating polyline");
 		float[] vertices = mapObj.getPolyline().getTransformedVertices();
 		Vector2[] worldVertices = new Vector2[vertices.length / 2];
 		

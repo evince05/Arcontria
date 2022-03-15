@@ -1,6 +1,7 @@
 package dev.eternalformula.arcontria.pathfinding;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import com.badlogic.gdx.math.Vector2;
@@ -8,7 +9,6 @@ import com.badlogic.gdx.math.Vector2;
 import dev.eternalformula.arcontria.entity.Entity;
 import dev.eternalformula.arcontria.entity.LivingEntity;
 import dev.eternalformula.arcontria.level.maps.Map;
-import dev.eternalformula.arcontria.util.Strings;
 
 /**
  * The Path object consists of a target object/entity, the object/entity who is following the target,
@@ -17,6 +17,8 @@ import dev.eternalformula.arcontria.util.Strings;
  */
 
 public class Path {
+	
+	private static final String TAG = Path.class.getName();
 	
 	private Map map;
 	private LivingEntity follower; // Follower is livingEntity (follower must move so they are living? lol)
@@ -37,15 +39,80 @@ public class Path {
 	 * <br>Also, this method stores the determined path in the nodes field.
 	 */
 	
-	private void calculatePath() {
+	public void calculatePath() {
 		Vector2 startPos = follower.getLocation();
 		Vector2 endPos = target.getLocation();
-		System.out.println("Calculating Path: " + Strings.vec2(startPos) + " -> " 
-				+ endPos);
 		
 		PathNode startNode = map.getNode((int) startPos.x, (int) startPos.y);
 		PathNode endNode = map.getNode((int) endPos.x, (int) endPos.y);
+		
+		List<PathNode> openNodes = new ArrayList<>();
+		openNodes.add(startNode);
+		
+		// HashSet is a list with no duplicate members.
+		HashSet<PathNode> closedNodes = new HashSet<>();
+		
+		while (openNodes.size() > 0) {
+			PathNode currentNode = openNodes.get(0);
+			for (int i = 1; i < openNodes.size(); i++) {
+				
+				if (openNodes.get(i).fCost() < currentNode.fCost() || 
+						openNodes.get(i).fCost() == currentNode.fCost()) {
+					
+					if (openNodes.get(i).hCost < currentNode.hCost) {
+						currentNode = openNodes.get(i);
+					}
+				}
+			}
+			
+			openNodes.remove(currentNode);
+			closedNodes.add(currentNode);
+			
+			if (currentNode.equals(endNode)) {
+				this.nodes = map.retracePath(startNode, endNode);
+				return;
+			}
+			
+			for (PathNode neighbor : map.getNeighbors(currentNode)) {
+				// add blocked congruent tiles 
+				List<PathNode> immediateNeighbors = map.getImmediateNeighbors(map.getNodeGrid(), currentNode, neighbor);
+				if (!neighbor.isWalkable() || closedNodes.contains(neighbor) || 
+						(immediateNeighbors != null && (!immediateNeighbors.get(0).isWalkable() 
+						|| !immediateNeighbors.get(1).isWalkable()))) {
+					continue;
+				}
+				
+				int newMovementCost = currentNode.gCost + map.getDistance(currentNode, neighbor);
+				if (newMovementCost < neighbor.gCost || !openNodes.contains(neighbor)) {
+					neighbor.gCost = newMovementCost;
+					neighbor.hCost = map.getDistance(neighbor, endNode);
+					neighbor.parent = currentNode;
+					
+					if (!openNodes.contains(neighbor)) {
+						openNodes.add(neighbor);
+					}
+				}
+			}
+		}
 	}
 	
-
+	/**
+	 * Gets the number of tiles in the path.
+	 */
+	
+	public int getLength() {
+		return nodes.size();
+	}
+	
+	/**
+	 * Gets the node at the selected index.
+	 * @param index The index of the desired node.
+	 * @return The node at the selected index, <b>null</b> if there are less
+	 * <br>nodes than the specified index.
+	 */
+	
+	public PathNode getNode(int index) {
+		return index < nodes.size() ? nodes.get(index) : null;
+	}
+	
 }

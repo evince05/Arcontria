@@ -82,8 +82,12 @@ public abstract class Entity {
 		return visible;
 	}
 	
-	public Body getBody() {
+	public Body getCollider() {
 		return body;
+	}
+	
+	public void setCollider(Body body) {
+		this.body = body;
 	}
 	
 	/**

@@ -1,0 +1,27 @@
+{
+	"tables": [
+	{
+		"table1":
+		{
+			"dropChance": 1.0,
+			"dropAmountMin": 1,
+			"droupAmountMax": 3,
+			
+			"items": [
+				{"material": "demo_item_1", "amount": 3, "weight": 0.25},
+				{"material": "demo_item_2", "amount": 3, "weight": 0.25},
+				{"material": "demo_item_3", "amount": 1, "weight": 0.50}
+			]
+		},
+		"table2":
+		{
+			"dropChance": 0.25,
+			"dropAmount": 1,
+			"items": [
+				{"material": "demo_item_1", "amount": 1, "weight": 0.5},
+				{"material": "demo_item_2", "amount": 1, "weight": 0.5}
+			]
+		}
+	}
+	]
+}

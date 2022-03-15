@@ -1,34 +1,32 @@
 package dev.eternalformula.arcontria.level.maps;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.TextureMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Sort;
 
+import dev.eternalformula.arcontria.ArcontriaGame;
 import dev.eternalformula.arcontria.level.GameLevel;
 import dev.eternalformula.arcontria.pathfinding.PathNode;
-import dev.eternalformula.arcontria.util.EFConstants;
-import dev.eternalformula.arcontria.util.Strings;
 
 public class Map {
 	
 	private GameLevel level;
 	private TiledMap map;
 	
-	private float mapWidth;
-	private float mapHeight;
+	private int mapWidth;
+	private int mapHeight;
 	
 	private ShapeRenderer debugRenderer;
 	
@@ -44,8 +42,8 @@ public class Map {
 		
 		this.debugRenderer = new ShapeRenderer();
 		
-		this.mapWidth = Float.valueOf(map.getProperties().get("width", int.class));
-		this.mapHeight = Float.valueOf(map.getProperties().get("height", int.class));
+		this.mapWidth = map.getProperties().get("width", int.class);
+		this.mapHeight = map.getProperties().get("height", int.class);
 		Map.zSort(map);
 		
 		this.nodeGrid = new PathNode[(int) mapHeight][(int) mapWidth];
@@ -58,152 +56,6 @@ public class Map {
 		MapUtil.parseTiledObjectLayer(level.getWorld(), map.getLayers().get("Collisions").getObjects());
 		
 		// Create Lights
-		createLights();
-	}
-	
-	/**
-	 * Sets tiles as "blocked" if they have an object on them.
-	 */
-	
-	private void setBlockedTiles() {
-		for (MapLayer layer : map.getLayers()) {
-			if (layer.getObjects().getCount() > 0) {
-				// Layer has objects.
-				
-				Array<TextureMapObject> rectObjects = layer.getObjects().getByType(TextureMapObject.class);
-				//System.out.println("size: " + rectObjects.size);
-				
-				int c = 0;
-				for (TextureMapObject tmo : rectObjects) {
-					TextureRegion tex = tmo.getTextureRegion();
-					
-					float objX = tmo.getX() / EFConstants.PPM;
-					float objY = tmo.getY() / EFConstants.PPM;
-					float objW = tex.getRegionWidth() / EFConstants.PPM;
-					float objH = tex.getRegionHeight() / EFConstants.PPM;
-					System.out.println("Method Entry... [" + objX +", " + objY + ", " + objW + ", " + objH + "]");
-					// Normal code executes if normal conditions are met.
-					if (objX >= 0 && Math.floor(objX + objW) <= mapWidth && objY >= 0 && Math.floor(objY + objH) <= mapHeight) {
-						Rectangle r = new Rectangle(objX, objY, objW, objH);
-						
-						PathNode minNode = getNode((int) r.x, (int) r.y);
-						PathNode maxNode = getNode((int) Math.floor(r.getX() + r.getWidth()),
-								(int) Math.floor(r.getY() + r.getHeight()));
-						
-						// TODO: Add checks for objects that go past the outside of the map.
-						
-						int width = (int) (maxNode.getPosition().x - minNode.getPosition().x);
-						int height = (int) (maxNode.getPosition().y - minNode.getPosition().y);
-						int x = (int) Math.floor(minNode.getPosition().x);
-						int y = (int) Math.floor(minNode.getPosition().y);
-						
-						// Set all tiles in range to blocked.
-						for (int w = x; w < x + width; w++) {
-							for (int h = y; h < y + height; h++) {
-								if (nodeGrid[h][w].isWalkable()) {
-									c++;
-									nodeGrid[h][w].setWalkable(false);
-								}	
-							}
-						}
-					}
-					else {
-						System.out.println("Found exception object!");
-						
-						// TODO: Optimize this code lmao
-						if (objX < 0f) {
-							System.out.println("left");
-							// Gets the number of tiles the object covers on the map from the left side.
-							int tilesTouchingX = (int) Math.ceil(Math.floor(objX) + objW);
-							System.out.println(Strings.vec2((float) Math.floor(objX), objY));
-							System.out.println("TTX: " + tilesTouchingX);
-							for (int row = (int) objY; row < objY + objH; row++) {
-								for (int col = 0; col < tilesTouchingX; col++) {
-									if (row > 0 && row <= mapHeight) {
-										if (nodeGrid[row][col].isWalkable()) {
-											c++;
-											nodeGrid[row][col].setWalkable(false);
-										}
-										
-									}
-								}
-							}
-						}
-						else if (objX + objW > mapWidth) {
-							// Gets the number of tiles the object covers on the map from the right side.
-							System.out.println("right");
-							int tilesTouchingX = (int) (objX + objW - mapWidth);
-							System.out.println(Strings.vec2(objX, objY));
-							System.out.println("TTX: " + tilesTouchingX);
-							for (int row = (int) objY; row < objY + objH; row++) {
-								for (int col = (int) mapWidth - 1; col >= mapWidth - tilesTouchingX; col--) {
-									if (row > 0 && row <= mapHeight) {
-										if (nodeGrid[row][col].isWalkable()) {
-											c++;
-											nodeGrid[row][col].setWalkable(false);
-										}
-										
-									}
-								}
-							}
-						}
-							
-						if (objY < 0f){
-							System.out.println("heading up");
-							int tilesTouchingY = (int) (objY + objH);
-							System.out.println(Strings.vec2(objX, objY));
-							System.out.println("TTY: " + tilesTouchingY);
-							for (int row = 0; row < tilesTouchingY; row++) {
-								for (int col = (int) objX; col < objX + objW; col++) {
-									if (col > 0 && col <= mapWidth) {
-										if (nodeGrid[row][col].isWalkable()) {
-											c++;
-											nodeGrid[row][col].setWalkable(false);
-										}
-									}
-								}
-							}
-						}
-						else if (objY + objH > mapHeight) {
-							System.out.println("heading down");
-							int tilesTouchingY = (int) (objY + objH - mapHeight);
-							System.out.println(Strings.vec2(objX, objY));
-							System.out.println("TTY: " + tilesTouchingY);
-							for (int row = (int) mapHeight - 1; row >= mapHeight - tilesTouchingY; row--) {
-								for (int col = (int) objX; col < objX + objW; col++) {
-									if (nodeGrid[row][col].isWalkable()) {
-										c++;
-										nodeGrid[row][col].setWalkable(false);
-									}
-								}
-							}
-						}
-					}
-					
-					// TODO: Add checks and cases for texturemapobjects that exceed the world bounds.
-					/* Debug
-					System.out.println("Min: " + Strings.vec2(minNode.getPosition()) + ", Max: " + Strings.vec2(maxNode.getPosition()));
-					System.out.println("Width: " + ((maxNode.getPosition().x - minNode.getPosition().x) / 16f) + " tiles");
-					System.out.println("Height: " + ((maxNode.getPosition().y - minNode.getPosition().y) / 16f) + " tiles");
-					*/
-				}
-				System.out.println("[DEBUG] Blocked " + c + " tiles!");
-			}
-		}
-	}
-	
-	private void createLights() {
-		for (MapLayer layer : map.getLayers()) {
-			if (layer.getObjects().getCount() > 0) {
-				//System.out.println("Obj Count: " + layer.getObjects().getCount());
-				for (int i = 0; i < layer.getObjects().getCount(); i++) {
-					//System.out.println("Class: " + layer.getObjects().get(i).getClass());
-				}
-			}
-			else {
-				continue;
-			}
-		}
 	}
 	
 	public void draw(float delta) {
@@ -212,6 +64,8 @@ public class Map {
 		debugRenderer.setColor(Color.RED);
 		debugRenderer.begin(ShapeType.Line);
 		
+		Vector2 loc = level.getEntities().get(1).getLocation();
+		debugRenderer.rect(loc.x, loc.y, 1 / 16f, 1 / 16f);
 		for (int row = 0; row < mapHeight; row++) {
 			for(int col = 0; col < mapWidth; col++) {
 				if (!nodeGrid[row][col].isWalkable()) {
@@ -220,26 +74,6 @@ public class Map {
 			}
 		}
 		debugRenderer.end();
-	}
-	
-	public PathNode getNode(int x, int y) {
-		return nodeGrid[y][x];
-	}
-	
-	public GameLevel getLevel() {
-		return level;
-	}
-	
-	public TiledMap getMap() {
-		return map;
-	}
-	
-	public float getWidth() {
-		return mapWidth;
-	}
-	
-	public float getHeight() {
-		return mapHeight;
 	}
 	
 	public static void zSort(TiledMap map) {
@@ -263,6 +97,142 @@ public class Map {
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Returns a list of immediate neighbors between the two nodes.
+	 * <br><t>This should only be used when the two tiles are diagonally adjacent to one another.
+	 * @param startNode The start node.
+	 * @param endNode The end node.
+	 * @return A list of immediate neighbors between the two nodes.
+	 */
+	
+	public List<PathNode> getImmediateNeighbors(PathNode[][] nodeGrid, PathNode startNode, PathNode endNode) {
+		int distanceX = endNode.gridX - startNode.gridX;
+		int distanceY = endNode.gridY - startNode.gridY;
+		
+		if (Math.abs(distanceX) != 1 || Math.abs(distanceY) != 1) {
+			return null;
+		}
+		
+		List<PathNode> nodes = new ArrayList<>();
+		
+		if (distanceX == 1) {
+			nodes.add(getNode(startNode.gridX + 1, startNode.gridY));
+		}
+		else if (distanceX == -1) {
+			nodes.add(getNode(startNode.gridX - 1, startNode.gridY));
+		}
+		
+		if (distanceY == 1) {
+			nodes.add(getNode(startNode.gridX, startNode.gridY + 1));
+		}
+		else if (distanceY == -1) {
+			nodes.add(getNode(startNode.gridX, startNode.gridY - 1));
+		}
+		
+		return nodes;
+	}
+	
+	/**
+	 * Gets a list of all neighbors of the specified node.
+	 * @param nodeGrid The NodeGrid to be searched
+	 * @param node The node to be searched.
+	 * @return A list of all neighbors of the node.
+	 */
+	
+	public List<PathNode> getNeighbors(PathNode node) {
+		List<PathNode> neighbors = new ArrayList<>();
+		
+		for (int x = -1; x <= 1; x++) {
+			for (int y = -1; y <= 1; y++) {
+				if (x == 0 && y == 0) {
+					continue;
+				}
+				
+				int checkX = node.gridX + x;
+				int checkY = node.gridY + y;
+				
+				if (checkX >= 0 && checkX < mapWidth
+						&& checkY >= 0 && checkY < mapHeight) {
+					neighbors.add(nodeGrid[checkY][checkX]);
+				}
+			}
+		}
+		return neighbors;
+	}
+	
+	public List<PathNode> retracePath(PathNode startNode, PathNode endNode) {
+		List<PathNode> path = new ArrayList<PathNode>();
+		PathNode currentNode = endNode;
+		
+		while (!currentNode.equals(startNode)) {
+			path.add(currentNode);
+			currentNode = currentNode.parent;
+		}
+		Collections.reverse(path);
+		return path;
+	}
+	
+	public int getDistance(PathNode nodeA, PathNode nodeB) {
+		int distanceX = Math.abs(nodeA.gridX - nodeB.gridX);
+		int distanceY = Math.abs(nodeA.gridY - nodeB.gridY);
+		
+		/**
+		 * Move cost: Diagonal -> 14
+		 * Horizontal/Vertical -> 10
+		 */
+		if (distanceX > distanceY) {
+			return 14 * distanceY + 10 * (distanceX - distanceY);
+		}
+		else {
+			return 14 * distanceX + 10 * (distanceY - distanceX);
+		}
+	}
+	
+	public PathNode getNode(int x, int y) {
+		return nodeGrid[y][x];
+	}
+	
+	public PathNode[][] getNodeGrid() {
+		return nodeGrid;
+	}
+	
+	public GameLevel getLevel() {
+		return level;
+	}
+	
+	public TiledMap getMap() {
+		return map;
+	}
+	
+	public int getWidth() {
+		return mapWidth;
+	}
+	
+	public int getHeight() {
+		return mapHeight;
+	}
+
+	/**
+	 * Blocks the tile on the grid at [x, y].
+	 * @param x The x grid location of the tile.
+	 * @param y The y grid location of the tile.
+	 */
+	
+	public void blockTile(int x, int y) {
+		nodeGrid[y][x].setWalkable(false);
+	}
+	
+	/**
+	 * Determines if the specified tile is walkable.
+	 * @param x The x grid location of the tile
+	 * @param y The y grid location of the tile
+	 * @return True if the tile is walkable, otherwise false.
+	 */
+	
+	public boolean isTileWalkable(int x, int y) {
+		return getNode(x, y).isWalkable();
 	}
 	
 	public static class MapComparator implements Comparator<TextureMapObject> {
