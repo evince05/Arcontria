@@ -1,5 +1,6 @@
 package dev.eternalformula.arcontria.physics;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.maps.objects.PolylineMapObject;
 import com.badlogic.gdx.maps.objects.TextureMapObject;
@@ -13,6 +14,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
 import dev.eternalformula.arcontria.entity.Entity;
+import dev.eternalformula.arcontria.level.GameLevel;
 import dev.eternalformula.arcontria.physics.PhysicsConstants.PhysicsCategory;
 import dev.eternalformula.arcontria.util.EFConstants;
 import dev.eternalformula.arcontria.util.EFDebug;
@@ -28,6 +30,7 @@ public class B2DUtil {
 	public static Body createEntityCollider(World world, Entity e, 
 			BodyType bodyType, PhysicsCategory category) {
 		
+		EFDebug.info("creating e collider");
 		Body body;
 		BodyDef def = new BodyDef();
 		def.type = bodyType;
@@ -58,15 +61,18 @@ public class B2DUtil {
 	 * @param centerY The y location of the center of the body (world units)
 	 * @param width The width of the body (world units)
 	 * @param height The height of the body (world units)
+	 * @param bodyType The bodytype of the body.
 	 * @param category The PhysicsCategory of the body.
+	 * @param userData The user data of the body's fixture.
 	 */
 	
 	public static Body createBody(World world, float centerX, float centerY,
-			float width, float height, PhysicsCategory category) {
-		EFDebug.info("Creating basic static body!");
+			float width, float height, BodyType bodyType, PhysicsCategory category,
+			Object userData) {
+		EFDebug.info("Creating box2d body");
 		Body body;
 		BodyDef def = new BodyDef();
-		def.type = BodyType.StaticBody;
+		def.type = bodyType;
 		def.position.set(centerX, centerY);
 		def.fixedRotation = true;
 		body = world.createBody(def);
@@ -79,9 +85,9 @@ public class B2DUtil {
 		fdef.density = 1.0f;
 		fdef.filter.categoryBits = category.getCBits();
 		fdef.filter.maskBits = category.getMBits();
-		fdef.filter.groupIndex = category.getGIndex();
+		fdef.isSensor = category.isSensor();
 		
-		body.createFixture(fdef);
+		body.createFixture(fdef).setUserData(userData);
 		shape.dispose();
 		return body;
 	}
@@ -95,7 +101,6 @@ public class B2DUtil {
 	}
 	
 	public static ChainShape createPolyline(PolylineMapObject mapObj) {
-		EFDebug.info("Creating polyline");
 		float[] vertices = mapObj.getPolyline().getTransformedVertices();
 		Vector2[] worldVertices = new Vector2[vertices.length / 2];
 		
@@ -117,7 +122,6 @@ public class B2DUtil {
 		def.position.set(new Vector2(obj.getPolygon().getOriginX() / EFConstants.PPM,
 				obj.getPolygon().getOriginY() / EFConstants.PPM));
 		def.fixedRotation = true;
-		System.out.println("Polygon Pos: " + Strings.vec2(def.position));
 		body = world.createBody(def);
 		
 		int numFixtures = Math.round(obj.getPolygon().getVertices().length / 8f);
@@ -162,6 +166,14 @@ public class B2DUtil {
 				mapObj.getTextureRegion().getRegionHeight() / EFConstants.PPM / 2f);
 		body.createFixture(shape, 1.0f);
 		shape.dispose();
+	}
+	
+	public static void setDebugColor(GameLevel level, Color color) {
+		level.getDebugRenderer().SHAPE_KINEMATIC.r = color.r;
+		level.getDebugRenderer().SHAPE_KINEMATIC.g = color.g;
+		level.getDebugRenderer().SHAPE_KINEMATIC.b = color.b;
+		level.getDebugRenderer().SHAPE_KINEMATIC.a = color.a;
+				
 	}
 
 }

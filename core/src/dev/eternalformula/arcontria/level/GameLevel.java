@@ -17,12 +17,15 @@ import dev.eternalformula.arcontria.entity.Entity;
 import dev.eternalformula.arcontria.entity.player.Player;
 import dev.eternalformula.arcontria.gfx.lighting.DaylightHandler;
 import dev.eternalformula.arcontria.gfx.particles.ParticleHandler;
+import dev.eternalformula.arcontria.inventory.InventoryHandler;
 import dev.eternalformula.arcontria.level.maps.Map;
 import dev.eternalformula.arcontria.level.maps.MapRenderer;
+import dev.eternalformula.arcontria.objects.debug.PathRenderer;
 import dev.eternalformula.arcontria.objects.loottables.DynamicLootTable;
 import dev.eternalformula.arcontria.objects.loottables.LootTableBuilder;
 import dev.eternalformula.arcontria.physics.WorldContactListener;
 import dev.eternalformula.arcontria.util.EFDebug;
+import dev.eternalformula.arcontria.util.Strings;
 
 public abstract class GameLevel {
 	
@@ -43,6 +46,10 @@ public abstract class GameLevel {
 	protected Box2DDebugRenderer b2dr;
 	protected RayHandler rayHandler;
 	
+	protected InventoryHandler inventoryHandler;
+	
+	private PathRenderer pathRenderer;
+	
 	protected float timeDebugAccumulator;
 	private Music music;
 	
@@ -55,6 +62,7 @@ public abstract class GameLevel {
 		this.entitiesToRemove = new ArrayList<Entity>();
 		this.daylightHandler = new DaylightHandler(this);
 		this.particleHandler = new ParticleHandler(this);
+		this.inventoryHandler = new InventoryHandler(this, null);
 		
 		// physics :)
 		this.world = new World(new Vector2(0f, 0f), false);
@@ -63,12 +71,18 @@ public abstract class GameLevel {
 		this.rayHandler = new RayHandler(world);
 		rayHandler.setAmbientLight(1.0f);
 		this.b2dr = new Box2DDebugRenderer();
+		b2dr.setDrawInactiveBodies(false);
+		
+		this.pathRenderer = new PathRenderer();
 		
 		this.music = Gdx.audio.newMusic(Gdx.files.internal("music/alpha.mp3"));
 		music.setVolume(0.35f);
 		
 		DynamicLootTable dlt = LootTableBuilder.loadFromFile("data/tables/dlt.json");
 		dlt.selectItems().forEach((i) -> { EFDebug.info(i.toDebugString()); } );
+		
+		
+		EFDebug.info("TODO: Remove demo inventory code");
 	}
 	
 	public List<Entity> getEntities() {
@@ -113,6 +127,10 @@ public abstract class GameLevel {
 		return world;
 	}
 	
+	public Box2DDebugRenderer getDebugRenderer() {
+		return b2dr;
+	}
+	
 	public MapRenderer getMapRenderer() {
 		return mapRenderer;
 	}
@@ -123,6 +141,10 @@ public abstract class GameLevel {
 	
 	public ParticleHandler getParticleHandler() {
 		return particleHandler;
+	}
+	
+	public PathRenderer getPathRenderer() {
+		return pathRenderer;
 	}
 	
 	public RayHandler getRayHandler() {
@@ -137,6 +159,7 @@ public abstract class GameLevel {
 		b2dr.dispose();
 		rayHandler.dispose();
 		particleHandler.dispose();
+		pathRenderer.dispose();
 	}
 	
 	public void update(float delta) {
@@ -144,16 +167,24 @@ public abstract class GameLevel {
 		particleHandler.update(delta);
 		world.step(1 / 60f, 6, 2);
 		
+		if (inventoryHandler.isInventoryOpen()) {
+			inventoryHandler.update(delta);
+		}
+		
 		// Lights
 		rayHandler.update();
 		rayHandler.setCombinedMatrix((OrthographicCamera) scene.getViewport().getCamera());
 		timeDebugAccumulator += delta;
 		if (timeDebugAccumulator >= 1f) {
 			timeDebugAccumulator -= 1f;
-			System.out.println("[DEBUG] World Time: " + daylightHandler.getFormattedWorldTime()
+			EFDebug.info("World Time: " + daylightHandler.getFormattedWorldTime()
 				+ " (running " + Gdx.graphics.getFramesPerSecond() + "FPS)");
-			System.out.println("[DEBUG] Physics Body Count: " + world.getBodyCount());
+			EFDebug.debug("Physics Body Count: " + world.getBodyCount());
 			EFDebug.debug("Particle Count: " + particleHandler.getActiveParticles().size());
+			EFDebug.debug("Player Pos: " + Strings.vec2(player.getLocation()) + ", Camera Pos: " + 
+					Strings.vec2(scene.getViewport().getCamera().position.x, scene.getViewport().getCamera().position.y));
+			
+			EFDebug.info("UI Cam Pos: " + Strings.vec3(scene.getUiViewport().getCamera().position));
 		}
 		
 		if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
@@ -172,6 +203,14 @@ public abstract class GameLevel {
 		
 		if (Gdx.input.isKeyJustPressed(Input.Keys.F2)) {
 			EFDebug.debugBox2D = !EFDebug.debugBox2D;
+		}
+		
+		if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
+			pathRenderer.toggle();
+		}
+		
+		if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+			inventoryHandler.toggle();
 		}
 		
 	}
@@ -204,11 +243,18 @@ public abstract class GameLevel {
 		
 		rayHandler.render();
 		
-		/*
-		scene.getUiBatch().begin();
-		particleHandler.draw(scene.getUiBatch(), delta);
-		scene.getUiBatch().end();
-		*/
+		if (pathRenderer.isEnabled()) {
+			pathRenderer.render();
+		}	
+	}
+	
+	public void drawUi(SpriteBatch batch, float delta) {
+		batch.begin();
+		
+		if (inventoryHandler.isInventoryOpen()) {
+			inventoryHandler.draw(batch, delta);
+		}
+		batch.end();
 	}
 	
 	public boolean isDebugEnabled() {

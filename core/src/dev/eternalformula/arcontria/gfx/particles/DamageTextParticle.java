@@ -6,9 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
-import dev.eternalformula.arcontria.util.EFDebug;
 import dev.eternalformula.arcontria.util.EFMath;
-import dev.eternalformula.arcontria.util.Strings;
 
 /**
  * DamageTextParticles are particles that are emitted from an entity upon being damaged by the player.
@@ -33,7 +31,6 @@ public class DamageTextParticle extends Particle {
 	 */
 	private int angle;
 	
-	private float damage;
 	private String damageStr;
 	
 	private float distance;
@@ -48,29 +45,30 @@ public class DamageTextParticle extends Particle {
 	private float targetY;
 	
 	private float maxTime;
-	private float alpha;
 	
 	private float fadeSpeed;
 	private Color fontColor;
 	
-	public DamageTextParticle(Vector2 origin, float damage) {
+	public DamageTextParticle(Vector2 origin, float damage, boolean isCritStrike) {
 		this.position = new Vector2(origin);
-		this.damage = damage;
 		this.damageStr = String.valueOf(Math.round(damage));
 		this.maxTime = EFMath.randomFloat(MIN_TIME, MAX_TIME);
 		this.distance = ThreadLocalRandom.current().nextFloat() * (MAX_DISTANCE - MIN_DISTANCE) + MIN_DISTANCE;
-		EFDebug.debug("Particle Distance: " + distance);
-		this.angle = ThreadLocalRandom.current().nextInt(0, 360);
-		this.fontColor = new Color(1f, 1f, 1f, 1f);
+		this.angle = ThreadLocalRandom.current().nextInt(75, 105);
+		
+		if (isCritStrike) {
+			this.fontColor = new Color(245f / 255f, 162f / 255f, 54f / 255f, 1f);
+		}
+		else {
+			this.fontColor = new Color(1f, 1f, 1f, 1f);
+		}
+		
 		solveDeltas();
 	}
 	
 	private void solveDeltas() {
 		this.deltaX = distance * (float) Math.cos(Math.toRadians(angle));
 		this.deltaY = distance * (float) Math.sin(Math.toRadians(angle));
-		
-		EFDebug.debug("Particle Angle: " + angle);
-		EFDebug.debug("Particle Deltas: " + Strings.vec2(deltaX, deltaY));
 		
 		this.targetX = position.x + deltaX;
 		this.targetY = position.y + deltaY;

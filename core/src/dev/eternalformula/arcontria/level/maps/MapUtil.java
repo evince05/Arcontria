@@ -36,7 +36,6 @@ public class MapUtil {
 				shape = createRectangle((RectangleMapObject) mapObj);
 			}
 			else {
-				System.out.println("Continue");
 				continue;
 			}
 			

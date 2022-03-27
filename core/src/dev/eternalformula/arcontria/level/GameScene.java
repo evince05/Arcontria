@@ -7,6 +7,8 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import dev.eternalformula.arcontria.ArcontriaGame;
 import dev.eternalformula.arcontria.gfx.EGFXUtil;
+import dev.eternalformula.arcontria.util.EFConstants;
+import dev.eternalformula.arcontria.util.EFDebug;
 
 public class GameScene { // extends GameState???
 	
@@ -24,6 +26,13 @@ public class GameScene { // extends GameState???
 		this.uiBatch = new SpriteBatch();
 		viewport.setUnitsPerPixel(EGFXUtil.DEFAULT_UPP);
 		viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		
+		
+		uiViewport.setUnitsPerPixel(EGFXUtil.DEFAULT_UPP);
+		uiViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		
+		uiViewport.getCamera().position.set(uiViewport.getWorldWidth() / 2f, uiViewport.getWorldHeight() / 2f, 0f);
+		
 		
 		// temp
 		this.level = new TestLevel(this);
@@ -58,12 +67,22 @@ public class GameScene { // extends GameState???
 			ArcontriaGame.GAME.resize(1920, 1080);
 			Gdx.graphics.setWindowedMode(1920, 1080);
 		}
+		if (Gdx.input.isKeyJustPressed(Input.Keys.F11)) {
+			ArcontriaGame.GAME.resize(1920, 1080);
+			Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+		}
+		
+		if (Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
+			EFDebug.debugEnabled = !EFDebug.debugEnabled;
+			EFDebug.info("Debug " + (EFDebug.debugEnabled ? "enabled!" : "disabled!"));
+		}
 	}
 	
 	public void draw(float delta) {
 		batch.setProjectionMatrix(viewport.getCamera().combined);
 		uiBatch.setProjectionMatrix(uiViewport.getCamera().combined);
 		level.draw(batch, delta);
+		level.drawUi(uiBatch, delta);
 	}
 	
 	public void dispose() {
@@ -93,7 +112,7 @@ public class GameScene { // extends GameState???
 		// TODO: Add perfect scaling check
 		float upp = (width / EGFXUtil.DEFAULT_WIDTH);
 		viewport.setUnitsPerPixel(EGFXUtil.DEFAULT_UPP / upp);
-		uiViewport.setUnitsPerPixel(upp);
+		uiViewport.setUnitsPerPixel(EGFXUtil.DEFAULT_UPP / upp);
 	}
 	
 	public GameLevel getLevel() {

@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
 
 import dev.eternalformula.arcontria.level.GameLevel;
 
@@ -13,7 +12,6 @@ public abstract class Entity {
 	protected Animation<TextureRegion> currentAnimation;
 	
 	// Physics Stuff! :)
-	protected Body body;
 	
 	/**
 	 * Determines whether the entity should be rendered.
@@ -28,6 +26,7 @@ public abstract class Entity {
 	
 	protected Entity(GameLevel level) {
 		this.level = level;
+		this.location = new Vector2(0, 0);
 	}
 	
 	public float getX() {
@@ -67,7 +66,12 @@ public abstract class Entity {
 	}
 	
 	public void setLocation(Vector2 location) {
-		this.body.setTransform(location, 0);
+		this.location = location;
+		//this.body.setTransform(location, 0);
+	}
+	
+	public void setLocation(float x, float y) {
+		this.location = new Vector2(x, y);
 	}
 	
 	public Animation<TextureRegion> getCurrentAnimation() {
@@ -80,14 +84,6 @@ public abstract class Entity {
 	
 	public boolean isVisible() {
 		return visible;
-	}
-	
-	public Body getCollider() {
-		return body;
-	}
-	
-	public void setCollider(Body body) {
-		this.body = body;
 	}
 	
 	/**
@@ -103,10 +99,12 @@ public abstract class Entity {
 	
 	public void update(float delta) {
 		
+		/*
 		if (body != null) {
 			this.location.x = body.getPosition().x - width / 2f;
 			this.location.y = body.getPosition().y - height / 2f;
 		}
+		*/
 		
 	}
 

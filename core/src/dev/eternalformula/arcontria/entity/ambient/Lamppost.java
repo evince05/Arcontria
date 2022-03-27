@@ -7,14 +7,14 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 
 import box2dLight.PointLight;
 import dev.eternalformula.arcontria.entity.Entity;
 import dev.eternalformula.arcontria.gfx.lighting.DaylightHandler;
 import dev.eternalformula.arcontria.level.GameLevel;
-import dev.eternalformula.arcontria.physics.PhysicsConstants;
+import dev.eternalformula.arcontria.physics.boxes.Box;
+import dev.eternalformula.arcontria.physics.boxes.EntityColliderBox;
 import dev.eternalformula.arcontria.util.EFConstants;
 
 public class Lamppost extends Entity {
@@ -23,10 +23,11 @@ public class Lamppost extends Entity {
 	private TextureRegion texRegion;
 	private final int lamppostType;
 	
-	private float brightness;
 	private Color lightColor;
 	
 	private Body lightBody;
+	private Box colliderBox;
+	
 	private PointLight light;
 	
 	public Lamppost(GameLevel level, TextureRegion region, float x, float y, int type) {
@@ -43,6 +44,10 @@ public class Lamppost extends Entity {
 		light.setSoftnessLength(0f);
 		light.setXray(true);
 		light.attachToBody(lightBody);
+		
+		this.width = 1f;
+		this.height = 2f;
+		this.colliderBox = new EntityColliderBox(level, this, BodyType.StaticBody);
 	}
 	
 	private Body createLightBody() {

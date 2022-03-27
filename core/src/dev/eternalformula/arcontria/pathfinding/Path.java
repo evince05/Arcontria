@@ -104,6 +104,10 @@ public class Path {
 		return nodes.size();
 	}
 	
+	public List<PathNode> getNodes() {
+		return nodes;
+	}
+	
 	/**
 	 * Gets the node at the selected index.
 	 * @param index The index of the desired node.
@@ -113,6 +117,10 @@ public class Path {
 	
 	public PathNode getNode(int index) {
 		return index < nodes.size() ? nodes.get(index) : null;
+	}
+	
+	public void removeNode(int index) {
+		nodes.remove(index);
 	}
 	
 }

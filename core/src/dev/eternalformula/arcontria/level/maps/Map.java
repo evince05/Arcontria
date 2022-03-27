@@ -53,8 +53,9 @@ public class Map {
 			}
 		}
 		
-		MapUtil.parseTiledObjectLayer(level.getWorld(), map.getLayers().get("Collisions").getObjects());
-		
+		if (map.getLayers().get("Collisions") != null) {
+			MapUtil.parseTiledObjectLayer(level.getWorld(), map.getLayers().get("Collisions").getObjects());
+		}
 		// Create Lights
 	}
 	
@@ -68,9 +69,9 @@ public class Map {
 		debugRenderer.rect(loc.x, loc.y, 1 / 16f, 1 / 16f);
 		for (int row = 0; row < mapHeight; row++) {
 			for(int col = 0; col < mapWidth; col++) {
-				if (!nodeGrid[row][col].isWalkable()) {
+				//if (!nodeGrid[row][col].isWalkable()) {
 					debugRenderer.rect(col, row, 1f, 1f);
-				}
+				//}
 			}
 		}
 		debugRenderer.end();

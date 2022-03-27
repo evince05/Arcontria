@@ -6,6 +6,8 @@ import dev.eternalformula.arcontria.entity.LivingEntity;
 import dev.eternalformula.arcontria.level.GameLevel;
 import dev.eternalformula.arcontria.pathfinding.Path;
 import dev.eternalformula.arcontria.pathfinding.PathNode;
+import dev.eternalformula.arcontria.pathfinding.PathUtil;
+import dev.eternalformula.arcontria.util.EFDebug;
 import dev.eternalformula.arcontria.util.Strings;
 
 public abstract class HostileEntity extends LivingEntity {
@@ -32,8 +34,19 @@ public abstract class HostileEntity extends LivingEntity {
 		this.location = location;
 		
 		this.meleeAttacker = true;
+		
+	}
+	
+	protected void calculatePath() {
 		this.pathToTarget = new Path(level.getMap(), this, target);
 		this.lastTargetPosition = new Vector2(target.getLocation());
+		
+		EFDebug.debug("Path Size: " + pathToTarget.getLength());
+		level.getPathRenderer().addPath(pathToTarget);
+		
+		for (PathNode pathNode : pathToTarget.getNodes()) {
+			EFDebug.debug("Node: " + Strings.vec2(pathNode.getPosition()));
+		}
 	}
 	
 	@Override
@@ -51,11 +64,14 @@ public abstract class HostileEntity extends LivingEntity {
 		// Update the target's last position
 		this.lastTargetPosition = new Vector2(target.getLocation());
 		
-		if (meleeAttacker) {
-			moveToPlayer(delta);
-		}
+		if (pathToTarget.getLength() > 1) {
+			if (meleeAttacker) {
+				PathUtil.moveToTarget(this, delta);
+			}
+		}	
 	}
 	
+	/**
 	private void moveToPlayer(float delta) {
 		
 		if (pathToTarget.getLength() > 1) {
@@ -70,13 +86,13 @@ public abstract class HostileEntity extends LivingEntity {
 			
 			//System.out.println("Distances: " + Strings.vec2(distanceX, distanceY));
 			
-			/*
+			
 			 * Determines the direction in which the entity should first move.
 			 * In the case that the two distances are equal, the entity will move
 			 * first horizontally.
-			 */
+			 
 			
-			if (Math.abs(distanceY) > Math.abs(distanceX)) {
+			if (Math.abs(distanceY) != 0) { // old: math.abs(distanceY) > math.abs(distanceX)
 				float directionY = Math.signum(distanceY);
 				verticalForce = directionY * speed;
 				
@@ -106,13 +122,17 @@ public abstract class HostileEntity extends LivingEntity {
 				move(delta, horizontalForce, verticalForce);
 			}
 			else {
-				body.setLinearVelocity(0f, 0f);
+				//body.setLinearVelocity(0f, 0f);
 			}
 		}
-	}
+	}*/
 	
 	public LivingEntity getTarget() {
 		return target;
+	}
+	
+	public Path getPath() {
+		return pathToTarget;
 	}
 	
 	public boolean isMeleeAttacker() {

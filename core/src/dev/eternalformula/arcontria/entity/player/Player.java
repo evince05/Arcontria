@@ -10,16 +10,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.Array;
 
-import dev.eternalformula.arcontria.ArcontriaGame;
 import dev.eternalformula.arcontria.entity.LivingEntity;
-import dev.eternalformula.arcontria.gfx.particles.DamageTextParticle;
 import dev.eternalformula.arcontria.input.Controllable;
 import dev.eternalformula.arcontria.level.GameLevel;
-import dev.eternalformula.arcontria.physics.B2DUtil;
-import dev.eternalformula.arcontria.physics.PhysicsConstants.PhysicsCategory;
+import dev.eternalformula.arcontria.physics.boxes.PlayerAttackBox;
+import dev.eternalformula.arcontria.physics.boxes.PlayerColliderBox;
+import dev.eternalformula.arcontria.physics.boxes.PlayerHitbox;
 import dev.eternalformula.arcontria.util.EFConstants;
 
 public class Player extends LivingEntity implements Controllable {
@@ -60,6 +58,7 @@ public class Player extends LivingEntity implements Controllable {
 	
 	private float soundTimer; // footstep noise should be every 1/8 of a second.
 	
+	private PlayerAttackBox attackBox;
 	private static final float BASE_SPEED = 2f;
 	
 	/**
@@ -76,7 +75,7 @@ public class Player extends LivingEntity implements Controllable {
 		this.speed = BASE_SPEED;
 		
 		this.location = new Vector2(0f, 0f);
-		this.sound = Gdx.audio.newSound(Gdx.files.internal("sfx/footsteps/grass2.ogg"));
+		this.sound = Gdx.audio.newSound(Gdx.files.internal("sfx/footsteps/wood.ogg"));
 		this.meleeSound = Gdx.audio.newSound(Gdx.files.internal("sfx/weapons/swing-air-woosh.wav"));
 		
 		this.width = 1f;
@@ -191,7 +190,11 @@ public class Player extends LivingEntity implements Controllable {
 		this.isMoving = false;
 		
 		// Physics stuff :)
-		this.body = B2DUtil.createEntityCollider(level.getWorld(), this, BodyType.DynamicBody, PhysicsCategory.PLAYER_COLLIDER);
+		//this.body = B2DUtil.createEntityCollider(level.getWorld(), this, BodyType.DynamicBody, PhysicsCategory.PLAYER_COLLIDER);
+		
+		this.hitbox = new PlayerHitbox(level, this);
+		this.colliderBox = new PlayerColliderBox(level, this);
+		this.attackBox = new PlayerAttackBox(level, this);
 	}
 
 	@Override
@@ -200,9 +203,32 @@ public class Player extends LivingEntity implements Controllable {
 		
 		if (isAttacking) {
 			attackingTime += delta;
+			attackBox.getBody().setActive(true);
+
+			Vector2 pos = new Vector2(hitbox.getBody().getPosition());
+			if (direction == 1) {
+				// up
+				pos.y += 0.5;
+			}
+			else if (direction == 2) {
+				// left
+				pos.x -= 0.65;
+			}
+			else if (direction == 3) {
+				// right
+				pos.x += 0.65;
+			}
+			else if (direction == 4) {
+				// down
+				pos.y -= 0.5;
+			}
+
+			attackBox.getBody().setTransform(pos, 0);
+			
 			if (currentAnimation.isAnimationFinished(attackingTime)) {
 				isAttacking = false;
 				attackingTime = 0f;
+				attackBox.getBody().setActive(false);
 			}
 		}
 		
@@ -228,10 +254,11 @@ public class Player extends LivingEntity implements Controllable {
 		}
 		
 		if (Math.abs(horizontalForce) > 0 || Math.abs(verticalForce) > 0) {
-			move(delta, horizontalForce, verticalForce);
+			move(horizontalForce, verticalForce);
 		}
 		else {
-			body.setLinearVelocity(0f, 0f);
+			hitbox.setLinearVelocity(0f, 0f);
+			colliderBox.setLinearVelocity(0f, 0f);
 		}
 		
 		
@@ -240,21 +267,16 @@ public class Player extends LivingEntity implements Controllable {
 			setWeaponAnimation();
 			meleeSound.play(0.3f);
 			
-			Vector2 particleLocation = new Vector2(location.x + 0.5f, location.y + 1f);
-			ArcontriaGame.GAME.getScene().getLevel().getParticleHandler().spawnParticle(new DamageTextParticle(particleLocation, 10));
 		}
 		
 		if (isMoving) {
 			soundTimer += delta;
 			if (soundTimer >= 0.28f) {
 				soundTimer -= 0.28f;
-				sound.play(0.15f);
+				sound.play(0.75f);
 			}
 		}
-		
-		
 		currentAnimation = getAnimation();
-		//System.out.println("is currentanim null? " + currentAnimation == null);
 	}
 	
 	/**

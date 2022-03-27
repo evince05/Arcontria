@@ -10,35 +10,51 @@ import com.badlogic.gdx.math.Vector3;
 
 import dev.eternalformula.arcontria.entity.Entity;
 import dev.eternalformula.arcontria.entity.hostile.Skeleton;
+import dev.eternalformula.arcontria.entity.misc.Dummy;
 import dev.eternalformula.arcontria.entity.player.Player;
-import dev.eternalformula.arcontria.gfx.particles.DamageTextParticle;
 import dev.eternalformula.arcontria.level.maps.Map;
 import dev.eternalformula.arcontria.level.maps.MapRenderer;
 import dev.eternalformula.arcontria.level.maps.TemplateTmxMapLoader;
+import dev.eternalformula.arcontria.util.EFDebug;
 
 public class TestLevel extends GameLevel {
 	
 	private float viewportWidth;
 	private float viewportHeight;
-	private Skeleton skeleton;
 	
 	public TestLevel(GameScene scene) {
 		super(scene);
 		
+		//this.map = new Map(this, new TemplateTmxMapLoader(this).load("data/levels/maps/dojo/dojo.tmx"));
 		this.map = new Map(this, new TemplateTmxMapLoader(this).load("data/levels/maps/map.tmx"));
 		this.mapRenderer = new MapRenderer(map);
 		this.viewportWidth = scene.getViewport().getWorldWidth();
 		this.viewportHeight = scene.getViewport().getWorldHeight();
-	
+		
+		/*
+		Dummy dummy = new Dummy(this);
+		dummy.setLocation(7.5f, 7f);
+		entities.add(dummy);
+		
+		Dummy dummy1 = new Dummy(this);
+		dummy1.setLocation(3.5f, 5f);
+		entities.add(dummy1);
+		
+		Dummy dummy2 = new Dummy(this);
+		dummy2.setLocation(11.5f, 5f);
+		entities.add(dummy2);
+		*/
+		
+		
 		player = Player.create(this, "Elliott", UUID.randomUUID());
 		entities.add(player);
 		
-		this.skeleton = new Skeleton(this);
+		player.setLocation(new Vector2(7.5f, 10.5f)); // dojo: 7.5f, 1.5f
+		player.setDirection(1);
 		
-		System.out.println("TODO: Remove comment @ TestLevel.java:43 to re-add skeleton");
+		//Skeleton skeleton = new Skeleton(this);
 		//entities.add(skeleton);
 		
-		player.setLocation(new Vector2(10, 17.375f));
 		setupCamera();
 			
 	}
@@ -50,6 +66,7 @@ public class TestLevel extends GameLevel {
 		for (Entity e : entities) {
 			e.update(delta);
 		}
+		
 		
 		Vector2 cameraPos = new Vector2(scene.getViewport().getCamera().position.x,
 				scene.getViewport().getCamera().position.y);
@@ -75,10 +92,7 @@ public class TestLevel extends GameLevel {
 		//System.out.println("Camera Pos: " + Strings.vec2(cameraPos));
 		
 		scene.getViewport().getCamera().position.set(cameraPos, 0f);
-		float uiPosX = cameraPos.x * 16f;
-		float uiPosY = cameraPos.y * 16f;
 		
-		scene.getUiViewport().getCamera().position.set(new Vector3(uiPosX, uiPosY, 0f));
 		player.handleInput(delta);
 		
 		// Handle entity clearing.
@@ -114,28 +128,40 @@ public class TestLevel extends GameLevel {
 		Vector2 playerPos = player.getLocation();
 		Vector2 cameraPos = new Vector2();
 		
-		float centerX = viewportWidth / 2f - 0.5f;
-		float centerY = viewportHeight / 2f - 1f;
-		
-		if (playerPos.x < centerX) {
-			cameraPos.x = viewportWidth / 2f;
-		}
-		else if (playerPos.x > map.getWidth() - centerX) {
-			cameraPos.x = map.getWidth() - viewportWidth / 2f + 0.5f;
+		if (map.getWidth() <= viewportWidth) {
+			EFDebug.debug("Watch TestLevel.java:setupCamera... line cameraPosX = map.getWidth() / 2f");
+			cameraPos.x = map.getWidth() / 2f;
 		}
 		else {
-			cameraPos.x = playerPos.x;
+			float centerX = viewportWidth / 2f - 0.5f;
+			if (playerPos.x < centerX) {
+				cameraPos.x = viewportWidth / 2f;
+			}
+			else if (playerPos.x > map.getWidth() - centerX) {
+				cameraPos.x = map.getWidth() - viewportWidth / 2f + 0.5f;
+			}
+			else {
+				cameraPos.x = playerPos.x;
+			}
 		}
 		
-		if (playerPos.y < centerY) {
-			cameraPos.y = viewportHeight / 2f;
-		}
-		else if (playerPos.y > map.getHeight() - centerY) {
-			cameraPos.y = map.getHeight() - viewportHeight / 2f + 1f;
+		if (map.getHeight() <= viewportHeight) {
+			cameraPos.y = map.getHeight() / 2f + 0.5f;
 		}
 		else {
-			cameraPos.y = playerPos.y;
+			float centerY = viewportHeight / 2f - 1f;
+			
+			if (playerPos.y < centerY) {
+				cameraPos.y = viewportHeight / 2f;
+			}
+			else if (playerPos.y > map.getHeight() - centerY) {
+				cameraPos.y = map.getHeight() - viewportHeight / 2f + 1f;
+			}
+			else {
+				cameraPos.y = playerPos.y;
+			}
 		}
+		
 		scene.getViewport().getCamera().position.set(cameraPos, 0f);
 	}
 }

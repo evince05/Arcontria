@@ -43,9 +43,11 @@ public class MapEntityBuilder {
 			float colliderOffsetY = props.get("colliderOffsetY", 0f, float.class);
 			float colliderWidth = props.get("colliderWidth", 0f, float.class);
 			float colliderHeight = props.get("colliderHeight", 0f, float.class);
-			entity.setCollider(createCustomColliderBody(level.getWorld(), x, y,
+			
+			/*entity.setCollider(createCustomColliderBody(level.getWorld(), x, y,
 					colliderWidth, colliderHeight,
 					colliderOffsetX, colliderOffsetY));
+					*/
 		}
 		
 		return entity;

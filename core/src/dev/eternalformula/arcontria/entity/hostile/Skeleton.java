@@ -11,7 +11,10 @@ import com.badlogic.gdx.utils.Array;
 import dev.eternalformula.arcontria.level.GameLevel;
 import dev.eternalformula.arcontria.physics.B2DUtil;
 import dev.eternalformula.arcontria.physics.PhysicsConstants.PhysicsCategory;
+import dev.eternalformula.arcontria.physics.boxes.EntityAttackBox;
+import dev.eternalformula.arcontria.physics.boxes.EntityColliderBox;
 import dev.eternalformula.arcontria.physics.boxes.EntityHitbox;
+import dev.eternalformula.arcontria.util.EFDebug;
 
 public class Skeleton extends HostileEntity {
 
@@ -31,8 +34,7 @@ public class Skeleton extends HostileEntity {
 	
 	
 	public Skeleton(GameLevel level) {
-		super(level, level.getPlayer(), new Vector2(14f, 18f));
-		this.location = new Vector2(10f, 10f);
+		super(level, level.getPlayer(), new Vector2(10f, 7f));
 		this.speed = BASE_SPEED;
 		
 		this.health = 25f;
@@ -41,8 +43,11 @@ public class Skeleton extends HostileEntity {
 		this.width = 1f;
 		this.height = 2f;
 		
-		this.body = B2DUtil.createEntityCollider(level.getWorld(), this, BodyType.DynamicBody, PhysicsCategory.ENTITY_COLLIDER);
+		calculatePath();
 		
+		//this.body = B2DUtil.createEntityCollider(level.getWorld(), this, BodyType.DynamicBody, PhysicsCategory.ENTITY_COLLIDER);
+		
+		EFDebug.debug("Reminder: Hitboxes now control body movement.");
 		init();
 	}
 	
@@ -86,6 +91,9 @@ public class Skeleton extends HostileEntity {
 		currentAnimation = walkRight;
 		
 		direction = 3;
+		
+		this.hitbox = new EntityHitbox(level, this);
+		this.colliderBox = new EntityColliderBox(level, this);
 	}
 	
 	public void dispose() {
@@ -110,6 +118,11 @@ public class Skeleton extends HostileEntity {
 			else {
 				currentAnimation = walkDown;
 			}
+		}
+		
+		if (hitbox != null) {
+			this.location.x = hitbox.getBody().getPosition().x - width / 2f;
+			this.location.y = hitbox.getBody().getPosition().y - height / 2f;
 		}
 	}
 

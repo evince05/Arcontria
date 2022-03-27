@@ -36,5 +36,23 @@ public class FontUtil {
 		ttfGenerator.dispose();
 		return f;
 	}
+	
+	public static BitmapFont createBasicFont(String ttfFile, int size) {
+		
+		if (!ttfFile.endsWith(".ttf")) {
+			return null;
+		}
+		
+		FreeTypeFontGenerator ttfGenerator = new FreeTypeFontGenerator(Gdx.files.internal(ttfFile));
+		FreeTypeFontParameter params = new FreeTypeFontParameter();
+		params.genMipMaps = true;
+		params.color = Color.WHITE;
+		params.size = size;
+		
+		BitmapFont f = ttfGenerator.generateFont(params);
+		f.getData().setScale(size / 256f);
+		ttfGenerator.dispose();
+		return f;
+	}
 
 }

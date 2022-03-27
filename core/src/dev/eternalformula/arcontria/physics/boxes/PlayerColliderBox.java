@@ -2,10 +2,14 @@ package dev.eternalformula.arcontria.physics.boxes;
 
 import java.util.UUID;
 
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+
 import dev.eternalformula.arcontria.entity.player.Player;
 import dev.eternalformula.arcontria.level.GameLevel;
 import dev.eternalformula.arcontria.physics.B2DUtil;
 import dev.eternalformula.arcontria.physics.PhysicsConstants.PhysicsCategory;
+import dev.eternalformula.arcontria.util.EFDebug;
+import dev.eternalformula.arcontria.util.Strings;
 
 public class PlayerColliderBox extends Box {
 	
@@ -14,9 +18,9 @@ public class PlayerColliderBox extends Box {
 	public PlayerColliderBox(GameLevel level, Player player) {
 		this.player = player;
 		this.body = B2DUtil.createBody(level.getWorld(), player.getLocation().x + 0.5f,
-				player.getLocation().y, 1, 0.25f, PhysicsCategory.PLAYER_COLLIDER);
+				player.getLocation().y, 1, 0.25f, BodyType.DynamicBody,
+				PhysicsCategory.PLAYER_COLLIDER, this);
 		this.id = UUID.randomUUID();
-		body.setUserData(this);
 	}
 	
 	public Player getPlayer() {
