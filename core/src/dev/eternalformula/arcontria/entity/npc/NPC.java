@@ -2,6 +2,7 @@ package dev.eternalformula.arcontria.entity.npc;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -13,6 +14,7 @@ import dev.eternalformula.arcontria.pathfinding.NavigationPath;
 import dev.eternalformula.arcontria.pathfinding.PathUtil;
 import dev.eternalformula.arcontria.physics.boxes.EntityColliderBox;
 import dev.eternalformula.arcontria.physics.boxes.EntityHitbox;
+import dev.eternalformula.arcontria.util.EFDebug;
 import dev.eternalformula.arcontria.util.EFMath;
 
 public class NPC extends LivingEntity {
@@ -70,7 +72,10 @@ public class NPC extends LivingEntity {
 		this.hitbox = new EntityHitbox(level, this);
 		this.colliderBox = new EntityColliderBox(level, this);
 		
-		path = new NavigationPath(level.getMap(), colliderBox.getBody().getPosition(), level.getPlayer().getLocation(), width / 2f);
+		Vector2 plrLoc = level.getPlayer().getLocation();
+		Vector2 targetLocation = new Vector2(plrLoc.x + 0.5f, plrLoc.y);
+		
+		path = new NavigationPath(level.getMap(), colliderBox.getBody().getPosition(), targetLocation, width / 2f);
 		
 		this.currentAnimation = walkRight;
 	}
@@ -79,16 +84,15 @@ public class NPC extends LivingEntity {
 	public void update(float delta) {
 		super.update(delta);
 		
-		//EFDebug.info("Direction: " + direction);
-		
 		path.recalibrate(location, level.getPlayer().getLocation());
 		path.update();
 		
-		if (path.getCurrentPath().getCount() > 1) {
-			Vector2 targetPos = path.getCurrentPath().get(1).getPortal().getMidpoint();
+		if (path != null && path.getPoints().size > 0) {
+			Vector2 targetPos = path.getPoints().get(1);
 			
 			float angle = EFMath.getAngle(location, targetPos);
 			direction = path.getAnimationDirection(this, angle);
+			System.out.println(direction);
 			
 			switch (direction) {
 			case 1:
@@ -108,11 +112,20 @@ public class NPC extends LivingEntity {
 				break;
 			}
 			
-			PathUtil.moveToTarget(delta, path, this, targetPos);
+			// The lastAnimationDirection is IMPORTANT!!
 			lastAnimationDirection = direction;
-			path.setLastAngleToTarget(angle);
+			PathUtil.moveToTarget(delta, path, this, targetPos);
 		}
 	}
 	
-
+	@Override
+	public void draw(SpriteBatch batch, float delta) {
+		super.draw(batch, delta);
+		
+		if (EFDebug.mapDebugEnabled) {
+			batch.end();
+			path.draw();
+			batch.begin();
+		}
+	}
 }

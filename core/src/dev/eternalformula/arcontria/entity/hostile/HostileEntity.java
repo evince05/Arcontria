@@ -37,9 +37,6 @@ public abstract class HostileEntity extends LivingEntity {
 		
 		this.meleeAttacker = true;
 		
-		this.path = new NavigationPath(level.getMap(), location, 
-				target.getLocation(), width / 2f);
-		
 	}
 	
 	/*
@@ -61,7 +58,7 @@ public abstract class HostileEntity extends LivingEntity {
 		
 		batch.end();
 		if (EFDebug.mapDebugEnabled) {
-			path.draw();
+			//path.draw();
 		}
 		batch.begin();
 	}
@@ -70,15 +67,16 @@ public abstract class HostileEntity extends LivingEntity {
 	public void update(float delta) {
 		super.update(delta);
 		
-		
+		/*
 		path.recalibrate(location, target.getLocation());
 		path.update();
+		*/
 		
-		
+		/*
 		if (path.getCurrentPath().getCount() > 0) {
 			Vector2 targetPos = path.getCurrentPath().get(0).getPortal().getMidpoint();
 			PathUtil.moveToTarget(delta, path, this, targetPos);
-		}
+		}*/
 		
 		// Watch this algorithm for efficiency and CPU usage...
 		/*

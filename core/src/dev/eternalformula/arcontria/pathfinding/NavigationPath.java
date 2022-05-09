@@ -21,6 +21,7 @@ import dev.eternalformula.arcontria.entity.LivingEntity;
 import dev.eternalformula.arcontria.level.maps.Map;
 import dev.eternalformula.arcontria.util.EFConstants;
 import dev.eternalformula.arcontria.util.EFDebug;
+import dev.eternalformula.arcontria.util.Strings;
 
 /**
  * General class for Pathfinding using a Navigation Mesh.
@@ -35,7 +36,7 @@ public class NavigationPath implements Telegraph {
 	private static final int PF_TELEGRAM_RESPONSE = 2;
 	
 	// This value is measured in frames.
-	private static final float THRESHOLD_CHANGE_DURATION = 15f; // should roughly translate to 0.25s
+	private static final float THRESHOLD_CHANGE_DURATION = 7.5f; // should roughly translate to 0.125s
 	
 	private Map map;
 	private Navmesh navmesh;
@@ -76,7 +77,6 @@ public class NavigationPath implements Telegraph {
 		this.map = map;
 		this.navmesh = map.getNavmesh();
 		this.startPos = startPos;
-		this.endPos = endPos;
 		
 		this.agentRadius = agentRadius;
 		
@@ -95,6 +95,9 @@ public class NavigationPath implements Telegraph {
 	 */
 	
 	public void recalibrate(Vector2 startPos, Vector2 endPos) {
+		this.startPos = startPos;
+		this.endPos = endPos;
+		
 		// Recalibrate path.
 		pathFinder.findPath(startPos, endPos, agentRadius, this);
 	}
@@ -110,6 +113,7 @@ public class NavigationPath implements Telegraph {
 
 	@Override
 	public boolean handleMessage(Telegram msg) {
+		System.out.println("- New reception -");
 		switch (msg.message) {
 		case PF_TELEGRAM_RESPONSE:
 			final NavMeshPathRequest pfr = (NavMeshPathRequest) msg.extraInfo;
@@ -118,7 +122,8 @@ public class NavigationPath implements Telegraph {
 			if (latestPath.getCount() > 0) {
 	             
 				final NavMeshPortal[] portals = stringPuller.pathToPortals(latestPath);
-				points = stringPuller.stringPull(startPos, endPos, portals, agentRadius);
+				this.points = stringPuller.stringPull(startPos, endPos, portals, agentRadius);
+				System.out.println("Path point count: " + points.size);
 			}
 			else {
                 points = null;
@@ -133,7 +138,7 @@ public class NavigationPath implements Telegraph {
 	}
 	
 	public void draw() {
-		
+		System.out.print(points != null ? "Points: " + points.size : "No points");
 		if (points != null && points.size > 0) {
 			
 			
@@ -167,6 +172,10 @@ public class NavigationPath implements Telegraph {
 		return latestPath;
 	}
 	
+	public Array<Vector2> getPoints() {
+		return points;
+	}
+	
 	public Vector2 getEndPosition() {
 		return endPos;
 	}
@@ -189,28 +198,6 @@ public class NavigationPath implements Telegraph {
 	public boolean hasJustPassedThreshold(float currentAngle) {
 		return Math.abs(currentAngle / 45f - ((int) currentAngle / 45)) < 1 / 45f ||
 				Math.abs(currentAngle / 45f - ((int) currentAngle / 45)) > 1 - 1 / 45f;
-	}*/
-	
-	/*
-	public int getDirection(float angle) {
-		
-		int direction = 0;
-		if (angle >= 45 && angle <= 135) {
-			direction = 1;
-			framesSinceLastDirectionChange = 0;
-		}
-		else if (angle > 135 && angle < 225) {
-			direction = 2;
-		}
-		else if (angle < 315 || angle < 45) {
-			direction = 3;
-		}
-		else if (angle >= 225 && angle <= 315) {
-			direction = 4;
-		}
-		
-		lastDirection = direction;
-		return direction;
 	}*/
 	
 	/**
@@ -253,7 +240,6 @@ public class NavigationPath implements Telegraph {
 				threshDR += deltaThresh;
 			}
 			
-			EFDebug.info("Returning new animation direction.");
 			framesSinceLastDirectionChange = 0;
 			
 			// Possible fix if this is broken. Move outside if clause.
@@ -276,12 +262,12 @@ public class NavigationPath implements Telegraph {
 		// If this block of code is executed, the direction has not changed.
 		framesSinceLastDirectionChange++;
 		
-		/*
+		
 		EFDebug.debug("Returning previous animation direction: " +
 				"[Current, Prev = " + Strings.vec2(angle, entity.getLastAnimationDirection()) + "], framesElapsed = "
 				+ framesSinceLastDirectionChange);
 		
-		*/
+		
 		
 		// Default return value is the entity's last animation.
 		return entity.getLastAnimationDirection();
