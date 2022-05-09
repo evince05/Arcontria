@@ -63,6 +63,10 @@ public class PhysicsConstants {
 				BIT_PROJECTILE_COLLIDER,
 				(short) (BIT_PLAYER_HITBOX | BIT_ENTITY_HITBOX | BIT_MAPOBJECT_COLLIDER),
 				//(short) (GROUP_ATTACKBOX_NONCOLLIDE | GROUP_COLLIDER_NONCOLLIDE),
+				new Color(0f, 0f, 0f, 0f)),
+		MAPOBJECT_COLLIDER(
+				BIT_MAPOBJECT_COLLIDER,
+				(short) (BIT_PLAYER_COLLIDER | BIT_ENTITY_COLLIDER | BIT_PROJECTILE_COLLIDER),
 				new Color(0f, 0f, 0f, 0f));
 		
 		private short cBits; // Bits which the object is (doesn't collide with)

@@ -1,9 +1,17 @@
 package dev.eternalformula.arcontria.level.maps;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.poly2tri.geometry.polygon.Polygon;
+import org.poly2tri.geometry.polygon.PolygonPoint;
+
+import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
+import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -12,6 +20,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 
 import dev.eternalformula.arcontria.physics.B2DUtil;
 import dev.eternalformula.arcontria.physics.PhysicsConstants;
@@ -78,5 +87,39 @@ public class MapUtil {
 		
 		
 	}
-
+	
+	/**
+	 * Parses and creates a polygon array from a MapObject layer.
+	 * @param layer The layer to be parsed (must be a MapObject layer)
+	 * @return An array containing all rectangle bounds of the MapObject layer.
+	 */
+	
+	public static Array<Polygon> createPolygonArrayFromMap(TiledMap map) {
+		Array<Polygon> polygons = new Array<Polygon>();
+		
+		for (MapLayer layer : map.getLayers()) {
+			
+			for (MapObject mapObj : layer.getObjects()) {
+				if (mapObj instanceof RectangleMapObject) {
+					RectangleMapObject rectObj = (RectangleMapObject) mapObj;
+					Rectangle rect = rectObj.getRectangle();
+					
+					List<PolygonPoint> points = new ArrayList<PolygonPoint>();
+					float x = rect.x / EFConstants.PPM; 
+					float y = rect.y / EFConstants.PPM;
+					float width = rect.width / EFConstants.PPM;
+					float height = rect.height / EFConstants.PPM;
+					
+					points.add(new PolygonPoint(x, y));
+					points.add(new PolygonPoint(x + width, y));
+					points.add(new PolygonPoint(x, y + height));
+					points.add(new PolygonPoint(x + width, y + height));
+					
+					Polygon poly = new Polygon(points);
+					polygons.add(poly);
+				}
+			}
+		}
+		return polygons;
+	}
 }

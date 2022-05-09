@@ -1,5 +1,11 @@
 package dev.eternalformula.arcontria.level.maps;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.poly2tri.geometry.polygon.Polygon;
+import org.poly2tri.geometry.polygon.PolygonPoint;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
@@ -7,14 +13,19 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.ImageResolver;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.MapProperties;
+import com.badlogic.gdx.maps.objects.TextureMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlReader.Element;
+import com.shibabandit.gdx_navmesh.coll.CollUtil;
 
 import dev.eternalformula.arcontria.entity.MapEntityBuilder;
-import dev.eternalformula.arcontria.entity.ambient.Lamppost;
 import dev.eternalformula.arcontria.level.GameLevel;
+import dev.eternalformula.arcontria.physics.B2DUtil;
+import dev.eternalformula.arcontria.physics.PhysicsConstants.PhysicsCategory;
 import dev.eternalformula.arcontria.util.EFConstants;
 
 /**
@@ -27,9 +38,12 @@ public class TemplateTmxMapLoader extends TmxMapLoader {
 	FileHandle tmxFile;
 	private GameLevel level;
 	
+	private Array<org.locationtech.jts.geom.Polygon> polygons;
+	
 	public TemplateTmxMapLoader(GameLevel level) {
 		super();
 		this.level = level;
+		this.polygons = new Array<>();
 	}
 	
     @Override
@@ -49,12 +63,12 @@ public class TemplateTmxMapLoader extends TmxMapLoader {
 			
 			FileHandle template = getRelativeFileHandle(tmxFile,element.getAttribute("template"));
 			Element el = xml.parse(template);
-			for(Element obj : el.getChildrenByName("object")) {
+			for (Element obj : el.getChildrenByName("object")) {
 				
 				MapProperties objProps = getMapProperties(obj);
-				if (true) {
+				if (objProps != null) {
 					int id = obj.getInt("gid") - el.getChildByName("tileset").getInt("firstgid");
-					FileHandle tilesetFile = getRelativeFileHandle(tmxFile, el.getChildByName("tileset").get("source"));
+					FileHandle tilesetFile = getRelativeFileHandle(template, el.getChildByName("tileset").get("source"));
 					
 					Element tileset = xml.parse(tilesetFile);
 					
@@ -72,9 +86,39 @@ public class TemplateTmxMapLoader extends TmxMapLoader {
 							float width = obj.getFloat("width") / EFConstants.PPM;
 							float height = obj.getFloat("height") / EFConstants.PPM;
 							
-							int entityId = objProps.get("entityId", int.class); // TODO: fix
-							level.addEntity(MapEntityBuilder.createEntity(level, entityId, region, x, y,
-									width, height, objProps));
+							if (objProps.containsKey("entityId")) {
+								int entityId = objProps.get("entityId", int.class); // TODO: fix
+								level.addEntity(MapEntityBuilder.createEntity(level, entityId, region, x, y,
+										width, height, objProps));
+							}
+							else {
+								// Creating polygon for navmesh
+								List<PolygonPoint> points = new ArrayList<PolygonPoint>();
+								float colliderX = objProps.get("colliderX", float.class);
+								float colliderY = objProps.get("colliderY", float.class);
+								float colliderW = objProps.get("colliderWidth", float.class);
+								float colliderH = objProps.get("colliderHeight", float.class);
+								
+								points.add(new PolygonPoint(x + colliderX, y + colliderY));
+								points.add(new PolygonPoint(x + colliderX + colliderW, y + colliderY));
+								points.add(new PolygonPoint(x + colliderX + colliderW, y + colliderY + colliderH));
+								points.add(new PolygonPoint(x + colliderX, y + colliderY + colliderH));
+								
+								// Add polygon to navmesh.
+								polygons.add(CollUtil.toJtsPoly(new Polygon(points)));
+								// Add TextureMapObject to objects
+								TextureMapObject tmo = new TextureMapObject(region);
+								tmo.setX(x * EFConstants.PPM);
+								tmo.setY(y * EFConstants.PPM);
+								objects.add(tmo);
+								
+								B2DUtil.createBody(level.getWorld(),
+										x + colliderX + colliderW / 2f,
+										y + colliderY + colliderH / 2f,
+										colliderW, colliderH, BodyType.StaticBody,
+										PhysicsCategory.MAPOBJECT_COLLIDER, null);
+							}
+							
 						}
 						continue;
 					}
@@ -114,5 +158,9 @@ public class TemplateTmxMapLoader extends TmxMapLoader {
 			return props;
 		}
 		return null;
+	}
+	
+	public Array<org.locationtech.jts.geom.Polygon> getNavmeshPolygons() {
+		return polygons;
 	}
 }

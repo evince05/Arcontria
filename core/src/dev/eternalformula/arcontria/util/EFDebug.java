@@ -4,8 +4,9 @@ import com.badlogic.gdx.Gdx;
 
 public class EFDebug {
 	
-	public static boolean debugBox2D = true;
+	public static boolean debugBox2D = false;
 	public static boolean debugEnabled = true;
+	public static boolean mapDebugEnabled = false;
 	
 	public static void warn(String msg) {
 		Gdx.app.debug("WARNING", msg);

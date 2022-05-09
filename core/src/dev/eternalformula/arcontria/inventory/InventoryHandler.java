@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import dev.eternalformula.arcontria.gfx.EGFXUtil;
 import dev.eternalformula.arcontria.gfx.text.FontUtil;
 import dev.eternalformula.arcontria.level.GameLevel;
 import dev.eternalformula.arcontria.util.EFConstants;
@@ -67,10 +68,12 @@ public class InventoryHandler {
 	
 	public void draw(SpriteBatch batch, float delta) {
 		
-		batch.draw(texture, 0, 0, texture.getWidth() / EFConstants.PPM,
-				texture.getHeight() / EFConstants.PPM);
-		//font.setColor(EFConstants.INVENTORY_TEXT_COLOR);
-		//font.draw(batch, "Ell", 2f, 7f);
-		//font.draw(batch, "Inventory", 6f, 7f);
+		batch.draw(texture, 0, 0, texture.getWidth() * EGFXUtil.RENDER_SCALE, texture.getHeight() * EGFXUtil.RENDER_SCALE);
+		
+		font.setColor(EFConstants.INVENTORY_TEXT_COLOR);
+		font.getData().setScale(EGFXUtil.RENDER_SCALE);
+		font.draw(batch, "Player", 51.5f * EGFXUtil.RENDER_SCALE, 159.5f * EGFXUtil.RENDER_SCALE);
+		font.draw(batch, "Inventory", 125 * EGFXUtil.RENDER_SCALE, 159.5f * EGFXUtil.RENDER_SCALE);
+		font.draw(batch, "Effects", 218.5f * EGFXUtil.RENDER_SCALE, 159.5f * EGFXUtil.RENDER_SCALE);
 	}
 }

@@ -43,8 +43,6 @@ public class Skeleton extends HostileEntity {
 		this.width = 1f;
 		this.height = 2f;
 		
-		calculatePath();
-		
 		//this.body = B2DUtil.createEntityCollider(level.getWorld(), this, BodyType.DynamicBody, PhysicsCategory.ENTITY_COLLIDER);
 		
 		EFDebug.debug("Reminder: Hitboxes now control body movement.");

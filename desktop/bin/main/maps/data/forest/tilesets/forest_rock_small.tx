@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template>
+ <tileset firstgid="1" source="forest_scenery.tsx"/>
+ <object gid="2" width="15" height="12">
+  <properties>
+   <property name="colliderHeight" type="float" value="0.9375"/>
+   <property name="colliderWidth" type="float" value="0.75"/>
+   <property name="colliderX" type="float" value="0"/>
+   <property name="colliderY" type="float" value="0"/>
+  </properties>
+ </object>
+</template>

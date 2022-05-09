@@ -199,6 +199,8 @@ public abstract class GameLevel {
 		
 		if (Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
 			debugEnabled = !debugEnabled;
+			EFDebug.debugEnabled = !EFDebug.debugEnabled;
+			EFDebug.mapDebugEnabled = !EFDebug.mapDebugEnabled;
 		}
 		
 		if (Gdx.input.isKeyJustPressed(Input.Keys.F2)) {

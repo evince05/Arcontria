@@ -28,7 +28,7 @@ public class GameScene { // extends GameState???
 		viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		
 		
-		uiViewport.setUnitsPerPixel(EGFXUtil.DEFAULT_UPP);
+		//uiViewport.setUnitsPerPixel(EGFXUtil.DEFAULT_UPP);
 		uiViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		
 		uiViewport.getCamera().position.set(uiViewport.getWorldWidth() / 2f, uiViewport.getWorldHeight() / 2f, 0f);
@@ -111,8 +111,14 @@ public class GameScene { // extends GameState???
 		
 		// TODO: Add perfect scaling check
 		float upp = (width / EGFXUtil.DEFAULT_WIDTH);
+		EGFXUtil.RENDER_SCALE = 2 * upp;
 		viewport.setUnitsPerPixel(EGFXUtil.DEFAULT_UPP / upp);
-		uiViewport.setUnitsPerPixel(EGFXUtil.DEFAULT_UPP / upp);
+		
+		EFDebug.info("RENDER SCALE: " + EGFXUtil.RENDER_SCALE);
+		uiViewport.update(width, height);
+		uiViewport.getCamera().position.set(uiViewport.getWorldWidth() / 2f, uiViewport.getWorldHeight() / 2f, 0f);
+		
+		//uiViewport.setUnitsPerPixel(EGFXUtil.DEFAULT_UPP / upp);
 	}
 	
 	public GameLevel getLevel() {

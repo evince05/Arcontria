@@ -4,13 +4,15 @@ import java.util.UUID;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Array;
 
 import dev.eternalformula.arcontria.entity.Entity;
 import dev.eternalformula.arcontria.entity.hostile.Skeleton;
-import dev.eternalformula.arcontria.entity.misc.Dummy;
+import dev.eternalformula.arcontria.entity.npc.NPC;
 import dev.eternalformula.arcontria.entity.player.Player;
 import dev.eternalformula.arcontria.level.maps.Map;
 import dev.eternalformula.arcontria.level.maps.MapRenderer;
@@ -22,14 +24,25 @@ public class TestLevel extends GameLevel {
 	private float viewportWidth;
 	private float viewportHeight;
 	
+	private Sound waveSfx;
+	
 	public TestLevel(GameScene scene) {
 		super(scene);
 		
-		//this.map = new Map(this, new TemplateTmxMapLoader(this).load("data/levels/maps/dojo/dojo.tmx"));
-		this.map = new Map(this, new TemplateTmxMapLoader(this).load("data/levels/maps/map.tmx"));
+		//this.map = new Map(this, new TmxMapLoader(this).load("data/levels/maps/dojo/dojo.tmx"));
+		TemplateTmxMapLoader mapLoader = new TemplateTmxMapLoader(this);
+		
+		TiledMap tiledMap = mapLoader.load("maps/data/forest/level_1-1.tmx");
+		Array<org.locationtech.jts.geom.Polygon> polygons = mapLoader.getNavmeshPolygons();
+		
+		this.map = new Map(this, tiledMap, polygons);
+		
 		this.mapRenderer = new MapRenderer(map);
 		this.viewportWidth = scene.getViewport().getWorldWidth();
 		this.viewportHeight = scene.getViewport().getWorldHeight();
+		
+		this.waveSfx = Gdx.audio.newSound(Gdx.files.internal("sfx/ambient/waves.wav"));
+		waveSfx.loop();
 		
 		/*
 		Dummy dummy = new Dummy(this);
@@ -51,6 +64,12 @@ public class TestLevel extends GameLevel {
 		
 		player.setLocation(new Vector2(7.5f, 10.5f)); // dojo: 7.5f, 1.5f
 		player.setDirection(1);
+		
+		Skeleton skele = new Skeleton(this);
+		entities.add(skele);
+		
+		NPC npc = new NPC(this);
+		entities.add(npc);
 		
 		//Skeleton skeleton = new Skeleton(this);
 		//entities.add(skeleton);

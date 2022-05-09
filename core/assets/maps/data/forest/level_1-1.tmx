@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="32" height="21" tilewidth="16" tileheight="16" infinite="0" nextlayerid="3" nextobjectid="162">
+ <tileset firstgid="1" source="tilesets/forest.tsx"/>
+ <tileset firstgid="235" source="tilesets/forest_scenery.tsx"/>
+ <layer id="1" name="Tile Layer 1" width="32" height="21">
+  <data encoding="csv">
+6,58,6,6,58,32,6,32,32,6,58,6,58,6,32,32,32,6,32,32,32,58,58,58,6,32,6,58,6,6,58,32,
+58,59,58,58,32,58,32,32,6,32,58,32,32,32,32,6,32,32,58,58,32,32,58,32,32,6,9,10,10,10,11,32,
+58,6,58,58,6,32,6,6,32,6,32,58,58,32,6,58,6,6,32,32,32,58,32,6,9,10,147,36,36,36,37,32,
+6,6,58,32,6,33,32,32,6,6,32,32,6,32,32,32,58,58,34,6,32,32,32,6,35,36,36,36,36,36,145,11,
+32,6,32,58,32,58,32,32,32,32,58,6,58,32,58,6,58,32,58,58,58,58,58,9,147,36,36,36,36,36,36,37,
+58,32,32,6,6,6,58,32,58,6,60,32,58,58,6,32,6,32,6,32,58,58,9,147,36,36,36,36,36,36,36,37,
+32,32,58,6,32,58,6,6,58,32,32,58,32,6,58,6,32,6,58,32,32,32,61,95,36,36,36,36,36,93,62,63,
+6,58,32,58,32,32,6,32,32,6,32,32,58,58,6,6,6,32,32,32,6,58,6,61,95,36,36,36,93,63,58,6,
+6,32,58,32,60,32,58,32,6,32,58,32,32,60,58,32,58,6,32,58,32,6,58,58,61,62,62,62,63,6,58,58,
+6,32,6,6,32,32,58,6,60,6,6,58,58,58,32,58,32,6,6,6,32,58,32,8,6,6,32,32,6,58,6,32,
+32,32,58,58,6,58,58,58,6,6,58,32,32,58,58,58,32,58,32,58,58,32,58,32,6,32,58,58,32,32,32,32,
+58,58,58,6,6,32,6,6,32,6,58,58,32,32,32,6,58,32,58,6,32,32,58,32,32,58,58,58,58,32,32,32,
+58,6,6,32,6,34,58,58,58,6,58,6,32,6,58,58,32,58,34,32,6,58,32,58,32,58,32,6,58,6,58,58,
+32,32,32,6,6,6,6,6,58,6,58,6,58,32,58,58,32,6,6,58,32,58,6,32,6,32,32,32,58,33,58,32,
+32,58,6,8,32,32,32,32,6,6,6,8,58,58,58,6,32,6,6,6,6,6,32,32,6,32,6,58,6,58,58,58,
+58,32,6,6,6,58,32,58,32,32,32,32,6,58,58,58,32,6,32,6,32,32,59,6,32,58,32,58,6,58,6,32,
+58,58,6,6,6,58,6,32,58,6,58,6,6,58,6,58,6,6,32,58,58,32,6,32,6,58,6,6,58,32,58,58,
+58,6,32,32,58,58,6,32,32,58,32,32,6,6,32,58,8,6,32,32,32,6,32,6,58,6,32,32,58,32,58,58,
+32,6,6,32,6,32,32,58,58,6,6,58,58,6,6,58,32,58,32,32,58,32,6,6,6,6,8,32,32,32,6,32,
+58,32,32,6,6,34,6,58,34,58,58,6,58,6,32,32,32,6,58,32,32,32,7,58,32,32,58,32,32,58,6,58,
+32,32,58,32,6,6,58,6,58,58,6,58,6,32,6,32,32,58,32,58,58,32,32,6,6,6,32,6,6,58,32,6
+</data>
+ </layer>
+ <objectgroup id="2" name="Objects">
+  <object id="1" template="tilesets/forest_lamppost.tx" x="365" y="52"/>
+  <object id="2" template="tilesets/forest_lamppost.tx" x="478" y="130"/>
+  <object id="3" template="tilesets/forest_lamppost.tx" x="99" y="76"/>
+  <object id="4" template="tilesets/forest_lamppost.tx" x="356" y="318"/>
+  <object id="5" template="tilesets/forest_lamppost.tx" x="79" y="304"/>
+  <object id="6" template="tilesets/forest_lamppost.tx" x="145" y="214"/>
+  <object id="7" template="tilesets/forest_rock_large.tx" x="319" y="69"/>
+  <object id="8" template="tilesets/forest_rock_large.tx" x="333" y="65"/>
+  <object id="9" template="tilesets/forest_rock_large.tx" x="330" y="74"/>
+  <object id="10" template="tilesets/forest_rock_large.tx" x="458" y="161"/>
+  <object id="11" template="tilesets/forest_rock_large.tx" x="437" y="275"/>
+  <object id="12" template="tilesets/forest_rock_large.tx" x="449" y="267"/>
+  <object id="13" template="tilesets/forest_rock_large.tx" x="452" y="277"/>
+  <object id="14" template="tilesets/forest_rock_large.tx" x="415" y="226"/>
+  <object id="15" template="tilesets/forest_rock_large.tx" x="423" y="232"/>
+  <object id="16" template="tilesets/forest_rock_large.tx" x="44" y="146"/>
+  <object id="17" template="tilesets/forest_rock_large.tx" x="63" y="146"/>
+  <object id="18" template="tilesets/forest_rock_large.tx" x="54" y="137"/>
+  <object id="19" template="tilesets/forest_rock_large.tx" x="55" y="150"/>
+  <object id="21" template="tilesets/forest_rock_small.tx" x="243" y="45"/>
+  <object id="22" template="tilesets/forest_rock_small.tx" x="252" y="41"/>
+  <object id="23" template="tilesets/forest_rock_small.tx" x="251" y="48"/>
+  <object id="24" template="tilesets/forest_rock_small.tx" x="265" y="266"/>
+  <object id="25" template="tilesets/forest_rock_small.tx" x="260" y="272"/>
+  <object id="27" template="tilesets/forest_rock_small.tx" x="267" y="271"/>
+  <object id="28" template="tilesets/forest_rock_small.tx" x="75" y="240"/>
+  <object id="29" template="tilesets/forest_rock_small.tx" x="126" y="265"/>
+  <object id="30" template="tilesets/forest_rock_small.tx" x="31" y="38"/>
+  <object id="31" template="tilesets/forest_rock_small.tx" x="173" y="45"/>
+  <object id="32" template="tilesets/forest_tree_dark.tx" x="192" y="102"/>
+  <object id="33" template="tilesets/forest_tree_dark.tx" x="24" y="97"/>
+  <object id="34" template="tilesets/forest_tree_dark.tx" x="16" y="189"/>
+  <object id="35" template="tilesets/forest_tree_dark.tx" x="105" y="216"/>
+  <object id="36" template="tilesets/forest_tree_dark.tx" x="168" y="303"/>
+  <object id="37" template="tilesets/forest_tree_dark.tx" x="11" y="326"/>
+  <object id="38" template="tilesets/forest_tree_dark.tx" x="245" y="328"/>
+  <object id="39" template="tilesets/forest_tree_dark.tx" x="428" y="324"/>
+  <object id="40" template="tilesets/forest_tree_dark.tx" x="378" y="279"/>
+  <object id="41" template="tilesets/forest_tree_dark.tx" x="470" y="233"/>
+  <object id="42" template="tilesets/forest_tree_dark.tx" x="484" y="318"/>
+  <object id="43" template="tilesets/forest_tree_dark.tx" x="425" y="192"/>
+  <object id="44" template="tilesets/forest_tree_dark.tx" x="369" y="224"/>
+  <object id="45" template="tilesets/forest_tree_dark.tx" x="310" y="266"/>
+  <object id="46" template="tilesets/forest_tree_dark.tx" x="232" y="231"/>
+  <object id="47" template="tilesets/forest_tree_dark.tx" x="315" y="156"/>
+  <object id="48" template="tilesets/forest_tree_light.tx" x="324" y="165"/>
+  <object id="49" template="tilesets/forest_tree_light.tx" x="463" y="243"/>
+  <object id="50" template="tilesets/forest_tree_light.tx" x="489" y="298"/>
+  <object id="51" template="tilesets/forest_tree_light.tx" x="472" y="307"/>
+  <object id="52" template="tilesets/forest_tree_light.tx" x="482" y="236"/>
+  <object id="53" template="tilesets/forest_tree_light.tx" x="439" y="181"/>
+  <object id="54" template="tilesets/forest_tree_light.tx" x="424" y="180"/>
+  <object id="55" template="tilesets/forest_tree_light.tx" x="335" y="244"/>
+  <object id="56" template="tilesets/forest_tree_light.tx" x="399" y="328"/>
+  <object id="57" template="tilesets/forest_tree_light.tx" x="259" y="315"/>
+  <object id="58" template="tilesets/forest_tree_light.tx" x="229" y="325"/>
+  <object id="59" template="tilesets/forest_tree_light.tx" x="179" y="311"/>
+  <object id="60" template="tilesets/forest_tree_light.tx" x="154" y="310"/>
+  <object id="61" template="tilesets/forest_tree_light.tx" x="220" y="241"/>
+  <object id="62" template="tilesets/forest_tree_light.tx" x="112" y="230"/>
+  <object id="63" template="tilesets/forest_tree_light.tx" x="21" y="201"/>
+  <object id="64" template="tilesets/forest_tree_light.tx" x="3" y="194"/>
+  <object id="65" template="tilesets/forest_tree_light.tx" x="25" y="313"/>
+  <object id="66" template="tilesets/forest_tree_light.tx" x="8" y="311"/>
+  <object id="67" template="tilesets/forest_tree_light.tx" x="35" y="86"/>
+  <object id="68" template="tilesets/forest_tree_light.tx" x="179" y="92"/>
+  <object id="69" template="tilesets/forest_tree_light.tx" x="193" y="89"/>
+  <object id="70" template="tilesets/forest_tree_light.tx" x="-10" y="27"/>
+  <object id="71" template="tilesets/forest_tree_light.tx" x="37" y="26"/>
+  <object id="72" template="tilesets/forest_tree_light.tx" x="-8" y="66"/>
+  <object id="73" template="tilesets/forest_tree_light.tx" x="-13" y="112"/>
+  <object id="74" template="tilesets/forest_tree_light.tx" x="-3" y="150"/>
+  <object id="75" template="tilesets/forest_tree_light.tx" x="-13" y="234"/>
+  <object id="76" template="tilesets/forest_tree_light.tx" x="-3" y="283"/>
+  <object id="77" template="tilesets/forest_tree_light.tx" x="-9" y="353"/>
+  <object id="78" template="tilesets/forest_tree_light.tx" x="51" y="347"/>
+  <object id="79" template="tilesets/forest_tree_light.tx" x="115" y="356"/>
+  <object id="80" template="tilesets/forest_tree_light.tx" x="165" y="346"/>
+  <object id="81" template="tilesets/forest_tree_light.tx" x="203" y="347"/>
+  <object id="82" template="tilesets/forest_tree_light.tx" x="275" y="342"/>
+  <object id="83" template="tilesets/forest_tree_light.tx" x="325" y="352"/>
+  <object id="84" template="tilesets/forest_tree_light.tx" x="373" y="360"/>
+  <object id="85" template="tilesets/forest_tree_light.tx" x="415" y="349"/>
+  <object id="86" template="tilesets/forest_tree_light.tx" x="452" y="352"/>
+  <object id="87" template="tilesets/forest_tree_light.tx" x="483" y="341"/>
+  <object id="88" template="tilesets/forest_tree_light.tx" x="485" y="263"/>
+  <object id="89" template="tilesets/forest_tree_light.tx" x="495" y="204"/>
+  <object id="90" template="tilesets/forest_tree_light.tx" x="482" y="173"/>
+  <object id="91" template="tilesets/forest_tree_light.tx" x="495" y="138"/>
+  <object id="92" template="tilesets/forest_tree_light.tx" x="489" y="52"/>
+  <object id="93" template="tilesets/forest_tree_light.tx" x="479" y="17"/>
+  <object id="94" template="tilesets/forest_tree_light.tx" x="444" y="18"/>
+  <object id="95" template="tilesets/forest_tree_light.tx" x="405" y="9"/>
+  <object id="96" template="tilesets/forest_tree_light.tx" x="371" y="23"/>
+  <object id="97" template="tilesets/forest_tree_light.tx" x="323" y="15"/>
+  <object id="98" template="tilesets/forest_tree_light.tx" x="292" y="22"/>
+  <object id="99" template="tilesets/forest_tree_light.tx" x="253" y="14"/>
+  <object id="100" template="tilesets/forest_tree_light.tx" x="218" y="22"/>
+  <object id="101" template="tilesets/forest_tree_light.tx" x="180" y="14"/>
+  <object id="102" template="tilesets/forest_tree_light.tx" x="139" y="25"/>
+  <object id="103" template="tilesets/forest_tree_dark.tx" x="495" y="181"/>
+  <object id="104" template="tilesets/forest_tree_dark.tx" x="483" y="209"/>
+  <object id="105" template="tilesets/forest_tree_dark.tx" x="493" y="245"/>
+  <object id="106" template="tilesets/forest_tree_dark.tx" x="478" y="281"/>
+  <object id="107" template="tilesets/forest_tree_dark.tx" x="503" y="277"/>
+  <object id="108" template="tilesets/forest_tree_dark.tx" x="499" y="345"/>
+  <object id="109" template="tilesets/forest_tree_dark.tx" x="469" y="344"/>
+  <object id="110" template="tilesets/forest_tree_dark.tx" x="434" y="339"/>
+  <object id="111" template="tilesets/forest_tree_dark.tx" x="390" y="350"/>
+  <object id="112" template="tilesets/forest_tree_dark.tx" x="366" y="341"/>
+  <object id="113" template="tilesets/forest_tree_dark.tx" x="344" y="354"/>
+  <object id="114" template="tilesets/forest_tree_dark.tx" x="328" y="336"/>
+  <object id="115" template="tilesets/forest_tree_dark.tx" x="300" y="348"/>
+  <object id="116" template="tilesets/forest_tree_dark.tx" x="261" y="346"/>
+  <object id="117" template="tilesets/forest_tree_dark.tx" x="231" y="344"/>
+  <object id="118" template="tilesets/forest_tree_dark.tx" x="209" y="327"/>
+  <object id="119" template="tilesets/forest_tree_dark.tx" x="183" y="345"/>
+  <object id="120" template="tilesets/forest_tree_dark.tx" x="243" y="351"/>
+  <object id="121" template="tilesets/forest_tree_dark.tx" x="190" y="329"/>
+  <object id="122" template="tilesets/forest_tree_dark.tx" x="151" y="328"/>
+  <object id="123" template="tilesets/forest_tree_dark.tx" x="136" y="348"/>
+  <object id="124" template="tilesets/forest_tree_dark.tx" x="98" y="338"/>
+  <object id="125" template="tilesets/forest_tree_dark.tx" x="74" y="346"/>
+  <object id="126" template="tilesets/forest_tree_dark.tx" x="29" y="340"/>
+  <object id="127" template="tilesets/forest_tree_dark.tx" x="10" y="348"/>
+  <object id="128" template="tilesets/forest_tree_dark.tx" x="-13" y="321"/>
+  <object id="129" template="tilesets/forest_tree_dark.tx" x="-8" y="298"/>
+  <object id="130" template="tilesets/forest_tree_dark.tx" x="12" y="269"/>
+  <object id="131" template="tilesets/forest_tree_dark.tx" x="-8" y="252"/>
+  <object id="132" template="tilesets/forest_tree_dark.tx" x="7" y="225"/>
+  <object id="133" template="tilesets/forest_tree_dark.tx" x="-10" y="210"/>
+  <object id="134" template="tilesets/forest_tree_dark.tx" x="-8" y="172"/>
+  <object id="135" template="tilesets/forest_tree_dark.tx" x="11" y="151"/>
+  <object id="136" template="tilesets/forest_tree_dark.tx" x="-6" y="127"/>
+  <object id="137" template="tilesets/forest_tree_dark.tx" x="7" y="108"/>
+  <object id="138" template="tilesets/forest_tree_dark.tx" x="-9" y="85"/>
+  <object id="139" template="tilesets/forest_tree_dark.tx" x="12" y="68"/>
+  <object id="140" template="tilesets/forest_tree_dark.tx" x="-5" y="39"/>
+  <object id="141" template="tilesets/forest_tree_dark.tx" x="16" y="22"/>
+  <object id="142" template="tilesets/forest_tree_dark.tx" x="55" y="15"/>
+  <object id="143" template="tilesets/forest_tree_dark.tx" x="71" y="28"/>
+  <object id="144" template="tilesets/forest_tree_dark.tx" x="91" y="19"/>
+  <object id="145" template="tilesets/forest_tree_dark.tx" x="117" y="23"/>
+  <object id="146" template="tilesets/forest_tree_dark.tx" x="160" y="17"/>
+  <object id="147" template="tilesets/forest_tree_dark.tx" x="182" y="24"/>
+  <object id="148" template="tilesets/forest_tree_dark.tx" x="168" y="24"/>
+  <object id="149" template="tilesets/forest_tree_dark.tx" x="201" y="17"/>
+  <object id="150" template="tilesets/forest_tree_dark.tx" x="235" y="16"/>
+  <object id="151" template="tilesets/forest_tree_dark.tx" x="264" y="25"/>
+  <object id="152" template="tilesets/forest_tree_dark.tx" x="282" y="17"/>
+  <object id="153" template="tilesets/forest_tree_dark.tx" x="315" y="24"/>
+  <object id="154" template="tilesets/forest_tree_dark.tx" x="345" y="22"/>
+  <object id="155" template="tilesets/forest_tree_dark.tx" x="363" y="16"/>
+  <object id="156" template="tilesets/forest_tree_dark.tx" x="394" y="21"/>
+  <object id="157" template="tilesets/forest_tree_dark.tx" x="424" y="12"/>
+  <object id="158" template="tilesets/forest_tree_dark.tx" x="461" y="17"/>
+  <object id="159" template="tilesets/forest_tree_dark.tx" x="494" y="32"/>
+  <object id="160" template="tilesets/forest_tree_dark.tx" x="505" y="81"/>
+  <object id="161" template="tilesets/forest_tree_dark.tx" x="507" y="108"/>
+ </objectgroup>
+</map>

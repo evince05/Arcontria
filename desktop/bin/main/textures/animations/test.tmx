@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="12" height="12" tilewidth="16" tileheight="16" infinite="0" nextlayerid="3" nextobjectid="47">
+ <tileset firstgid="1" source="../../data/levels/maps/forest.tsx"/>
+ <tileset firstgid="97" source="../maps/PlantsnRocks.tsx"/>
+ <layer id="1" name="Tile Layer 1" width="12" height="12">
+  <data encoding="csv">
+18,18,18,18,18,18,18,18,18,18,18,18,
+18,18,18,18,18,18,18,18,18,18,18,18,
+18,18,18,18,18,18,18,18,18,18,18,18,
+18,18,18,18,18,18,18,55,55,45,46,47,
+18,18,18,18,55,55,55,55,55,56,58,66,
+18,18,55,55,55,55,55,45,46,68,58,58,
+18,18,18,18,18,18,18,57,58,42,44,42,
+18,18,18,18,18,18,18,57,58,59,69,71,
+18,18,18,18,18,18,45,68,42,71,55,55,
+18,18,18,18,45,46,68,42,71,55,55,55,
+46,46,46,46,68,58,58,54,55,55,55,55,
+70,70,70,70,70,70,70,71,55,55,55,55
+</data>
+ </layer>
+ <objectgroup id="2" name="Objects">
+  <object id="1" gid="97" x="110" y="80" width="32" height="48"/>
+  <object id="2" gid="100" x="123" y="68" width="32" height="48"/>
+  <object id="3" gid="99" x="126" y="85" width="32" height="32"/>
+  <object id="4" gid="100" x="146" y="50" width="32" height="48"/>
+  <object id="5" gid="97" x="163" y="43" width="32" height="48"/>
+  <object id="6" gid="100" x="177" y="52" width="32" height="48"/>
+  <object id="7" gid="97" x="88" y="95" width="32" height="48"/>
+  <object id="8" gid="97" x="68" y="146" width="32" height="48"/>
+  <object id="9" gid="97" x="87" y="129" width="32" height="48"/>
+  <object id="10" gid="97" x="70" y="113" width="32" height="48"/>
+  <object id="11" gid="100" x="92" y="107" width="32" height="48"/>
+  <object id="12" gid="100" x="80" y="136" width="32" height="48"/>
+  <object id="13" gid="100" x="55" y="128" width="32" height="48"/>
+  <object id="14" gid="100" x="91" y="75" width="32" height="48"/>
+  <object id="15" gid="100" x="107" y="57" width="32" height="48"/>
+  <object id="16" gid="100" x="128" y="44" width="32" height="48"/>
+  <object id="17" gid="100" x="105" y="31" width="32" height="48"/>
+  <object id="18" gid="97" x="80" y="38" width="32" height="48"/>
+  <object id="19" gid="100" x="60" y="67" width="32" height="48"/>
+  <object id="20" gid="97" x="59" y="93" width="32" height="48"/>
+  <object id="21" gid="97" x="35" y="81" width="32" height="48"/>
+  <object id="22" gid="97" x="57" y="39" width="32" height="48"/>
+  <object id="23" gid="100" x="25" y="36" width="32" height="48"/>
+  <object id="24" gid="97" x="9" y="62" width="32" height="48"/>
+  <object id="25" gid="100" x="25" y="112" width="32" height="48"/>
+  <object id="26" gid="97" x="39" y="154" width="32" height="48"/>
+  <object id="27" gid="97" x="-4" y="161" width="32" height="48"/>
+  <object id="28" gid="97" x="14" y="139" width="32" height="48"/>
+  <object id="29" gid="100" x="8" y="149" width="32" height="48"/>
+  <object id="30" gid="100" x="24" y="164" width="32" height="48"/>
+  <object id="31" gid="100" x="-7" y="128" width="32" height="48"/>
+  <object id="32" gid="100" x="6" y="103" width="32" height="48"/>
+  <object id="33" gid="100" x="-8" y="78" width="32" height="48"/>
+  <object id="34" gid="100" x="-3" y="33" width="32" height="48"/>
+  <object id="35" gid="100" x="130" y="202" width="32" height="48"/>
+  <object id="36" gid="98" x="157" y="144" width="26" height="18"/>
+  <object id="37" gid="98" x="166" y="152" width="26" height="18"/>
+  <object id="38" gid="98" x="152" y="154" width="26" height="18"/>
+  <object id="39" gid="100" x="163" y="180" width="32" height="48"/>
+  <object id="40" gid="100" x="125" y="172" width="32" height="48"/>
+  <object id="41" gid="97" x="164" y="214" width="32" height="48"/>
+  <object id="42" gid="97" x="36" y="53" width="32" height="48"/>
+  <object id="43" gid="100" x="19" y="85" width="32" height="48"/>
+ </objectgroup>
+</map>

@@ -12,12 +12,11 @@ import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.TextureMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Sort;
 
-import dev.eternalformula.arcontria.ArcontriaGame;
 import dev.eternalformula.arcontria.level.GameLevel;
+import dev.eternalformula.arcontria.pathfinding.Navmesh;
 import dev.eternalformula.arcontria.pathfinding.PathNode;
 
 public class Map {
@@ -36,7 +35,10 @@ public class Map {
 	
 	private PathNode[][] nodeGrid;
 	
-	public Map(GameLevel level, TiledMap map) {
+	private Navmesh navmesh;
+	
+	
+	public Map(GameLevel level, TiledMap map, Array<org.locationtech.jts.geom.Polygon> navmeshPolygons) {
 		this.level = level;
 		this.map = map;
 		
@@ -46,13 +48,16 @@ public class Map {
 		this.mapHeight = map.getProperties().get("height", int.class);
 		Map.zSort(map);
 		
+		navmesh = new Navmesh(map, navmeshPolygons);
+		
+		/*
 		this.nodeGrid = new PathNode[(int) mapHeight][(int) mapWidth];
 		for (int row = 0; row < mapHeight; row++) {
 			for (int col = 0; col < mapWidth; col++) {
 				nodeGrid[row][col] = new PathNode(true, new Vector2(col, row), col, row);
 			}
-		}
-		
+		}*/
+				
 		if (map.getLayers().get("Collisions") != null) {
 			MapUtil.parseTiledObjectLayer(level.getWorld(), map.getLayers().get("Collisions").getObjects());
 		}
@@ -65,6 +70,9 @@ public class Map {
 		debugRenderer.setColor(Color.RED);
 		debugRenderer.begin(ShapeType.Line);
 		
+		navmesh.draw(debugRenderer);
+		
+		/*
 		Vector2 loc = level.getEntities().get(1).getLocation();
 		debugRenderer.rect(loc.x, loc.y, 1 / 16f, 1 / 16f);
 		for (int row = 0; row < mapHeight; row++) {
@@ -74,6 +82,7 @@ public class Map {
 				//}
 			}
 		}
+		*/
 		debugRenderer.end();
 	}
 	
@@ -203,6 +212,10 @@ public class Map {
 		return level;
 	}
 	
+	public Navmesh getNavmesh() {
+		return navmesh;
+	}
+	
 	public TiledMap getMap() {
 		return map;
 	}
@@ -213,6 +226,10 @@ public class Map {
 	
 	public int getHeight() {
 		return mapHeight;
+	}
+	
+	public ShapeRenderer getDebugRenderer() {
+		return debugRenderer;
 	}
 
 	/**

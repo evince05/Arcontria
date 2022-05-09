@@ -1,6 +1,6 @@
 package dev.eternalformula.arcontria.util;
 
-import java.math.BigDecimal;
+import com.badlogic.gdx.math.Vector2;
 
 public class EFMath {
 	
@@ -37,6 +37,21 @@ public class EFMath {
 
 	    // Below will only handles +ve values
 	    // return ( (float) ( (int) ((tmp - (int) tmp) >= 0.5f ? tmp + 1 : tmp) ) ) / pow;
+	}
+	
+	/**
+	 * Returns the angle (in degrees) between two points.
+	 * @param pointA The first point, in the form (x, y).
+	 * @param pointB The second point, in the form (x, y).
+	 */
+	
+	public static float getAngle(Vector2 pointA, Vector2 pointB) {
+		float angle = (float) Math.toDegrees(Math.atan2(pointB.y - pointA.y, pointB.x - pointA.x));
+		
+		if (angle < 0) {
+			angle += 360;
+		}
+		return angle;
 	}
 
 }

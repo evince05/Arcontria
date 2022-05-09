@@ -30,9 +30,12 @@ public abstract class LivingEntity extends Entity {
 	protected float speed;
 	protected float elapsedTime;
 	
+	protected int lastAnimationDirection;
+	
 	public LivingEntity(GameLevel level) {
 		super(level);
 		this.direction = 4;
+		this.lastAnimationDirection = direction;
 		
 		EFDebug.debug("(LivingEntity.java:34) Remember: Body positioning is now controlled by"
 				+ " hitboxes in \n\tLivingEntity's update method.");
@@ -63,6 +66,7 @@ public abstract class LivingEntity extends Entity {
 	
 	@Override
 	public void draw(SpriteBatch batch, float delta) {
+		
 		elapsedTime += Gdx.graphics.getDeltaTime();
 		TextureRegion texRegion = currentAnimation.getKeyFrame(elapsedTime, true);
 		float width = texRegion.getRegionWidth() / EFConstants.PPM;
@@ -148,5 +152,9 @@ public abstract class LivingEntity extends Entity {
 	
 	public void setDirection(int direction) {
 		this.direction = direction;
+	}
+	
+	public int getLastAnimationDirection() {
+		return lastAnimationDirection;
 	}
 }

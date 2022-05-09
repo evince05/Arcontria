@@ -1,14 +1,14 @@
 package dev.eternalformula.arcontria.entity.hostile;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 import dev.eternalformula.arcontria.entity.LivingEntity;
 import dev.eternalformula.arcontria.level.GameLevel;
+import dev.eternalformula.arcontria.pathfinding.NavigationPath;
 import dev.eternalformula.arcontria.pathfinding.Path;
-import dev.eternalformula.arcontria.pathfinding.PathNode;
 import dev.eternalformula.arcontria.pathfinding.PathUtil;
 import dev.eternalformula.arcontria.util.EFDebug;
-import dev.eternalformula.arcontria.util.Strings;
 
 public abstract class HostileEntity extends LivingEntity {
 	
@@ -16,6 +16,8 @@ public abstract class HostileEntity extends LivingEntity {
 	
 	protected Path pathToTarget;
 	protected Vector2 lastTargetPosition;
+	
+	protected NavigationPath path;
 	
 	/**
 	 * This boolean determines if the HostileEntity should chase the<br>
@@ -35,8 +37,12 @@ public abstract class HostileEntity extends LivingEntity {
 		
 		this.meleeAttacker = true;
 		
+		this.path = new NavigationPath(level.getMap(), location, 
+				target.getLocation(), width / 2f);
+		
 	}
 	
+	/*
 	protected void calculatePath() {
 		this.pathToTarget = new Path(level.getMap(), this, target);
 		this.lastTargetPosition = new Vector2(target.getLocation());
@@ -47,14 +53,35 @@ public abstract class HostileEntity extends LivingEntity {
 		for (PathNode pathNode : pathToTarget.getNodes()) {
 			EFDebug.debug("Node: " + Strings.vec2(pathNode.getPosition()));
 		}
+	}*/
+	
+	@Override
+	public void draw(SpriteBatch batch, float delta) {
+		//super.draw(batch, delta);
+		
+		batch.end();
+		if (EFDebug.mapDebugEnabled) {
+			path.draw();
+		}
+		batch.begin();
 	}
 	
 	@Override
 	public void update(float delta) {
 		super.update(delta);
 		
+		
+		path.recalibrate(location, target.getLocation());
+		path.update();
+		
+		
+		if (path.getCurrentPath().getCount() > 0) {
+			Vector2 targetPos = path.getCurrentPath().get(0).getPortal().getMidpoint();
+			PathUtil.moveToTarget(delta, path, this, targetPos);
+		}
+		
 		// Watch this algorithm for efficiency and CPU usage...
-	
+		/*
 		// Path is only recalculated if the target has recently moved.
 		if (lastTargetPosition.x != target.getLocation().x ||
 				lastTargetPosition.y != target.getLocation().y) {
@@ -68,7 +95,7 @@ public abstract class HostileEntity extends LivingEntity {
 			if (meleeAttacker) {
 				PathUtil.moveToTarget(this, delta);
 			}
-		}	
+		}*/	
 	}
 	
 	/**
@@ -129,10 +156,6 @@ public abstract class HostileEntity extends LivingEntity {
 	
 	public LivingEntity getTarget() {
 		return target;
-	}
-	
-	public Path getPath() {
-		return pathToTarget;
 	}
 	
 	public boolean isMeleeAttacker() {
