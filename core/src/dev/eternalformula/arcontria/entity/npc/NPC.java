@@ -29,7 +29,7 @@ public class NPC extends LivingEntity {
 	public NPC(GameLevel level) {
 		super(level);
 		
-		this.location = new Vector2(7f, 12f);
+		this.location = new Vector2(7f, 18f);
 		
 		TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("textures/entities/player/player.atlas"));
 		
@@ -87,34 +87,35 @@ public class NPC extends LivingEntity {
 		path.recalibrate(location, level.getPlayer().getLocation());
 		path.update();
 		
-		if (path != null && path.getPoints().size > 0) {
-			Vector2 targetPos = path.getPoints().get(1);
+		if (path != null) {
+			if (path.getPoints() != null && path.getPoints().size > 0) {
+				Vector2 targetPos = path.getPoints().get(1);
+
+				float angle = EFMath.getAngle(location, targetPos);
+				direction = path.getAnimationDirection(this, angle);
+
+				switch (direction) {
+				case 1:
+					currentAnimation = walkUp;
+					break;
+				case 2:
+					currentAnimation = walkLeft;
+					break;
+				case 3:
+					currentAnimation = walkRight;
+					break;
+				case 4:
+					currentAnimation = walkDown;
+					break;
+				default:
+					currentAnimation = walkDown;
+					break;
+				}
 			
-			float angle = EFMath.getAngle(location, targetPos);
-			direction = path.getAnimationDirection(this, angle);
-			System.out.println(direction);
-			
-			switch (direction) {
-			case 1:
-				currentAnimation = walkUp;
-				break;
-			case 2:
-				currentAnimation = walkLeft;
-				break;
-			case 3:
-				currentAnimation = walkRight;
-				break;
-			case 4:
-				currentAnimation = walkDown;
-				break;
-			default:
-				currentAnimation = walkDown;
-				break;
+				// The lastAnimationDirection is IMPORTANT!!
+				lastAnimationDirection = direction;
+				PathUtil.moveToTarget(delta, path, this, targetPos);
 			}
-			
-			// The lastAnimationDirection is IMPORTANT!!
-			lastAnimationDirection = direction;
-			PathUtil.moveToTarget(delta, path, this, targetPos);
 		}
 	}
 	

@@ -20,7 +20,6 @@ import dev.eternalformula.arcontria.gfx.particles.ParticleHandler;
 import dev.eternalformula.arcontria.inventory.InventoryHandler;
 import dev.eternalformula.arcontria.level.maps.Map;
 import dev.eternalformula.arcontria.level.maps.MapRenderer;
-import dev.eternalformula.arcontria.objects.debug.PathRenderer;
 import dev.eternalformula.arcontria.objects.loottables.DynamicLootTable;
 import dev.eternalformula.arcontria.objects.loottables.LootTableBuilder;
 import dev.eternalformula.arcontria.physics.WorldContactListener;
@@ -48,8 +47,6 @@ public abstract class GameLevel {
 	
 	protected InventoryHandler inventoryHandler;
 	
-	private PathRenderer pathRenderer;
-	
 	protected float timeDebugAccumulator;
 	private Music music;
 	
@@ -72,8 +69,6 @@ public abstract class GameLevel {
 		rayHandler.setAmbientLight(1.0f);
 		this.b2dr = new Box2DDebugRenderer();
 		b2dr.setDrawInactiveBodies(false);
-		
-		this.pathRenderer = new PathRenderer();
 		
 		this.music = Gdx.audio.newMusic(Gdx.files.internal("music/alpha.mp3"));
 		music.setVolume(0.35f);
@@ -143,10 +138,6 @@ public abstract class GameLevel {
 		return particleHandler;
 	}
 	
-	public PathRenderer getPathRenderer() {
-		return pathRenderer;
-	}
-	
 	public RayHandler getRayHandler() {
 		return rayHandler;
 	}
@@ -159,7 +150,6 @@ public abstract class GameLevel {
 		b2dr.dispose();
 		rayHandler.dispose();
 		particleHandler.dispose();
-		pathRenderer.dispose();
 	}
 	
 	public void update(float delta) {
@@ -170,6 +160,14 @@ public abstract class GameLevel {
 		if (inventoryHandler.isInventoryOpen()) {
 			inventoryHandler.update(delta);
 		}
+		
+		mapRenderer.update(delta);
+		
+		for (Entity e : entities) {
+			e.update(delta);
+		}
+		
+		player.update(delta);
 		
 		// Lights
 		rayHandler.update();
@@ -207,10 +205,6 @@ public abstract class GameLevel {
 			EFDebug.debugBox2D = !EFDebug.debugBox2D;
 		}
 		
-		if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
-			pathRenderer.toggle();
-		}
-		
 		if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
 			inventoryHandler.toggle();
 		}
@@ -221,11 +215,24 @@ public abstract class GameLevel {
 		daylightHandler.draw();
 		
 		batch.begin();
-		mapRenderer.draw(batch);
+		mapRenderer.draw(batch, delta);
+		
+		if (player.shouldRenderBeforeEntities()) {
+			player.draw(batch, delta);
+		}
+		
+		// Draw MapObjects.
+		mapRenderer.drawMapObjects(batch, delta);
+		
+		if (!player.shouldRenderBeforeEntities()) {
+			player.draw(batch, delta);
+		}
 		
 		for (Entity e : entities) {
 			e.draw(batch, delta);
 		}
+		
+		
 		
 		particleHandler.draw(batch, delta);
 		
@@ -244,10 +251,6 @@ public abstract class GameLevel {
 		}
 		
 		rayHandler.render();
-		
-		if (pathRenderer.isEnabled()) {
-			pathRenderer.render();
-		}	
 	}
 	
 	public void drawUi(SpriteBatch batch, float delta) {

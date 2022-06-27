@@ -14,6 +14,7 @@ import dev.eternalformula.arcontria.entity.Entity;
 import dev.eternalformula.arcontria.entity.hostile.Skeleton;
 import dev.eternalformula.arcontria.entity.npc.NPC;
 import dev.eternalformula.arcontria.entity.player.Player;
+import dev.eternalformula.arcontria.level.maps.EFMapObject;
 import dev.eternalformula.arcontria.level.maps.Map;
 import dev.eternalformula.arcontria.level.maps.MapRenderer;
 import dev.eternalformula.arcontria.level.maps.TemplateTmxMapLoader;
@@ -33,11 +34,14 @@ public class TestLevel extends GameLevel {
 		TemplateTmxMapLoader mapLoader = new TemplateTmxMapLoader(this);
 		
 		TiledMap tiledMap = mapLoader.load("maps/data/forest/level_1-1.tmx");
+		Array<EFMapObject> objects = mapLoader.getMapObjects();
+		
 		Array<org.locationtech.jts.geom.Polygon> polygons = mapLoader.getNavmeshPolygons();
 		
-		this.map = new Map(this, tiledMap, polygons);
+		this.map = new Map(this, tiledMap, polygons, objects);
 		
 		this.mapRenderer = new MapRenderer(map);
+		
 		this.viewportWidth = scene.getViewport().getWorldWidth();
 		this.viewportHeight = scene.getViewport().getWorldHeight();
 		
@@ -60,7 +64,6 @@ public class TestLevel extends GameLevel {
 		
 		
 		player = Player.create(this, "Elliott", UUID.randomUUID());
-		entities.add(player);
 		
 		player.setLocation(new Vector2(7.5f, 10.5f)); // dojo: 7.5f, 1.5f
 		player.setDirection(1);
@@ -68,8 +71,8 @@ public class TestLevel extends GameLevel {
 		Skeleton skele = new Skeleton(this);
 		entities.add(skele);
 		
-		NPC npc = new NPC(this);
-		entities.add(npc);
+		//NPC npc = new NPC(this);
+		//entities.add(npc);
 		
 		//Skeleton skeleton = new Skeleton(this);
 		//entities.add(skeleton);
@@ -81,11 +84,6 @@ public class TestLevel extends GameLevel {
 	@Override
 	public void update(float delta) {
 		super.update(delta);
-		
-		for (Entity e : entities) {
-			e.update(delta);
-		}
-		
 		
 		Vector2 cameraPos = new Vector2(scene.getViewport().getCamera().position.x,
 				scene.getViewport().getCamera().position.y);

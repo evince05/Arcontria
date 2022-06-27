@@ -113,7 +113,6 @@ public class NavigationPath implements Telegraph {
 
 	@Override
 	public boolean handleMessage(Telegram msg) {
-		System.out.println("- New reception -");
 		switch (msg.message) {
 		case PF_TELEGRAM_RESPONSE:
 			final NavMeshPathRequest pfr = (NavMeshPathRequest) msg.extraInfo;
@@ -123,7 +122,6 @@ public class NavigationPath implements Telegraph {
 	             
 				final NavMeshPortal[] portals = stringPuller.pathToPortals(latestPath);
 				this.points = stringPuller.stringPull(startPos, endPos, portals, agentRadius);
-				System.out.println("Path point count: " + points.size);
 			}
 			else {
                 points = null;
@@ -138,7 +136,6 @@ public class NavigationPath implements Telegraph {
 	}
 	
 	public void draw() {
-		System.out.print(points != null ? "Points: " + points.size : "No points");
 		if (points != null && points.size > 0) {
 			
 			
@@ -262,11 +259,11 @@ public class NavigationPath implements Telegraph {
 		// If this block of code is executed, the direction has not changed.
 		framesSinceLastDirectionChange++;
 		
-		
+		/*
 		EFDebug.debug("Returning previous animation direction: " +
 				"[Current, Prev = " + Strings.vec2(angle, entity.getLastAnimationDirection()) + "], framesElapsed = "
 				+ framesSinceLastDirectionChange);
-		
+		*/
 		
 		
 		// Default return value is the entity's last animation.

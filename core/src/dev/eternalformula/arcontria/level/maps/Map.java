@@ -28,17 +28,12 @@ public class Map {
 	private int mapHeight;
 	
 	private ShapeRenderer debugRenderer;
-	
-	/**
-	 * A 2D Array of all path nodes (tiles).
-	 */
-	
-	private PathNode[][] nodeGrid;
-	
+	private Array<EFMapObject> mapObjects;
 	private Navmesh navmesh;
 	
 	
-	public Map(GameLevel level, TiledMap map, Array<org.locationtech.jts.geom.Polygon> navmeshPolygons) {
+	public Map(GameLevel level, TiledMap map, Array<org.locationtech.jts.geom.Polygon> navmeshPolygons,
+			Array<EFMapObject> mapObjects) {
 		this.level = level;
 		this.map = map;
 		
@@ -46,6 +41,9 @@ public class Map {
 		
 		this.mapWidth = map.getProperties().get("width", int.class);
 		this.mapHeight = map.getProperties().get("height", int.class);
+		
+		this.mapObjects = mapObjects;
+		
 		Map.zSort(map);
 		
 		navmesh = new Navmesh(map, navmeshPolygons);
@@ -64,6 +62,11 @@ public class Map {
 		// Create Lights
 	}
 	
+	/**
+	 * Draws the underlying navmesh of the map.
+	 * @param delta The time that has elapsed since the last frame.
+	 */
+	
 	public void draw(float delta) {
 		debugRenderer.setProjectionMatrix(level.getScene().getViewport().getCamera().combined);
 		debugRenderer.setAutoShapeType(true);
@@ -71,20 +74,13 @@ public class Map {
 		debugRenderer.begin(ShapeType.Line);
 		
 		navmesh.draw(debugRenderer);
-		
-		/*
-		Vector2 loc = level.getEntities().get(1).getLocation();
-		debugRenderer.rect(loc.x, loc.y, 1 / 16f, 1 / 16f);
-		for (int row = 0; row < mapHeight; row++) {
-			for(int col = 0; col < mapWidth; col++) {
-				//if (!nodeGrid[row][col].isWalkable()) {
-					debugRenderer.rect(col, row, 1f, 1f);
-				//}
-			}
-		}
-		*/
 		debugRenderer.end();
 	}
+	
+	/**
+	 * Sorts the MapObjects from .tmx files so they appear correctly.
+	 * @param map The TiledMap to be sorted.
+	 */
 	
 	public static void zSort(TiledMap map) {
 		
@@ -109,105 +105,6 @@ public class Map {
 		}
 	}
 	
-	/**
-	 * Returns a list of immediate neighbors between the two nodes.
-	 * <br><t>This should only be used when the two tiles are diagonally adjacent to one another.
-	 * @param startNode The start node.
-	 * @param endNode The end node.
-	 * @return A list of immediate neighbors between the two nodes.
-	 */
-	
-	public List<PathNode> getImmediateNeighbors(PathNode[][] nodeGrid, PathNode startNode, PathNode endNode) {
-		int distanceX = endNode.gridX - startNode.gridX;
-		int distanceY = endNode.gridY - startNode.gridY;
-		
-		if (Math.abs(distanceX) != 1 || Math.abs(distanceY) != 1) {
-			return null;
-		}
-		
-		List<PathNode> nodes = new ArrayList<>();
-		
-		if (distanceX == 1) {
-			nodes.add(getNode(startNode.gridX + 1, startNode.gridY));
-		}
-		else if (distanceX == -1) {
-			nodes.add(getNode(startNode.gridX - 1, startNode.gridY));
-		}
-		
-		if (distanceY == 1) {
-			nodes.add(getNode(startNode.gridX, startNode.gridY + 1));
-		}
-		else if (distanceY == -1) {
-			nodes.add(getNode(startNode.gridX, startNode.gridY - 1));
-		}
-		
-		return nodes;
-	}
-	
-	/**
-	 * Gets a list of all neighbors of the specified node.
-	 * @param nodeGrid The NodeGrid to be searched
-	 * @param node The node to be searched.
-	 * @return A list of all neighbors of the node.
-	 */
-	
-	public List<PathNode> getNeighbors(PathNode node) {
-		List<PathNode> neighbors = new ArrayList<>();
-		
-		for (int x = -1; x <= 1; x++) {
-			for (int y = -1; y <= 1; y++) {
-				if (x == 0 && y == 0) {
-					continue;
-				}
-				
-				int checkX = node.gridX + x;
-				int checkY = node.gridY + y;
-				
-				if (checkX >= 0 && checkX < mapWidth
-						&& checkY >= 0 && checkY < mapHeight) {
-					neighbors.add(nodeGrid[checkY][checkX]);
-				}
-			}
-		}
-		return neighbors;
-	}
-	
-	public List<PathNode> retracePath(PathNode startNode, PathNode endNode) {
-		List<PathNode> path = new ArrayList<PathNode>();
-		PathNode currentNode = endNode;
-		
-		while (!currentNode.equals(startNode)) {
-			path.add(currentNode);
-			currentNode = currentNode.parent;
-		}
-		Collections.reverse(path);
-		return path;
-	}
-	
-	public int getDistance(PathNode nodeA, PathNode nodeB) {
-		int distanceX = Math.abs(nodeA.gridX - nodeB.gridX);
-		int distanceY = Math.abs(nodeA.gridY - nodeB.gridY);
-		
-		/**
-		 * Move cost: Diagonal -> 14
-		 * Horizontal/Vertical -> 10
-		 */
-		if (distanceX > distanceY) {
-			return 14 * distanceY + 10 * (distanceX - distanceY);
-		}
-		else {
-			return 14 * distanceX + 10 * (distanceY - distanceX);
-		}
-	}
-	
-	public PathNode getNode(int x, int y) {
-		return nodeGrid[y][x];
-	}
-	
-	public PathNode[][] getNodeGrid() {
-		return nodeGrid;
-	}
-	
 	public GameLevel getLevel() {
 		return level;
 	}
@@ -218,6 +115,10 @@ public class Map {
 	
 	public TiledMap getMap() {
 		return map;
+	}
+	
+	public Array<EFMapObject> getMapObjects() {
+		return mapObjects;
 	}
 	
 	public int getWidth() {
@@ -232,27 +133,6 @@ public class Map {
 		return debugRenderer;
 	}
 
-	/**
-	 * Blocks the tile on the grid at [x, y].
-	 * @param x The x grid location of the tile.
-	 * @param y The y grid location of the tile.
-	 */
-	
-	public void blockTile(int x, int y) {
-		nodeGrid[y][x].setWalkable(false);
-	}
-	
-	/**
-	 * Determines if the specified tile is walkable.
-	 * @param x The x grid location of the tile
-	 * @param y The y grid location of the tile
-	 * @return True if the tile is walkable, otherwise false.
-	 */
-	
-	public boolean isTileWalkable(int x, int y) {
-		return getNode(x, y).isWalkable();
-	}
-	
 	public static class MapComparator implements Comparator<TextureMapObject> {
 
 		@Override

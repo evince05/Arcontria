@@ -11,15 +11,9 @@ public class PhysicsConstants {
 	public static final short BIT_ENTITY_COLLIDER = 32;
 	public static final short BIT_ENTITY_ATTACKBOX = 64;
 	public static final short BIT_MAPOBJECT_COLLIDER = 128;
-	public static final short BIT_MAP_BOUNDS = 256;
-	public static final short BIT_PROJECTILE_COLLIDER = 512;
-	
-	private static final short GROUP_ATTACKBOX_COLLIDE = 1;
-	private static final short GROUP_COLLIDER_COLLIDE = 2;
-	private static final short GROUP_HITBOX_COLLIDE = 4;
-	private static final short GROUP_ATTACKBOX_NONCOLLIDE = -1;
-	private static final short GROUP_COLLIDER_NONCOLLIDE = -2;
-	private static final short GROUP_HITBOX_NONCOLLIDE = -4;
+	public static final short BIT_MAPOBJECT_HITBOX = 256;
+	public static final short BIT_MAP_BOUNDS = 512;
+	public static final short BIT_PROJECTILE_COLLIDER = 1024;
 	
 	public static final Color DEFAULT_B2DR_STATIC_COLOR = Color.GREEN;
 	public static final Color DEFAULT_B2DR_DYNAMIC_COLOR = Color.PINK;
@@ -55,7 +49,7 @@ public class PhysicsConstants {
 				new Color(0f, 0f, 0f, 0f)),
 		PLAYER_HITBOX(
 				BIT_PLAYER_HITBOX,
-				(short) (BIT_ENTITY_ATTACKBOX | BIT_PROJECTILE_COLLIDER),
+				(short) (BIT_ENTITY_ATTACKBOX | BIT_PROJECTILE_COLLIDER | BIT_MAPOBJECT_HITBOX),
 				true,
 				//(short) (GROUP_COLLIDER_NONCOLLIDE | GROUP_HITBOX_NONCOLLIDE),
 				new Color(0f, 0f, 0f, 0f)),
@@ -67,6 +61,10 @@ public class PhysicsConstants {
 		MAPOBJECT_COLLIDER(
 				BIT_MAPOBJECT_COLLIDER,
 				(short) (BIT_PLAYER_COLLIDER | BIT_ENTITY_COLLIDER | BIT_PROJECTILE_COLLIDER),
+				new Color(0f, 0f, 0f, 0f)),
+		MAPOBJECT_HITBOX(
+				BIT_MAPOBJECT_HITBOX,
+				BIT_PLAYER_HITBOX, true,
 				new Color(0f, 0f, 0f, 0f));
 		
 		private short cBits; // Bits which the object is (doesn't collide with)

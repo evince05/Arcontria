@@ -7,8 +7,11 @@ import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.TextureMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.utils.Array;
 
 import dev.eternalformula.arcontria.util.EFConstants;
+import dev.eternalformula.arcontria.util.EFDebug;
+import dev.eternalformula.arcontria.util.Strings;
 
 public class MapRenderer {
 	
@@ -32,9 +35,31 @@ public class MapRenderer {
 		this.mapRenderer.getBatch().setColor(tintColor);
 	}
 	
-	public void draw(SpriteBatch batch) {
+	/**
+	 * Updates the MapObjects within the map.
+	 * @param delta
+	 */
+	public void update(float delta) {
+		for (EFMapObject mapObj : map.getMapObjects()) {
+			mapObj.update(delta);
+		}
+	}
+	
+	/**
+	 * Draws the map (tiles only). See {@link MapRenderer#drawMapObjects(SpriteBatch, float)}<br>
+	 * for drawing MapObjects.
+	 * @param batch The SpriteBatch to be used.
+	 */
+	
+	public void draw(SpriteBatch batch, float delta) {
 		mapRenderer.setView((OrthographicCamera) map.getLevel().getScene().getViewport().getCamera());
 		mapRenderer.render();
+	}
+	
+	public void drawMapObjects(SpriteBatch batch, float delta) {
+		for (EFMapObject mapObj : map.getMapObjects()) {
+			mapObj.draw(batch, delta);
+		}
 	}
 	
 	public void resize(int width, int height) {
@@ -64,7 +89,7 @@ public class MapRenderer {
 						texObj.getScaleX(), texObj.getScaleY(), texObj.getRotation());
 				
 			}
-		}
+		} 
 		
 	}
 

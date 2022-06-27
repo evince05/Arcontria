@@ -122,7 +122,6 @@ public abstract class LivingEntity extends Entity {
 	}
 	
 	public void move(float horizontalVelocity, float verticalVelocity) {
-		
 		// TODO: Do for each body.
 		colliderBox.setLinearVelocity(horizontalVelocity, verticalVelocity);
 		

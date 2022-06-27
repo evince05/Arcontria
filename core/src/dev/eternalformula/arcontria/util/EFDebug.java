@@ -14,7 +14,7 @@ public class EFDebug {
 	
 	public static void debug(String msg) {
 		if (debugEnabled) {
-			Gdx.app.debug("DEBUG", msg);
+			//Gdx.app.debug("DEBUG", msg);
 		}
 	}
 	
@@ -23,6 +23,6 @@ public class EFDebug {
 	}
 	
 	public static void info(String msg) {
-		Gdx.app.debug("INFO", msg);
+		//Gdx.app.debug("INFO", msg);
 	}
 }

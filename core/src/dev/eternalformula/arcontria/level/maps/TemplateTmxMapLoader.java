@@ -16,6 +16,7 @@ import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.objects.TextureMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader;
@@ -26,6 +27,7 @@ import dev.eternalformula.arcontria.entity.MapEntityBuilder;
 import dev.eternalformula.arcontria.level.GameLevel;
 import dev.eternalformula.arcontria.physics.B2DUtil;
 import dev.eternalformula.arcontria.physics.PhysicsConstants.PhysicsCategory;
+import dev.eternalformula.arcontria.physics.boxes.MapObjectHitbox;
 import dev.eternalformula.arcontria.util.EFConstants;
 
 /**
@@ -38,12 +40,19 @@ public class TemplateTmxMapLoader extends TmxMapLoader {
 	FileHandle tmxFile;
 	private GameLevel level;
 	
+	private Array<EFMapObject> mapObjects;
+	
 	private Array<org.locationtech.jts.geom.Polygon> polygons;
 	
 	public TemplateTmxMapLoader(GameLevel level) {
 		super();
 		this.level = level;
 		this.polygons = new Array<>();
+		this.mapObjects = new Array<EFMapObject>();
+	}
+	
+	public Array<EFMapObject> getMapObjects() {
+		return mapObjects;
 	}
 	
     @Override
@@ -110,13 +119,24 @@ public class TemplateTmxMapLoader extends TmxMapLoader {
 								TextureMapObject tmo = new TextureMapObject(region);
 								tmo.setX(x * EFConstants.PPM);
 								tmo.setY(y * EFConstants.PPM);
-								objects.add(tmo);
+								//objects.add(tmo);
 								
+								// New EFO
+								
+								EFMapObject emo = new EFMapObject(tmo);
+								mapObjects.add(emo);
+								
+								// MapObject collider body.
 								B2DUtil.createBody(level.getWorld(),
 										x + colliderX + colliderW / 2f,
 										y + colliderY + colliderH / 2f,
 										colliderW, colliderH, BodyType.StaticBody,
 										PhysicsCategory.MAPOBJECT_COLLIDER, null);
+								
+								
+								// MapObject Hitbox (Used for alpha).
+								new MapObjectHitbox(level, emo);
+								
 							}
 							
 						}

@@ -1,5 +1,6 @@
 package dev.eternalformula.arcontria.entity.player;
 
+import java.io.File;
 import java.util.UUID;
 
 import com.badlogic.gdx.Gdx;
@@ -13,6 +14,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
 import dev.eternalformula.arcontria.entity.LivingEntity;
+import dev.eternalformula.arcontria.files.FileUtil;
 import dev.eternalformula.arcontria.input.Controllable;
 import dev.eternalformula.arcontria.level.GameLevel;
 import dev.eternalformula.arcontria.physics.boxes.PlayerAttackBox;
@@ -20,6 +22,11 @@ import dev.eternalformula.arcontria.physics.boxes.PlayerColliderBox;
 import dev.eternalformula.arcontria.physics.boxes.PlayerHitbox;
 import dev.eternalformula.arcontria.util.EFConstants;
 
+/**
+ * The Player Object.<br>
+ * Some Notes:<br>
+ * <t><b>DO NOT</b> add the player to the GameLevel entities array. 
+ */
 public class Player extends LivingEntity implements Controllable {
 	
 	private TextureAtlas atlas;
@@ -59,6 +66,15 @@ public class Player extends LivingEntity implements Controllable {
 	private float soundTimer; // footstep noise should be every 1/8 of a second.
 	
 	private PlayerAttackBox attackBox;
+	
+	/*
+	 * Determines if the player is currently behind any MapObject
+	 * (controls rendering order).
+	 */
+	private boolean isBehindMapObject;
+	
+	private PlayerData playerData;
+	
 	private static final float BASE_SPEED = 2f;
 	
 	/**
@@ -80,6 +96,11 @@ public class Player extends LivingEntity implements Controllable {
 		
 		this.width = 1f;
 		this.height = 2f;
+		
+		this.isBehindMapObject = false;
+		
+		this.playerData = PlayerData.loadFromFile(this, FileUtil.SAVES_FOLDER_LOCATION + File.separator +
+				"elliott" + File.separator + "elliott.json");
 		
 		init();
 	}
@@ -254,7 +275,11 @@ public class Player extends LivingEntity implements Controllable {
 		}
 		
 		if (Math.abs(horizontalForce) > 0 || Math.abs(verticalForce) > 0) {
+			
+			// Note that the distance moved from this method is roughly equal to (speed * Gdx.graphics.getDeltaTime())
 			move(horizontalForce, verticalForce);
+			
+			playerData.updateMovement(horizontalForce, verticalForce);
 		}
 		else {
 			hitbox.setLinearVelocity(0f, 0f);
@@ -359,5 +384,25 @@ public class Player extends LivingEntity implements Controllable {
 	public void dispose() {
 		sound.dispose();
 		atlas.dispose();
+	}
+
+	public boolean shouldRenderBeforeEntities() {
+		return isBehindMapObject;
+	}
+	
+	public void setBehindMapObject(boolean isBehindMapObject) {
+		this.isBehindMapObject = isBehindMapObject;
+	}
+	
+	public PlayerData getPlayerData() {
+		return playerData;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
 	}
 }

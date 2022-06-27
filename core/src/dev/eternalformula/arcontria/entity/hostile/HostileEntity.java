@@ -6,15 +6,11 @@ import com.badlogic.gdx.math.Vector2;
 import dev.eternalformula.arcontria.entity.LivingEntity;
 import dev.eternalformula.arcontria.level.GameLevel;
 import dev.eternalformula.arcontria.pathfinding.NavigationPath;
-import dev.eternalformula.arcontria.pathfinding.Path;
-import dev.eternalformula.arcontria.pathfinding.PathUtil;
 import dev.eternalformula.arcontria.util.EFDebug;
 
 public abstract class HostileEntity extends LivingEntity {
 	
 	protected LivingEntity target;
-	
-	protected Path pathToTarget;
 	protected Vector2 lastTargetPosition;
 	
 	protected NavigationPath path;

@@ -15,12 +15,8 @@ public class PathUtil {
 	 */
 	public static void moveToTarget(float delta, NavigationPath path, LivingEntity entity, Vector2 targetPos) {
 		
-		EFDebug.debug("--- New Frame ---");
-		
 		float distanceX = targetPos.x - entity.getLocation().x;
 		float distanceY = targetPos.y - entity.getLocation().y;
-		
-		EFDebug.debug("dst=" + Strings.vec2(distanceX, distanceY));
 		
 		float directionX = Math.signum(distanceX);
 		float horizontalVelocity = directionX * entity.getSpeed();
@@ -38,20 +34,14 @@ public class PathUtil {
 			verticalVelocity = directionY * (float) Math.sqrt((double) entity.getSpeed());
 			
 			entity.move(horizontalVelocity, verticalVelocity);
-			EFDebug.debug("Moving on both axes, [[velX,velY]: " + 
-					Strings.vec2(horizontalVelocity, verticalVelocity) + "], v= "
-					+ entity.getSpeed() + ", [[dX,dY]: "
-					+ Strings.vec2(directionX, directionY) + "]");
 		}
 		else if (Math.abs(distanceX) >= Math.abs(distanceY)) {
 			// The entity moves on the X axis.
 			entity.move(horizontalVelocity, 0f);
-			EFDebug.debug("Moving on x axis");
 		}
 		else {
 			// The entity moves on the Y axis.
 			entity.move(0f, verticalVelocity);
-			EFDebug.debug("Moving on y axis");
 		}
 	}
 }
