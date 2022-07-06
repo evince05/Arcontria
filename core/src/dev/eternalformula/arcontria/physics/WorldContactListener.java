@@ -99,7 +99,7 @@ public class WorldContactListener implements ContactListener {
 			
 			if (playerY > objY) {
 				objHitbox.getMapObject().beginFadeAnimation();
-				ArcontriaGame.GAME.getScene().getLevel().getPlayer().setBehindMapObject(true);
+				//ArcontriaGame.GAME.getScene().getLevel().getPlayer().setBehindMapObject(true);
 			}
 			return;
 		}

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector2;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -22,18 +23,21 @@ public class PlayerData {
 	private PlayerStats stats;
 	private AchievementHandler achHandler;
 	
+	private JsonNode playerDataNode;
+	
 	private float balance;
 	public float stepsTakenSession;
 	public float distanceTravelledSession;
 	public double timePlayedSeconds;
 	
-	PlayerData(String saveFile, PlayerStats stats, AchievementHandler achHandler) {
+	PlayerData(String saveFile, JsonNode playerData, PlayerStats stats, AchievementHandler achHandler) {
 		this.saveFile = saveFile;
+		this.playerDataNode = playerData;
 		this.stats = stats;
 		this.achHandler = achHandler;
 	}
 	
-	public static PlayerData loadFromFile(Player player, String file) {
+	public static PlayerData loadFromFile(String file) {
 		// Do stuff
 		JsonNode playerData = JsonUtil.getRootNodeFromLocalFile(file).get("playerData");
 		
@@ -42,11 +46,8 @@ public class PlayerData {
 		
 		AchievementHandler achHandler = AchievementHandler.load(FileUtil.SAVES_FOLDER_LOCATION + File.separator + "elliott" + File.separator + "achievements.json");
 		
-		PlayerData data = new PlayerData(file, stats, achHandler);
+		PlayerData data = new PlayerData(file, playerData, stats, achHandler);
 		data.setBalance(playerData.get("balance").floatValue());
-		player.setName(playerData.get("name").asText());
-		player.setHealth(playerData.get("health").floatValue());
-		player.setMaxHealth(playerData.get("maxHealth").floatValue());
 		
 		return data;
 	}
@@ -65,6 +66,8 @@ public class PlayerData {
 		playerDataNode.put("balance", balance);
 		playerDataNode.put("health", health);
 		playerDataNode.put("maxHealth", maxHealth);
+		playerDataNode.put("locationX", player.getLocation().x);
+		playerDataNode.put("locationY", player.getLocation().y);
 		
 		// Sets the saved stats
 		JsonNode statsNode = stats.save();
@@ -83,11 +86,7 @@ public class PlayerData {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		
-		 
 	}
-	
 	
 	public float getBalance() {
 		return balance;
@@ -107,6 +106,14 @@ public class PlayerData {
 	
 	public AchievementHandler getAchievementHandler() {
 		return achHandler;
+	}
+	
+	public JsonNode getPlayerDataNode() {
+		return playerDataNode;
+	}
+	
+	public Object getStat(String statName) {
+		return stats.getValue(statName);
 	}
 	
 	public void updateMovement(float velX, float velY) {
@@ -134,6 +141,4 @@ public class PlayerData {
 			achHandler.getAchievement("touch-grass").setCompleted(true);
 		}
 	}
-	
-
 }

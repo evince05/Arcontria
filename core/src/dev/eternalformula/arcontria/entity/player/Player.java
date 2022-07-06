@@ -67,13 +67,13 @@ public class Player extends LivingEntity implements Controllable {
 	
 	private PlayerAttackBox attackBox;
 	
+	private PlayerData playerData;
+	
 	/*
 	 * Determines if the player is currently behind any MapObject
 	 * (controls rendering order).
 	 */
 	private boolean isBehindMapObject;
-	
-	private PlayerData playerData;
 	
 	private static final float BASE_SPEED = 2f;
 	
@@ -98,10 +98,6 @@ public class Player extends LivingEntity implements Controllable {
 		this.height = 2f;
 		
 		this.isBehindMapObject = false;
-		
-		this.playerData = PlayerData.loadFromFile(this, FileUtil.SAVES_FOLDER_LOCATION + File.separator +
-				"elliott" + File.separator + "elliott.json");
-		
 		init();
 	}
 	
@@ -278,8 +274,6 @@ public class Player extends LivingEntity implements Controllable {
 			
 			// Note that the distance moved from this method is roughly equal to (speed * Gdx.graphics.getDeltaTime())
 			move(horizontalForce, verticalForce);
-			
-			playerData.updateMovement(horizontalForce, verticalForce);
 		}
 		else {
 			hitbox.setLinearVelocity(0f, 0f);
@@ -396,6 +390,10 @@ public class Player extends LivingEntity implements Controllable {
 	
 	public PlayerData getPlayerData() {
 		return playerData;
+	}
+	
+	public void setPlayerData(PlayerData playerData) {
+		this.playerData = playerData;
 	}
 	
 	public String getName() {

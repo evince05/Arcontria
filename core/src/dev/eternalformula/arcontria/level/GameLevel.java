@@ -6,7 +6,6 @@ import java.util.List;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
@@ -15,25 +14,23 @@ import com.badlogic.gdx.physics.box2d.World;
 import box2dLight.RayHandler;
 import dev.eternalformula.arcontria.entity.Entity;
 import dev.eternalformula.arcontria.entity.player.Player;
+import dev.eternalformula.arcontria.entity.player.PlayerData;
 import dev.eternalformula.arcontria.gfx.lighting.DaylightHandler;
 import dev.eternalformula.arcontria.gfx.particles.ParticleHandler;
 import dev.eternalformula.arcontria.inventory.InventoryHandler;
 import dev.eternalformula.arcontria.level.maps.Map;
 import dev.eternalformula.arcontria.level.maps.MapRenderer;
-import dev.eternalformula.arcontria.objects.loottables.DynamicLootTable;
-import dev.eternalformula.arcontria.objects.loottables.LootTableBuilder;
 import dev.eternalformula.arcontria.physics.WorldContactListener;
+import dev.eternalformula.arcontria.scenes.GameSession;
 import dev.eternalformula.arcontria.util.EFDebug;
 import dev.eternalformula.arcontria.util.Strings;
 
-public abstract class GameLevel {
+public class GameLevel {
 	
-	protected GameScene scene;
+	private GameSession session;
 	
 	protected List<Entity> entities;
 	private List<Entity> entitiesToRemove;
-	
-	protected Player player;
 	
 	protected Map map;
 	protected MapRenderer mapRenderer;
@@ -52,9 +49,9 @@ public abstract class GameLevel {
 	
 	private boolean debugEnabled;
 	
-	public GameLevel(GameScene scene) {
+	GameLevel(GameSession session) {
 		
-		this.scene = scene;
+		this.session = session;
 		this.entities = new ArrayList<Entity>();
 		this.entitiesToRemove = new ArrayList<Entity>();
 		this.daylightHandler = new DaylightHandler(this);
@@ -73,11 +70,13 @@ public abstract class GameLevel {
 		this.music = Gdx.audio.newMusic(Gdx.files.internal("music/alpha.mp3"));
 		music.setVolume(0.35f);
 		
-		DynamicLootTable dlt = LootTableBuilder.loadFromFile("data/tables/dlt.json");
-		dlt.selectItems().forEach((i) -> { EFDebug.info(i.toDebugString()); } );
 		
+	}
+	
+	public static GameLevel load(GameSession session, String saveFolder) {
+		GameLevel level = new GameLevel(session);
 		
-		EFDebug.info("TODO: Remove demo inventory code");
+		return level;
 	}
 	
 	public List<Entity> getEntities() {
@@ -114,10 +113,6 @@ public abstract class GameLevel {
 		mapRenderer.setMap(map);
 	}
 	
-	public GameScene getScene() {
-		return scene;
-	}
-	
 	public World getWorld() {
 		return world;
 	}
@@ -142,7 +137,9 @@ public abstract class GameLevel {
 		return rayHandler;
 	}
 	
-	public abstract void resize(int width, int height);
+	public void resize(int width, int height) {
+		mapRenderer.resize(width, height);
+	}
 	
 	public void dispose() {
 		music.dispose();
@@ -152,8 +149,54 @@ public abstract class GameLevel {
 		particleHandler.dispose();
 	}
 	
+	public void setupCamera() {
+		
+		// Calculates and sets the proper location of the camera.
+		Vector2 playerPos = session.getPlayer().getLocation();
+		Vector2 cameraPos = new Vector2();
+		
+		float viewportWidth = session.getViewportWidth();
+		float viewportHeight = session.getViewportHeight();
+		
+		if (map.getWidth() <= viewportWidth) {
+			EFDebug.debug("Watch TestLevel.java:setupCamera... line cameraPosX = map.getWidth() / 2f");
+			cameraPos.x = map.getWidth() / 2f;
+		}
+		else {
+			float centerX = viewportWidth / 2f - 0.5f;
+			if (playerPos.x < centerX) {
+				cameraPos.x = viewportWidth / 2f;
+			}
+			else if (playerPos.x > map.getWidth() - centerX) {
+				cameraPos.x = map.getWidth() - viewportWidth / 2f + 0.5f;
+			}
+			else {
+				cameraPos.x = playerPos.x;
+			}
+		}
+		
+		if (map.getHeight() <= viewportHeight) {
+			cameraPos.y = map.getHeight() / 2f + 0.5f;
+		}
+		else {
+			float centerY = viewportHeight / 2f - 1f;
+			
+			if (playerPos.y < centerY) {
+				cameraPos.y = viewportHeight / 2f;
+			}
+			else if (playerPos.y > map.getHeight() - centerY) {
+				cameraPos.y = map.getHeight() - viewportHeight / 2f + 1f;
+			}
+			else {
+				cameraPos.y = playerPos.y;
+			}
+		}
+		
+		session.getGameCamera().position.set(cameraPos, 0f);
+	}
+	
 	public void update(float delta) {
-		daylightHandler.update();
+		//daylightHandler.update();
 		particleHandler.update(delta);
 		world.step(1 / 60f, 6, 2);
 		
@@ -161,38 +204,25 @@ public abstract class GameLevel {
 			inventoryHandler.update(delta);
 		}
 		
-		mapRenderer.update(delta);
+		Vector2 pos = session.centerCamera(session.getPlayer());
+		session.getGameCamera().position.set(pos, 0f);
+		
+		//mapRenderer.update(delta);
 		
 		for (Entity e : entities) {
 			e.update(delta);
 		}
 		
-		player.update(delta);
-		
 		// Lights
 		rayHandler.update();
-		rayHandler.setCombinedMatrix((OrthographicCamera) scene.getViewport().getCamera());
+		rayHandler.setCombinedMatrix(session.getGameCamera());
 		timeDebugAccumulator += delta;
 		if (timeDebugAccumulator >= 1f) {
 			timeDebugAccumulator -= 1f;
 			EFDebug.info("World Time: " + daylightHandler.getFormattedWorldTime()
 				+ " (running " + Gdx.graphics.getFramesPerSecond() + "FPS)");
 			EFDebug.debug("Physics Body Count: " + world.getBodyCount());
-			EFDebug.debug("Particle Count: " + particleHandler.getActiveParticles().size());
-			EFDebug.debug("Player Pos: " + Strings.vec2(player.getLocation()) + ", Camera Pos: " + 
-					Strings.vec2(scene.getViewport().getCamera().position.x, scene.getViewport().getCamera().position.y));
-			
-			EFDebug.info("UI Cam Pos: " + Strings.vec3(scene.getUiViewport().getCamera().position));
-		}
-		
-		if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
-			
-			if (!music.isPlaying()) {
-				music.play();
-			}
-			else {
-				music.pause();
-			}
+			EFDebug.info("Camera Pos: " + Strings.vec3(session.getGameCamera().position));
 		}
 		
 		if (Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
@@ -212,17 +242,19 @@ public abstract class GameLevel {
 	}
 	
 	public void draw(SpriteBatch batch, float delta) {
-		daylightHandler.draw();
+		//daylightHandler.draw();
 		
 		batch.begin();
-		mapRenderer.draw(batch, delta);
+		//mapRenderer.draw(batch, delta);
+		
+		Player player = session.getPlayer();
 		
 		if (player.shouldRenderBeforeEntities()) {
 			player.draw(batch, delta);
 		}
 		
 		// Draw MapObjects.
-		mapRenderer.drawMapObjects(batch, delta);
+		//mapRenderer.drawMapObjects(batch, delta);
 		
 		if (!player.shouldRenderBeforeEntities()) {
 			player.draw(batch, delta);
@@ -238,7 +270,7 @@ public abstract class GameLevel {
 		
 		if (this.isDebugEnabled()) {
 			batch.end();
-			map.draw(delta);
+			//map.draw(delta);
 			batch.begin();
 		}
 		
@@ -247,7 +279,7 @@ public abstract class GameLevel {
 		batch.end();
 		
 		if (EFDebug.debugBox2D) {
-			b2dr.render(world, scene.getViewport().getCamera().combined);
+			b2dr.render(world, session.getGameCamera().combined);
 		}
 		
 		rayHandler.render();
@@ -266,11 +298,7 @@ public abstract class GameLevel {
 		return debugEnabled;
 	}
 	
-	public Player getPlayer() {
-		return player;
-	}
-	
-	public void setPlayer(Player player) {
-		this.player = player;
+	public GameSession getSession() {
+		return session;
 	}
 }

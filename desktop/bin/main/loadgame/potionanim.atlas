@@ -1,0 +1,13 @@
+
+loadanimation.png
+size: 736, 96
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+loadanimation
+  rotate: false
+  xy: 0, 0
+  size: 736, 96
+  orig: 736, 96
+  offset: 0, 0
+  index: -1

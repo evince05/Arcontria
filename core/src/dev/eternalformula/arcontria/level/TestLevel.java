@@ -20,6 +20,8 @@ import dev.eternalformula.arcontria.level.maps.MapRenderer;
 import dev.eternalformula.arcontria.level.maps.TemplateTmxMapLoader;
 import dev.eternalformula.arcontria.util.EFDebug;
 
+
+/*
 public class TestLevel extends GameLevel {
 	
 	private float viewportWidth;
@@ -60,7 +62,7 @@ public class TestLevel extends GameLevel {
 		Dummy dummy2 = new Dummy(this);
 		dummy2.setLocation(11.5f, 5f);
 		entities.add(dummy2);
-		*/
+		
 		
 		
 		player = Player.create(this, "Elliott", UUID.randomUUID());
@@ -181,4 +183,4 @@ public class TestLevel extends GameLevel {
 		
 		scene.getViewport().getCamera().position.set(cameraPos, 0f);
 	}
-}
+}*/

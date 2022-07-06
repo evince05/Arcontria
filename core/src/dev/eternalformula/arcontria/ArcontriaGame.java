@@ -1,5 +1,7 @@
 package dev.eternalformula.arcontria;
 
+import java.util.Scanner;
+
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -7,33 +9,40 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ai.msg.MessageManager;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import dev.eternalformula.arcontria.level.GameScene;
+import dev.eternalformula.arcontria.scenes.LoadScene;
+import dev.eternalformula.arcontria.scenes.Scene;
+import dev.eternalformula.arcontria.scenes.SceneManager;
 import dev.eternalformula.arcontria.util.EFDebug;
+import dev.eternalformula.arcontria.util.Settings;
 import dev.eternalformula.arcontria.util.Strings;
 
 public class ArcontriaGame extends ApplicationAdapter {
 	
 	public static final String TAG = ArcontriaGame.class.getName();
 	
-	private GameScene scene;
+	private SceneManager sceneManager;
 	
 	public static ArcontriaGame GAME;
 	
 	public static MessageManager msgManager;
+	public Settings settings;
 	
 	private boolean pause;
 	
 	@Override
 	public void create () {
-		scene = new GameScene();
-		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 		
+		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 		Gdx.app.debug(TAG, "Entering Debug Mode!");
 		
+		// Settings
+		this.settings = new Settings();
+		
+		this.sceneManager = new SceneManager();
+		sceneManager.setCurrentScene(new LoadScene(sceneManager));
 		msgManager = MessageManager.getInstance();
 		
 		GAME = this;
-		pause = false;
 	}
 
 	@Override
@@ -45,25 +54,53 @@ public class ArcontriaGame extends ApplicationAdapter {
 		}
 		
 		if (!pause) {
-			scene.update(Gdx.graphics.getDeltaTime());
+			sceneManager.update(Gdx.graphics.getDeltaTime());
+		}
+		sceneManager.draw(Gdx.graphics.getDeltaTime());
+		sceneManager.drawUI(Gdx.graphics.getDeltaTime());
+		
+		if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
+			Gdx.graphics.setWindowedMode(320, 180);
 		}
 		
-		scene.draw(Gdx.graphics.getDeltaTime());
+		if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
+			Gdx.graphics.setWindowedMode(640, 360);
+		}
 		
+		if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
+			Gdx.graphics.setWindowedMode(960, 540);
+		}
+		
+		if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_4)) {
+			Gdx.graphics.setWindowedMode(1280, 720);
+		}
+
+		if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_5)) {
+			Gdx.graphics.setWindowedMode(1600, 900);
+		}
+
+		if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_6)) {
+			Gdx.graphics.setWindowedMode(1920, 1080);
+		}
 	}
 	
 	@Override
-	public void dispose () {
-		scene.dispose();
+	public void dispose() {
+		sceneManager.dispose();
 	}
 	
 	@Override
 	public void resize(int width, int height) {
-		scene.resize(width, height);
+		sceneManager.resize(width, height);
+		
 		EFDebug.info("Screen Dimensions: " + Strings.vec2(width, height));
 	}
 	
-	public GameScene getScene() {
-		return scene;
+	public Scene getScene() {
+		return sceneManager.getCurrentScene();
+	}
+	
+	public Settings getSettings() {
+		return settings;
 	}
 }
