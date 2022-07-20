@@ -33,7 +33,7 @@ public class InventoryHandler {
 		this.inventoryOpen = false;
 		
 		this.texture = new Texture(Gdx.files.internal("ui/inventory/inventory.png"));
-		this.font = FontUtil.createBasicFont("fonts/alagard.ttf", 16);
+		//this.font = FontUtil.createBasicFont("fonts/alagard.ttf", 16);
 	}
 	
 	public boolean isInventoryOpen() {

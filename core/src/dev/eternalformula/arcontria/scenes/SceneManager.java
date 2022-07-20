@@ -3,24 +3,37 @@ package dev.eternalformula.arcontria.scenes;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import dev.eternalformula.arcontria.gfx.EGFXUtil;
+import dev.eternalformula.arcontria.input.InputHandler;
+import dev.eternalformula.arcontria.util.EFDebug;
+import dev.eternalformula.arcontria.util.Strings;
 
 public class SceneManager {
 	
 	private ViewportHandler viewportHandler;
+	private InputHandler inputHandler;
 	
 	private SpriteBatch gameBatch;
 	private SpriteBatch uiBatch;
+	
+	private ShapeRenderer shapeRend;
+	private EFDebug debug;
 	
 	private Scene currentScene;
 	
 	public SceneManager() {
 		this.viewportHandler = new ViewportHandler(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		this.inputHandler = new InputHandler(this);
+		
 		this.gameBatch = new SpriteBatch();
 		this.uiBatch = new SpriteBatch();
+		this.shapeRend = new ShapeRenderer();
+		this.debug = new EFDebug();
 	}
+	
 	
 	public Scene getCurrentScene() {
 		return currentScene;
@@ -31,7 +44,9 @@ public class SceneManager {
 	}
 	
 	public void update(float delta) {
+		debug.update(delta);
 		viewportHandler.update(delta);
+		inputHandler.update(delta);
 		
 		if (currentScene != null) {
 			currentScene.update(delta);
@@ -66,6 +81,14 @@ public class SceneManager {
 		return viewportHandler;
 	}
 	
+	public InputHandler getInputHandler() {
+		return inputHandler;
+	}
+	
+	public ShapeRenderer getShapeRenderer() {
+		return shapeRend;
+	}
+	
 	public void dispose() {
 		currentScene.dispose();
 	}
@@ -76,7 +99,7 @@ public class SceneManager {
 		currentScene.resize(width, height);
 	}
 	
-	static class ViewportHandler {
+	public static class ViewportHandler {
 		
 		private ScreenViewport viewport;
 		private ScreenViewport uiViewport;
@@ -96,7 +119,7 @@ public class SceneManager {
 			
 			// UI Viewport
 			this.uiViewport = new ScreenViewport();
-			uiViewport.setUnitsPerPixel(1f);
+			uiViewport.setUnitsPerPixel(1 / 2f);
 			uiViewport.update(width, height);
 			
 			uiViewport.getCamera().position.set(uiViewport.getWorldWidth() / 2f, 
@@ -118,9 +141,14 @@ public class SceneManager {
 			viewport.setUnitsPerPixel(EGFXUtil.DEFAULT_UPP / upp);
 			
 			// UIViewport
-			uiViewport.setUnitsPerPixel(1f);
+			uiViewport.setUnitsPerPixel(1f / EGFXUtil.RENDER_SCALE);
 			
 			System.out.println("[Resize] New Render Scale: " + EGFXUtil.RENDER_SCALE);
+			//System.out.println("[Resize] New UI UPP: " + uiViewport.getUnitsPerPixel());
+			float uiWidth = uiViewport.getWorldWidth();
+			float uiHeight = uiViewport.getWorldHeight();
+			
+			System.out.println("[Resize] New UI W/H: " + Strings.vec2(uiWidth, uiHeight));
 		}
 		
 		public ScreenViewport getGameViewport() {

@@ -1,0 +1,19 @@
+dev/eternalformula/arcontria/entity/Entity.java
+ dev.eternalformula.arcontria.entity.Entity
+dev/eternalformula/arcontria/util/EFDebug.java
+ dev.eternalformula.arcontria.util.EFDebug
+dev/eternalformula/arcontria/input/InputHandler.java
+ dev.eternalformula.arcontria.input.InputHandler
+dev/eternalformula/arcontria/ArcontriaGame.java
+ dev.eternalformula.arcontria.ArcontriaGame
+dev/eternalformula/arcontria/level/GameLevel.java
+ dev.eternalformula.arcontria.level.GameLevel
+dev/eternalformula/arcontria/scenes/SceneManager.java
+ dev.eternalformula.arcontria.scenes.SceneManager
+ dev.eternalformula.arcontria.scenes.SceneManager$ViewportHandler
+dev/eternalformula/arcontria/scenes/Scene.java
+ dev.eternalformula.arcontria.scenes.Scene
+dev/eternalformula/arcontria/util/Settings.java
+ dev.eternalformula.arcontria.util.Settings
+dev/eternalformula/arcontria/combat/DamageSource.java
+ dev.eternalformula.arcontria.combat.DamageSource

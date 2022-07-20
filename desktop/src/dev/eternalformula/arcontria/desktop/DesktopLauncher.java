@@ -13,6 +13,7 @@ public class DesktopLauncher {
 		config.width = (int) EGFXUtil.DEFAULT_WIDTH;
 		config.height = (int) EGFXUtil.DEFAULT_HEIGHT;
 		config.resizable = false;
+		config.title = "Game";
 		new LwjglApplication(new ArcontriaGame(), config);
 		
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);

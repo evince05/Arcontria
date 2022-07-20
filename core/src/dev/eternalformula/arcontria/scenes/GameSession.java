@@ -15,6 +15,7 @@ import dev.eternalformula.arcontria.entity.player.PlayerData;
 import dev.eternalformula.arcontria.gfx.EGFXUtil;
 import dev.eternalformula.arcontria.level.GameLevel;
 
+/*
 public class GameSession extends Scene {
 	
 	private String saveFolder;
@@ -28,7 +29,7 @@ public class GameSession extends Scene {
 	/**
 	 * Loads a GameSession from the given save folder.
 	 * @param saveFolder The location of the save folder.
-	 */
+	 
 	
 	public static GameSession load(String saveFolder) {
 		// Creates an empty GameSession
@@ -103,7 +104,7 @@ public class GameSession extends Scene {
 	
 	/**
 	 * Gets the camera that is used to render the game.
-	 */
+	 
 	
 	public OrthographicCamera getGameCamera() {
 		return (OrthographicCamera) viewportHandler.getViewport().getCamera();
@@ -117,6 +118,7 @@ public class GameSession extends Scene {
 	 * Gets the proper camera position.
 	 */
 	
+	/*
 	public Vector2 centerCamera(Player player) {
 		
 		Vector2 cameraPos = new Vector2(getGameCamera().position.x,
@@ -139,12 +141,13 @@ public class GameSession extends Scene {
 			cameraPos.y = playerPos.y + 1f;
 		}
 		return cameraPos;
-	}
+	}*/
 
 	/**
 	 * Gets the viewport width
 	 */
-	
+		
+	/*
 	public float getViewportWidth() {
 		return viewportHandler.getViewport().getWorldWidth();
 	}
@@ -153,6 +156,7 @@ public class GameSession extends Scene {
 	 * Gets the viewport height
 	 */
 	
+	/*
 	public float getViewportHeight() {
 		return viewportHandler.getViewport().getWorldHeight();
 	}
@@ -203,4 +207,4 @@ public class GameSession extends Scene {
 			return viewport.getWorldHeight();
 		}
 	}
-}
+}*/

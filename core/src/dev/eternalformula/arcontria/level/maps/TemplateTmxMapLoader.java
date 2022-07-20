@@ -97,8 +97,10 @@ public class TemplateTmxMapLoader extends TmxMapLoader {
 							
 							if (objProps.containsKey("entityId")) {
 								int entityId = objProps.get("entityId", int.class); // TODO: fix
-								level.addEntity(MapEntityBuilder.createEntity(level, entityId, region, x, y,
+								
+								/*level.addEntity(MapEntityBuilder.createEntity(level, entityId, region, x, y,
 										width, height, objProps));
+										*/
 							}
 							else {
 								// Creating polygon for navmesh
@@ -127,12 +129,14 @@ public class TemplateTmxMapLoader extends TmxMapLoader {
 								mapObjects.add(emo);
 								
 								// MapObject collider body.
+								
+								/*
 								B2DUtil.createBody(level.getWorld(),
 										x + colliderX + colliderW / 2f,
 										y + colliderY + colliderH / 2f,
 										colliderW, colliderH, BodyType.StaticBody,
 										PhysicsCategory.MAPOBJECT_COLLIDER, null);
-								
+								*/
 								
 								// MapObject Hitbox (Used for alpha).
 								new MapObjectHitbox(level, emo);

@@ -1,7 +1,5 @@
 package dev.eternalformula.arcontria;
 
-import java.util.Scanner;
-
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -9,9 +7,10 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ai.msg.MessageManager;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import dev.eternalformula.arcontria.scenes.LoadScene;
 import dev.eternalformula.arcontria.scenes.Scene;
 import dev.eternalformula.arcontria.scenes.SceneManager;
+import dev.eternalformula.arcontria.scenes.charcreator.CharacterCreatorScene;
+import dev.eternalformula.arcontria.util.Assets;
 import dev.eternalformula.arcontria.util.EFDebug;
 import dev.eternalformula.arcontria.util.Settings;
 import dev.eternalformula.arcontria.util.Strings;
@@ -35,11 +34,16 @@ public class ArcontriaGame extends ApplicationAdapter {
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 		Gdx.app.debug(TAG, "Entering Debug Mode!");
 		
+		Assets.load();
+		
 		// Settings
 		this.settings = new Settings();
+		while (!Assets.assMan.update()) {
+			EFDebug.info("[LOAD] Loading assets (" + (Assets.assMan.getProgress() * 100) + "%)!");
+		}
 		
 		this.sceneManager = new SceneManager();
-		sceneManager.setCurrentScene(new LoadScene(sceneManager));
+		sceneManager.setCurrentScene(new CharacterCreatorScene(sceneManager));
 		msgManager = MessageManager.getInstance();
 		
 		GAME = this;
@@ -48,7 +52,6 @@ public class ArcontriaGame extends ApplicationAdapter {
 	@Override
 	public void render () {
 		ScreenUtils.clear(0, 0, 0, 0);
-		
 		if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
 			pause = !pause;
 		}
@@ -58,10 +61,6 @@ public class ArcontriaGame extends ApplicationAdapter {
 		}
 		sceneManager.draw(Gdx.graphics.getDeltaTime());
 		sceneManager.drawUI(Gdx.graphics.getDeltaTime());
-		
-		if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
-			Gdx.graphics.setWindowedMode(320, 180);
-		}
 		
 		if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
 			Gdx.graphics.setWindowedMode(640, 360);
@@ -98,6 +97,10 @@ public class ArcontriaGame extends ApplicationAdapter {
 	
 	public Scene getScene() {
 		return sceneManager.getCurrentScene();
+	}
+	
+	public SceneManager getSceneManager() {
+		return sceneManager;
 	}
 	
 	public Settings getSettings() {

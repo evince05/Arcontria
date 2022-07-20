@@ -35,11 +35,11 @@ public class GameScene { // extends GameState???
 		
 		
 		// temp
-		this.level = new TestLevel(this);
+		//this.level = new TestLevel(this);
 	}
 	
 	public void update(float delta) {
-		level.update(delta);
+		//level.update(delta);
 		viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		uiViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		
@@ -81,13 +81,13 @@ public class GameScene { // extends GameState???
 	public void draw(float delta) {
 		batch.setProjectionMatrix(viewport.getCamera().combined);
 		uiBatch.setProjectionMatrix(uiViewport.getCamera().combined);
-		level.draw(batch, delta);
-		level.drawUi(uiBatch, delta);
+		//level.draw(batch, delta);
+		//level.drawUi(uiBatch, delta);
 	}
 	
 	public void dispose() {
 		batch.dispose();
-		level.dispose();
+		//level.dispose();
 	}
 	
 	public ScreenViewport getViewport() {
@@ -107,7 +107,7 @@ public class GameScene { // extends GameState???
 	}
 	
 	public void resize(int width, int height) {
-		level.resize(width, height);
+		//level.resize(width, height);
 		
 		// TODO: Add perfect scaling check
 		float upp = (width / EGFXUtil.DEFAULT_WIDTH);

@@ -21,5 +21,13 @@ public abstract class Scene {
 	
 	public abstract void resize(int width, int height);
 	
+	public abstract void onKeyTyped(char key);
+	
+	public abstract void onMouseClicked(int x, int y, int button);
+	
+	public abstract void onMouseReleased(int x, int y, int button);
+	
+	public abstract void onMouseDrag(int x, int y);
+	
 	public abstract void dispose();
 }

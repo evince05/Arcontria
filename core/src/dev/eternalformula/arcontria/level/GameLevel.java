@@ -21,13 +21,13 @@ import dev.eternalformula.arcontria.inventory.InventoryHandler;
 import dev.eternalformula.arcontria.level.maps.Map;
 import dev.eternalformula.arcontria.level.maps.MapRenderer;
 import dev.eternalformula.arcontria.physics.WorldContactListener;
-import dev.eternalformula.arcontria.scenes.GameSession;
+//import dev.eternalformula.arcontria.scenes.GameSession;
 import dev.eternalformula.arcontria.util.EFDebug;
 import dev.eternalformula.arcontria.util.Strings;
 
 public class GameLevel {
 	
-	private GameSession session;
+	//private GameSession session;
 	
 	protected List<Entity> entities;
 	private List<Entity> entitiesToRemove;
@@ -48,7 +48,9 @@ public class GameLevel {
 	private Music music;
 	
 	private boolean debugEnabled;
+}
 	
+	/*
 	GameLevel(GameSession session) {
 		
 		this.session = session;
@@ -94,6 +96,7 @@ public class GameLevel {
 	 * @param entity The entity to be removed.
 	 */
 	
+	/*
 	public void removeEntity(Entity entity) {
 		entitiesToRemove.add(entity);
 	}
@@ -301,4 +304,4 @@ public class GameLevel {
 	public GameSession getSession() {
 		return session;
 	}
-}
+}*/

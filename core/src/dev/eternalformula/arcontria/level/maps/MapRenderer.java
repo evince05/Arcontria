@@ -52,7 +52,7 @@ public class MapRenderer {
 	 */
 	
 	public void draw(SpriteBatch batch, float delta) {
-		mapRenderer.setView((OrthographicCamera) map.getLevel().getScene().getViewport().getCamera());
+		//mapRenderer.setView((OrthographicCamera) map.getLevel().getScene().getViewport().getCamera());
 		mapRenderer.render();
 	}
 	

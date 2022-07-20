@@ -113,8 +113,8 @@ public class DaylightHandler {
 	
 	public void draw() {
 		// Applies tints and colors to the MapRenderer's batch and the SpriteBatch.
-		level.getMapRenderer().setColor(currentColor);
-		level.getSession().getBatch().setColor(currentColor);
+		//level.getMapRenderer().setColor(currentColor);
+		//level.getSession().getBatch().setColor(currentColor);
 	}
 	
 	private void calculateCurrentColor() {

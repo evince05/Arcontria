@@ -3,12 +3,16 @@ package dev.eternalformula.arcontria.gfx.text;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.Hinting;
 
-import dev.eternalformula.arcontria.util.EFConstants;
+import dev.eternalformula.arcontria.util.Assets;
 
 public class FontUtil {
+	
+	private static final GlyphLayout LAYOUT = new GlyphLayout();
 	
 	/**
 	 * Creates a font from the given .ttf file.
@@ -28,10 +32,17 @@ public class FontUtil {
 		params.genMipMaps = true;
 		params.color = Color.WHITE;
 		params.size = size;
+		params.mono = true;
+		params.hinting = Hinting.None;
 		
 		BitmapFont f = ttfGenerator.generateFont(params);
 		ttfGenerator.dispose();
 		return f;
+	}
+	
+	public static float getWidth(BitmapFont font, String text) {
+		LAYOUT.setText(font, text);
+		return LAYOUT.width;
 	}
 
 }

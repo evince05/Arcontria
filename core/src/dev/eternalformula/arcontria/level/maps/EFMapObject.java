@@ -69,7 +69,7 @@ public class EFMapObject {
 				// Animation has finished.
 				System.out.println("Animation finished (reapp)");
 				isReappearing = false;
-				ArcontriaGame.GAME.getScene().getLevel().getPlayer().setBehindMapObject(false);
+				//ArcontriaGame.GAME.getScene().getLevel().getPlayer().setBehindMapObject(false);
 			}
 		}
 	}

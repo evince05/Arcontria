@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.Array;
 
 import dev.eternalformula.arcontria.gfx.EGFXUtil;
 import dev.eternalformula.arcontria.gfx.text.FontUtil;
+import dev.eternalformula.arcontria.scenes.charcreator.CharacterCreatorScene;
 import dev.eternalformula.arcontria.util.EFConstants;
 import dev.eternalformula.arcontria.util.Strings;
 
@@ -64,7 +65,7 @@ public class LoadScene extends Scene {
 		}
 		else {
 			// Manager can move scenes now.
-			//manager.setCurrentScene(new MainMenuScene(manager));
+			manager.setCurrentScene(new CharacterCreatorScene(manager));
 		}
 		
 	}
@@ -72,11 +73,26 @@ public class LoadScene extends Scene {
 	@Override
 	public void resize(int width, int height) {
 	}
+	
+	@Override
+	public void onKeyTyped(char key) {
+	}
+	
+	@Override
+	public void onMouseClicked(int x, int y, int button) {
+	}
+	
+	@Override
+	public void onMouseReleased(int x, int y, int button) {
+	}
+	
+	@Override
+	public void onMouseDrag(int x, int y) {
+	}
 
 	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
-		
 	}
 	
 	/**
@@ -120,7 +136,7 @@ public class LoadScene extends Scene {
 			
 			this.potionAtlas = new TextureAtlas(Gdx.files.internal("loadgame/potionanim.atlas"));
 			
-			this.font = FontUtil.createFont("fonts/orange-kid.regular.ttf", 75);
+			this.font = FontUtil.createFont("fonts/orange-kid.regular.ttf", 40);
 			
 			// Animation
 			Array<TextureRegion> frames = new Array<TextureRegion>();
@@ -215,15 +231,16 @@ public class LoadScene extends Scene {
 		
 		public void drawUI(SpriteBatch batch, float delta) {
 			
+			batch.enableBlending();
 			batch.begin();
 			
-			float x = Gdx.graphics.getWidth() / 2f;
-			float y = Gdx.graphics.getHeight() / 2f + font.getCapHeight() / 2f;
+			float x = Gdx.graphics.getWidth() / 2f / EGFXUtil.RENDER_SCALE;
+			float y = (Gdx.graphics.getHeight() / 2f + font.getCapHeight() / 2f) / EGFXUtil.RENDER_SCALE;
 
 			Color fontColor = new Color(1f, 1f, 1f, textAlpha);
 			font.setColor(fontColor);
-			font.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
-			font.draw(batch, "EternalFormula", x - (75f * EGFXUtil.RENDER_SCALE), y);
+			font.getRegion().getTexture().setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+			font.draw(batch, "EternalFormula", x - 75f, y);
 			
 			batch.end();
 		}
@@ -234,7 +251,6 @@ public class LoadScene extends Scene {
 			potionAtlas.dispose();
 			font.dispose();
 		}
-		
 	}
 
 }

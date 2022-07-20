@@ -57,7 +57,7 @@ public class Map {
 		}*/
 				
 		if (map.getLayers().get("Collisions") != null) {
-			MapUtil.parseTiledObjectLayer(level.getWorld(), map.getLayers().get("Collisions").getObjects());
+			//MapUtil.parseTiledObjectLayer(level.getWorld(), map.getLayers().get("Collisions").getObjects());
 		}
 		// Create Lights
 	}
@@ -68,7 +68,7 @@ public class Map {
 	 */
 	
 	public void draw(float delta) {
-		debugRenderer.setProjectionMatrix(level.getScene().getViewport().getCamera().combined);
+		//debugRenderer.setProjectionMatrix(level.getScene().getViewport().getCamera().combined);
 		debugRenderer.setAutoShapeType(true);
 		debugRenderer.setColor(Color.RED);
 		debugRenderer.begin(ShapeType.Line);
