@@ -38,15 +38,13 @@ import dev.eternalformula.arcontria.util.EFConstants;
 public class TemplateTmxMapLoader extends TmxMapLoader {
 
 	FileHandle tmxFile;
-	private GameLevel level;
 	
 	private Array<EFMapObject> mapObjects;
 	
 	private Array<org.locationtech.jts.geom.Polygon> polygons;
 	
-	public TemplateTmxMapLoader(GameLevel level) {
+	public TemplateTmxMapLoader() {
 		super();
-		this.level = level;
 		this.polygons = new Array<>();
 		this.mapObjects = new Array<EFMapObject>();
 	}
@@ -139,7 +137,7 @@ public class TemplateTmxMapLoader extends TmxMapLoader {
 								*/
 								
 								// MapObject Hitbox (Used for alpha).
-								new MapObjectHitbox(level, emo);
+								//new MapObjectHitbox(level, emo);
 								
 							}
 							

@@ -72,6 +72,16 @@ public abstract class CharacterCreatorTab extends UIContainer {
 		}
 	}
 	
+	@Override
+	public void onMouseDrag(int x, int y) {
+		
+		if (scene.getCurrentTab() == tabId) {
+			for (UIElement e : children) {
+				e.onMouseDrag(x, y);
+			}
+		}
+	}
+	
 	public void setIconClickAction(ButtonClickAction action) {
 		tabIcon.setClickAction(action);
 	}

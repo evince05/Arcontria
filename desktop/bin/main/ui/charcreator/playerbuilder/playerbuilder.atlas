@@ -1,0 +1,76 @@
+
+playerbuilder.png
+size: 128, 32
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+basehuman
+  rotate: false
+  xy: 48, 0
+  size: 16, 32
+  orig: 16, 32
+  offset: 0, 0
+  index: -1
+boots
+  rotate: false
+  xy: 0, 0
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+bootsitems
+  rotate: false
+  xy: 64, 16
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+eyebrows
+  rotate: false
+  xy: 64, 3
+  size: 6, 1
+  orig: 6, 1
+  offset: 0, 0
+  index: -1
+eyes
+  rotate: false
+  xy: 80, 28
+  size: 4, 2
+  orig: 4, 2
+  offset: 0, 0
+  index: -1
+eyewhites
+  rotate: false
+  xy: 80, 30
+  size: 6, 2
+  orig: 6, 2
+  offset: 0, 0
+  index: -1
+hair
+  rotate: false
+  xy: 0, 16
+  size: 48, 16
+  orig: 48, 16
+  offset: 0, 0
+  index: -1
+pants
+  rotate: false
+  xy: 32, 0
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+pantsitems
+  rotate: false
+  xy: 16, 0
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+shirt
+  rotate: false
+  xy: 64, 4
+  size: 16, 12
+  orig: 16, 12
+  offset: 0, 0
+  index: -1

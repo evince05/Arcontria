@@ -1,5 +1,6 @@
 package dev.eternalformula.arcontria.scenes.charcreator.tabs;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -7,11 +8,14 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import dev.eternalformula.arcontria.scenes.charcreator.CharacterCreatorScene;
 import dev.eternalformula.arcontria.ui.actions.ButtonClickAction;
 import dev.eternalformula.arcontria.ui.charcreator.CCColorPicker;
+import dev.eternalformula.arcontria.ui.charcreator.CCStylePicker;
 import dev.eternalformula.arcontria.ui.elements.EFButton;
 import dev.eternalformula.arcontria.util.Assets;
+import dev.eternalformula.arcontria.util.Strings;
 
 public class CCHairTab extends CharacterCreatorTab {
-
+	
+	private CCStylePicker stylePicker;
 	private CCColorPicker colorPicker;
 	
 	public CCHairTab(CharacterCreatorScene scene) {
@@ -41,23 +45,35 @@ public class CCHairTab extends CharacterCreatorTab {
 			}
 		});
 		
+		TextureRegion hairRegion = Assets.get("ui/charcreator/playerbuilder/playerbuilder.atlas",
+				TextureAtlas.class).findRegion("hair");
+		
+		// Style Picker
+		this.stylePicker = new CCStylePicker(scene, this, 64, 34);
+		stylePicker.setPreviewTexture(hairRegion, 16, 16);
+		stylePicker.setItemTextPrefix("Hair");
+		stylePicker.setMaxItems(3);
+		
 		// Color Picker
-		this.colorPicker = new CCColorPicker(150, 34);
+		this.colorPicker = new CCColorPicker(156, 34);
+		colorPicker.setColor(new Color(64 / 255f, 43 / 255f, 20 / 255f, 1f));
 				
 		// Child Management
-		addChildren(colorPicker);
+		addChildren(stylePicker, colorPicker);
 	}
 
 	@Override
 	public void draw(SpriteBatch batch, float delta) {
 		super.draw(batch, delta);
-
 	}
 
 	@Override
 	public void update(float delta) {
 		super.update(delta);
-
+		
+		scene.getPlayerPreview().setHairColor(colorPicker.getColor());
+		scene.getPlayerPreview().hairId = stylePicker.getCurrentId();
+		stylePicker.setPreviewColor(colorPicker.getColor());
 	}
 
 	@Override

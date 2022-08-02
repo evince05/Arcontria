@@ -94,5 +94,9 @@ public class EFSlider extends UIElement {
 	public float getCurrentPercent() {
 		return currentValue / width;
 	}
+	
+	public void setCurrentPercent(float percent) {
+		this.currentValue = percent * width;
+	}
 
 }

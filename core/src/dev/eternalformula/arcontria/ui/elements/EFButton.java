@@ -1,13 +1,16 @@
 package dev.eternalformula.arcontria.ui.elements;
 
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import dev.eternalformula.arcontria.ArcontriaGame;
+import dev.eternalformula.arcontria.gfx.text.FontUtil;
 import dev.eternalformula.arcontria.ui.UIContainer;
 import dev.eternalformula.arcontria.ui.UIElement;
 import dev.eternalformula.arcontria.ui.actions.ButtonClickAction;
+import dev.eternalformula.arcontria.util.Assets;
 
 public class EFButton extends UIElement {
 	
@@ -15,6 +18,9 @@ public class EFButton extends UIElement {
 	public static final int TOGGLE_MODE = 1;
 	
 	private TextureRegion clickedSkin;
+	private String text;
+
+	private BitmapFont font;
 	
 	private boolean isClicked;
 	
@@ -36,6 +42,8 @@ public class EFButton extends UIElement {
 		
 		this.clickedSkin = null;
 		this.buttonMode = EFButton.DEFAULT_MODE;
+		
+		this.font = Assets.get("fonts/Habbo.fnt", BitmapFont.class);
 	}
 	
 	@Override
@@ -95,6 +103,12 @@ public class EFButton extends UIElement {
 		else {
 			uiBatch.draw(skin, location.x, location.y);
 		}
+		
+		if (text != null && !text.equals("")) {
+			float width = FontUtil.getWidth(font, text);
+			font.draw(uiBatch, text, location.x + skin.getRegionWidth() / 2f - width / 2f,
+					location.y + skin.getRegionHeight() - 2f);
+		}
 	}
 	
 	/**
@@ -124,6 +138,10 @@ public class EFButton extends UIElement {
 	
 	public void setButtonMode(int buttonMode) {
 		this.buttonMode = buttonMode;
+	}
+	
+	public void setText(String text) {
+		this.text = text;
 	}
 
 }

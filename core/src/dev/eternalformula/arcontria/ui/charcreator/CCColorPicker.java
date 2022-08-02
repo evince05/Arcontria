@@ -13,9 +13,9 @@ import dev.eternalformula.arcontria.util.Assets;
 
 public class CCColorPicker extends UIContainer {
 	
-	private EFSlider redSlider;
-	private EFSlider greenSlider;
-	private EFSlider blueSlider;
+	private EFSlider rSlider;
+	private EFSlider gSlider;
+	private EFSlider bSlider;
 	private ColorDisplayBox displayBox;
 	
 	public UIElement focusedElement;
@@ -23,6 +23,7 @@ public class CCColorPicker extends UIContainer {
 	private BitmapFont font;
 	
 	private Color color;
+	private int timesClicked;
 	
 	public CCColorPicker(int x, int y) {
 		super();
@@ -38,20 +39,25 @@ public class CCColorPicker extends UIContainer {
 		
 		this.font = Assets.get("fonts/Habbo.fnt", BitmapFont.class);
 		
-		this.redSlider = new EFSlider(this, x + 7, y + 63);
-		this.greenSlider = new EFSlider(this, x + 7, y + 50);
-		this.blueSlider = new EFSlider(this, x + 7, y + 37);
+		this.rSlider = new EFSlider(this, x + 7, y + 63);
+		this.gSlider = new EFSlider(this, x + 7, y + 50);
+		this.bSlider = new EFSlider(this, x + 7, y + 37);
 		this.displayBox = new ColorDisplayBox(this, x + 41, y + 8);
 		
-		addChildren(displayBox, redSlider, greenSlider, blueSlider);
+		addChildren(displayBox, rSlider, gSlider, bSlider);
 		
 	}
 
 	@Override
 	public void onMouseClicked(int x, int y, int button) {
-		children.forEach(e -> {
-			e.onMouseClicked(x, y, button);
-		});
+		
+		if (bounds.contains(x, y)) {
+			timesClicked++;
+			children.forEach(e -> {
+				e.onMouseClicked(x, y, button);
+			});
+		}
+		
 	}
 
 	@Override
@@ -79,11 +85,15 @@ public class CCColorPicker extends UIContainer {
 	public void update(float delta) {
 		super.update(delta);
 		
-		Color displayColor = new Color(redSlider.getCurrentPercent(),
-				greenSlider.getCurrentPercent(), blueSlider.getCurrentPercent(), 1f);
+		if (timesClicked > 0) {
+			Color displayColor = new Color(rSlider.getCurrentPercent(), 
+					gSlider.getCurrentPercent(), bSlider.getCurrentPercent(), 1f);			
+			this.color = displayColor;
+			displayBox.setColor(displayColor);
+		}
+		else {
+		}
 		
-		this.color = displayColor;
-		displayBox.setColor(displayColor);
 		
 	}
 
@@ -102,6 +112,14 @@ public class CCColorPicker extends UIContainer {
 	
 	public Color getColor() {
 		return color;
+	}
+	
+	public void setColor(Color color) {
+		this.color = color;
+		displayBox.setColor(color);
+		rSlider.setCurrentPercent(color.r);
+		gSlider.setCurrentPercent(color.g);
+		bSlider.setCurrentPercent(color.b);
 	}
 
 }

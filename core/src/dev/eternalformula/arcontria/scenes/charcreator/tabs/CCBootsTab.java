@@ -7,11 +7,14 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import dev.eternalformula.arcontria.scenes.charcreator.CharacterCreatorScene;
 import dev.eternalformula.arcontria.ui.actions.ButtonClickAction;
 import dev.eternalformula.arcontria.ui.charcreator.CCColorPicker;
+import dev.eternalformula.arcontria.ui.charcreator.CCStylePicker;
 import dev.eternalformula.arcontria.ui.elements.EFButton;
 import dev.eternalformula.arcontria.util.Assets;
+import dev.eternalformula.arcontria.util.EFUtil;
 
 public class CCBootsTab extends CharacterCreatorTab {
 
+	private CCStylePicker stylePicker;
 	private CCColorPicker colorPicker;
 	
 	public CCBootsTab(CharacterCreatorScene scene) {
@@ -42,11 +45,21 @@ public class CCBootsTab extends CharacterCreatorTab {
 			}
 		});
 		
+		TextureRegion bootsItems = Assets.get("ui/charcreator/playerbuilder/playerbuilder.atlas",
+				TextureAtlas.class).findRegion("bootsitems");
+		
+		// Style Picker
+		this.stylePicker = new CCStylePicker(scene, this, 64, 34);
+		stylePicker.setItemTextPrefix("Boots");
+		stylePicker.setPreviewTexture(bootsItems, 16, 16);
+		stylePicker.setMaxItems(1);
+		
 		// Color Picker
-		this.colorPicker = new CCColorPicker(150, 34);
+		this.colorPicker = new CCColorPicker(156, 34);
+		colorPicker.setColor(EFUtil.getColorFromRGB(128, 97, 65));
 				
 		// Child Management
-		addChildren(colorPicker);			
+		addChildren(stylePicker, colorPicker);			
 	}
 
 	@Override
@@ -58,6 +71,10 @@ public class CCBootsTab extends CharacterCreatorTab {
 	@Override
 	public void update(float delta) {
 		super.update(delta);
+		
+		scene.getPlayerPreview().setBootsColor(colorPicker.getColor());
+		scene.getPlayerPreview().bootsId = stylePicker.getCurrentId();
+		stylePicker.setPreviewColor(colorPicker.getColor());
 
 	}
 

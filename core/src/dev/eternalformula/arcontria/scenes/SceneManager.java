@@ -77,6 +77,10 @@ public class SceneManager {
 		return (OrthographicCamera) viewportHandler.getUIViewport().getCamera();
 	}
 	
+	public SpriteBatch getGameBatch() {
+		return gameBatch;
+	}
+	
 	public ViewportHandler getViewportHandler() {
 		return viewportHandler;
 	}

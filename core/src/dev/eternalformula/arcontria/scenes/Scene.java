@@ -8,8 +8,15 @@ public abstract class Scene {
 	
 	public Scene(SceneManager manager) {
 		this.manager = manager;
+		loadAssets();
 		load();
 	}
+	
+	/**
+	 * Handles any AssetManager loading.
+	 */
+	
+	protected abstract void loadAssets();
 	
 	public abstract void load();
 	

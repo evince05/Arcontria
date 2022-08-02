@@ -57,7 +57,7 @@ public abstract class UIElement {
 		this.location = location;
 	}
 	
-	public void setLocation(int x, int y) {
+	public void setLocation(float x, float y) {
 		this.location = new Vector2(x, y);
 	}
 	

@@ -26,6 +26,10 @@ public class LoadScene extends Scene {
 	}
 	
 	@Override
+	public void loadAssets() {
+	}
+	
+	@Override
 	public void load() {
 		this.loadSequence = new EFLoadSequence();
 		manager.getGameCamera().position.set(manager.getViewportHandler().getWorldWidth() / 2f, 
@@ -219,6 +223,7 @@ public class LoadScene extends Scene {
 			float width = reg.getRegionWidth() / EFConstants.PPM;
 			float height = reg.getRegionHeight() / EFConstants.PPM;
 			
+			System.out.println("draw");
 			// Alpha
 			Color preColor = batch.getColor();
 			Color drawColor = new Color(preColor.r, preColor.g, preColor.b, potionAlpha);

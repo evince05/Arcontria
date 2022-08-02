@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tileset version="1.5" tiledversion="1.7.2" name="forest" tilewidth="16" tileheight="16" tilecount="234" columns="26">
  <image source="../../../textures/forest/forest.png" width="416" height="144"/>
+ <tile id="5" probability="0.3"/>
+ <tile id="6" probability="0.016"/>
+ <tile id="7" probability="0.016"/>
  <tile id="8">
   <animation>
    <frame tileid="8" duration="138"/>
@@ -37,6 +40,9 @@
    <frame tileid="91" duration="138"/>
   </animation>
  </tile>
+ <tile id="31" probability="0.3"/>
+ <tile id="32" probability="0.016"/>
+ <tile id="33" probability="0.016"/>
  <tile id="34">
   <animation>
    <frame tileid="34" duration="138"/>
@@ -73,6 +79,9 @@
    <frame tileid="117" duration="138"/>
   </animation>
  </tile>
+ <tile id="57" probability="0.3"/>
+ <tile id="58" probability="0.016"/>
+ <tile id="59" probability="0.016"/>
  <tile id="60">
   <animation>
    <frame tileid="60" duration="138"/>

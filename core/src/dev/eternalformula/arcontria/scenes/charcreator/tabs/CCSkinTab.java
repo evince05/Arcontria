@@ -1,5 +1,6 @@
 package dev.eternalformula.arcontria.scenes.charcreator.tabs;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -7,13 +8,13 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import dev.eternalformula.arcontria.scenes.charcreator.CharacterCreatorScene;
 import dev.eternalformula.arcontria.ui.actions.ButtonClickAction;
 import dev.eternalformula.arcontria.ui.charcreator.CCColorPicker;
-import dev.eternalformula.arcontria.ui.charcreator.CCItemSelector;
+import dev.eternalformula.arcontria.ui.charcreator.CCPlayerPreviewPane;
 import dev.eternalformula.arcontria.ui.elements.EFButton;
 import dev.eternalformula.arcontria.util.Assets;
 
 public class CCSkinTab extends CharacterCreatorTab {
-
-	private CCItemSelector itemSelector;
+	
+	private CCPlayerPreviewPane playerPrevPane;
 	private CCColorPicker colorPicker;
 	
 	public CCSkinTab(CharacterCreatorScene scene) {
@@ -43,15 +44,15 @@ public class CCSkinTab extends CharacterCreatorTab {
 			}
 		});
 		
-		// Color Picker
-		this.colorPicker = new CCColorPicker(150, 34);
+		// PPPane
+		this.playerPrevPane = new CCPlayerPreviewPane(scene, this, 76, 38);
 		
-		this.itemSelector = new CCItemSelector(this, 50, 60);
-		itemSelector.setItemColor(colorPicker.getColor());
-		itemSelector.setItemName("Skin");
+		// Color Picker
+		this.colorPicker = new CCColorPicker(144, 34);
+		colorPicker.setColor(new Color(252 / 255f, 211 / 255f, 164 / 255f, 1f));
 				
 		// Child Management
-		addChildren(itemSelector, colorPicker);
+		addChildren(playerPrevPane, colorPicker);
 	}
 
 	@Override
@@ -63,6 +64,8 @@ public class CCSkinTab extends CharacterCreatorTab {
 	@Override
 	public void update(float delta) {
 		super.update(delta);
+		
+		scene.getPlayerPreview().setSkinColor(colorPicker.getColor());
 
 	}
 

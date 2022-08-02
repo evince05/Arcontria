@@ -6,28 +6,63 @@ filter: Nearest, Nearest
 repeat: none
 charcreatorpane
   rotate: false
-  xy: 0, 38
+  xy: 0, 100
   size: 260, 148
   orig: 260, 148
   offset: 0, 0
   index: -1
+clickedcreatebtn
+  rotate: false
+  xy: 260, 132
+  size: 48, 24
+  orig: 48, 24
+  offset: 0, 0
+  index: -1
+createbtn
+  rotate: false
+  xy: 84, 58
+  size: 48, 24
+  orig: 48, 24
+  offset: 0, 0
+  index: -1
+playerpreview
+  rotate: false
+  xy: 320, 192
+  size: 22, 38
+  orig: 22, 38
+  offset: 0, 0
+  index: -1
+playerpreviewpane
+  rotate: false
+  xy: 260, 156
+  size: 60, 92
+  orig: 60, 92
+  offset: 0, 0
+  index: -1
 selectedtabicons
   rotate: false
-  xy: 0, 20
+  xy: 84, 82
   size: 126, 18
   orig: 126, 18
   offset: 0, 0
   index: -1
 selectiondisplay
   rotate: false
-  xy: 0, 0
+  xy: 260, 112
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
+stylepickerpane
+  rotate: false
+  xy: 0, 0
+  size: 84, 100
+  orig: 84, 100
+  offset: 0, 0
+  index: -1
 tabicons
   rotate: false
-  xy: 260, 168
+  xy: 320, 230
   size: 126, 18
   orig: 126, 18
   offset: 0, 0

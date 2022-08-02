@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import dev.eternalformula.arcontria.gfx.text.FontUtil;
 import dev.eternalformula.arcontria.scenes.charcreator.CharacterCreatorScene;
 import dev.eternalformula.arcontria.ui.actions.ButtonClickAction;
 import dev.eternalformula.arcontria.ui.charcreator.CCGenderPicker;
@@ -16,6 +17,7 @@ public class CCInfoTab extends CharacterCreatorTab {
 	
 	private EFTextField nameField;
 	private EFTextField nicknameField;
+	private EFButton createBtn;
 	
 	private CCGenderPicker genderPicker;
 	
@@ -59,9 +61,15 @@ public class CCInfoTab extends CharacterCreatorTab {
 		nicknameField.setLocation(90, 68);
 		nicknameField.setSkin(uiAtlas.findRegion("textfield"));
 		
+		this.createBtn = new EFButton(this, 0, 0);
+		createBtn.setLocation(224, 30);
+		createBtn.setSkin(ccAtlas.findRegion("createbtn"));
+		createBtn.setClickSkin(ccAtlas.findRegion("clickedcreatebtn"));
+		createBtn.setText("Create");
+		
 		this.genderPicker = new CCGenderPicker(this, 90, 50);
 		
-		addChildren(nameField, nicknameField, genderPicker);
+		addChildren(nameField, nicknameField, genderPicker, createBtn);
 		
 	}
 
@@ -70,6 +78,16 @@ public class CCInfoTab extends CharacterCreatorTab {
 		super.draw(batch, delta);
 		
 		if (scene.getCurrentTab() == tabId) {
+			
+			scene.getPlayerPreview().setLocation(237, 77);
+			scene.getPlayerPreview().draw(batch, delta);
+			
+			String text = "Preview";
+			float width = FontUtil.getWidth(font, text);
+			float prevTxtX = 237 + 11 - width / 2f;
+			float prevTxtY = 78f;
+			font.draw(batch, text, prevTxtX, prevTxtY);
+			
 			font.draw(batch, "Name", nameField.getLocation().x - 30,
 					nameField.getLocation().y + 22);
 			

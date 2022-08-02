@@ -7,11 +7,14 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import dev.eternalformula.arcontria.scenes.charcreator.CharacterCreatorScene;
 import dev.eternalformula.arcontria.ui.actions.ButtonClickAction;
 import dev.eternalformula.arcontria.ui.charcreator.CCColorPicker;
+import dev.eternalformula.arcontria.ui.charcreator.CCPlayerPreviewPane;
 import dev.eternalformula.arcontria.ui.elements.EFButton;
 import dev.eternalformula.arcontria.util.Assets;
+import dev.eternalformula.arcontria.util.EFUtil;
 
 public class CCEyesTab extends CharacterCreatorTab {
 
+	private CCPlayerPreviewPane playerPrevPane;
 	private CCColorPicker colorPicker;
 		
 	public CCEyesTab(CharacterCreatorScene scene) {
@@ -41,11 +44,15 @@ public class CCEyesTab extends CharacterCreatorTab {
 			}
 		});
 		
+		// PPPane
+		this.playerPrevPane = new CCPlayerPreviewPane(scene, this, 76, 38);
+		
 		// Color Picker
-		this.colorPicker = new CCColorPicker(150, 34);
+		this.colorPicker = new CCColorPicker(144, 34);
+		colorPicker.setColor(EFUtil.getColorFromRGB(44, 143, 57));
 				
 		// Child Management
-		addChildren(colorPicker);
+		addChildren(playerPrevPane, colorPicker);
 	}
 
 	@Override
@@ -57,6 +64,8 @@ public class CCEyesTab extends CharacterCreatorTab {
 	@Override
 	public void update(float delta) {
 		super.update(delta);
+		
+		scene.getPlayerPreview().setEyeColor(colorPicker.getColor());
 	}
 
 	@Override

@@ -22,7 +22,7 @@ public class ColorDisplayBox extends UIElement {
 		super(container);
 		
 		this.location = new Vector2(x, y);
-		this.drawColor = Color.CORAL;
+		this.drawColor = new Color(0f, 0f, 0f, 1f);
 		
 		TextureAtlas atlas = Assets.get("ui/elements/uiatlas.atlas", TextureAtlas.class);
 		

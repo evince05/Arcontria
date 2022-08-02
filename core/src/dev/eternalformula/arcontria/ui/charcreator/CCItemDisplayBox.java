@@ -3,17 +3,22 @@ package dev.eternalformula.arcontria.ui.charcreator;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 import dev.eternalformula.arcontria.ui.UIContainer;
 import dev.eternalformula.arcontria.ui.UIElement;
 
 public class CCItemDisplayBox extends UIElement {
-
+	
+	private ShaderProgram shader;
 	private TextureRegion itemTex;
 	private Color tintColor;
 	
-	public CCItemDisplayBox(UIContainer container) {
+	public CCItemDisplayBox(UIContainer container, ShaderProgram shader) {
 		super(container);
+		
+		this.shader = shader;
+		this.tintColor = Color.WHITE;
 	}
 	
 	@Override
@@ -33,18 +38,20 @@ public class CCItemDisplayBox extends UIElement {
 		uiBatch.draw(skin, location.x, location.y);
 		uiBatch.setColor(tintColor);
 		
+		uiBatch.setShader(shader);
 		if (itemTex != null) {
 			uiBatch.draw(itemTex, location.x + 2, location.y + 2);
 		}
 		uiBatch.setColor(Color.WHITE);
-	}
-	
-	public void setItemTexture(TextureRegion itemTexture) {
-		this.itemTex = itemTexture;
+		uiBatch.setShader(null);
 	}
 	
 	public void setItemColor(Color color) {
 		this.tintColor = color;
+	}
+	
+	public void setItemTexture(TextureRegion itemTex) {
+		this.itemTex = itemTex;
 	}
 
 }
