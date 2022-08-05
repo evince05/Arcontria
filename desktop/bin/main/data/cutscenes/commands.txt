@@ -1,0 +1,20 @@
+entity:
+  entity <uuid> moveto [x,y] - Moves the entity to [x, y]
+  entity <uuid> move [x,y] - Moves the entity by [x, y]
+  entity <uuid> setlocation [x,y] - Sets the entity's location to [x,y]
+  entity <uuid> setanim <anim> - Sets the entity's animation
+
+camera:
+  camera setlocation [x,y] - Sets the camera's location
+  camera moveto [x,y] (speed) - Moves the camera to [x,y] with optional speed (speed)
+  camera follow <uuid> - Sets the camera to follow the entity with the specified UUID
+
+dialog:
+  dialog <message> - Opens a dialog pane from the specified dialog line in the cutscene file.
+
+wait:
+  wait <timeInSeconds> - Adds a natural pause to the cutscene.
+
+exit:
+  exit - exits the cutscene with a fade out effect taking 1.4s
+  exit <animationType> <time> - exits the cutscene using animation type with the specified time

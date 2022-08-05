@@ -3,9 +3,10 @@ package dev.eternalformula.arcontria.ui.elements;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import dev.eternalformula.arcontria.cutscenes.Cutscene;
+import dev.eternalformula.arcontria.gfx.text.FontUtil;
 import dev.eternalformula.arcontria.ui.UIContainer;
 import dev.eternalformula.arcontria.ui.UIElement;
-import dev.eternalformula.arcontria.util.Strings;
 
 public class EFTypingLabel extends UIElement {
 	
@@ -21,6 +22,10 @@ public class EFTypingLabel extends UIElement {
 	private boolean isFinished;
 	
 	private BitmapFont font;
+	
+	private String[] displayLines;
+	private int currentRow;
+	private int lineWidth;
 	
 	public EFTypingLabel(UIContainer container, String text) {
 		super(container);
@@ -49,6 +54,16 @@ public class EFTypingLabel extends UIElement {
 			elapsedTime = 0f;
 			
 			displayText.append(text.charAt(currentIndex));
+			if (FontUtil.getWidth(font, displayText.toString()) >= lineWidth) {
+				displayLines[currentRow] = displayText.toString();
+				text = text.substring(displayLines[currentRow].length() - 1);
+				
+				displayText = new StringBuilder();
+				currentRow++;
+				currentIndex = 0;
+				System.out.println("Remaining text: " + text);
+				
+			}
 			currentIndex++;
 		
 			if (currentIndex == text.length()) {
@@ -62,6 +77,7 @@ public class EFTypingLabel extends UIElement {
 		
 		if (font != null && !text.equals("")) {
 			font.draw(uiBatch, displayText, location.x, location.y);
+			
 		}
 	}
 	
@@ -84,5 +100,11 @@ public class EFTypingLabel extends UIElement {
 	
 	public void setFont(BitmapFont font) {
 		this.font = font;
+	}
+	
+	public void setupWrapping(BitmapFont font, int lineWidth) {
+		this.font = font;
+		this.lineWidth = lineWidth;
+		this.displayLines = new String[(int) Math.ceil(FontUtil.getWidth(font, text) / lineWidth)];
 	}
 }

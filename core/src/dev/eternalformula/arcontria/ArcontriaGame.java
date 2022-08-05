@@ -1,7 +1,5 @@
 package dev.eternalformula.arcontria;
 
-import java.util.Scanner;
-
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -10,7 +8,6 @@ import com.badlogic.gdx.ai.msg.MessageManager;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import dev.eternalformula.arcontria.scenes.GameScene;
-import dev.eternalformula.arcontria.scenes.LoadScene;
 import dev.eternalformula.arcontria.scenes.Scene;
 import dev.eternalformula.arcontria.scenes.SceneManager;
 import dev.eternalformula.arcontria.util.Assets;
@@ -47,11 +44,12 @@ public class ArcontriaGame extends ApplicationAdapter {
 		}
 		
 		this.sceneManager = new SceneManager();
-		sceneManager.setCurrentScene(new GameScene(sceneManager));
 		
 		msgManager = MessageManager.getInstance();
 		
 		GAME = this;
+		
+		sceneManager.setCurrentScene(new GameScene(sceneManager));
 	}
 
 	@Override

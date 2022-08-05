@@ -53,5 +53,42 @@ public class EFMath {
 		}
 		return angle;
 	}
-
+	
+	/**
+	 * Parses a Vector2 from a string in the format [x, y].
+	 * @param str The string to be parsed.
+	 * @return A vector2 parsed from the string.
+	 */
+	
+	public static Vector2 vec2FromString(String str) {
+		Vector2 vec = new Vector2();
+		String unbracket = str.substring(1, str.length() - 1);
+		String[] coords = unbracket.split(",");
+		
+		vec.x = Float.valueOf(coords[0]);
+		vec.y = Float.valueOf(coords[1]);
+		
+		return vec;
+	}
+	
+	/**
+	 * Rounds the specified number to the nearest fraction of x. Eg:<br>
+	 * <code> roundToNearestXth(1.38f, 1/2f)</code> would return <code>1.5f</code>
+	 * @param num The number to round
+	 * @param x The number to round to, usually expressed as a fraction.
+	 */
+	
+	public static float roundToNearestXth(float num, float x) {
+		float reciprocal = 1f / x;
+		return Math.round(num * reciprocal) / reciprocal;
+	}
+	
+	/**
+	 * Rounds the specified number to the nearest 16th. Used mainly to adjust the camera for pixels.
+	 * @param num The number to round
+	 */
+	
+	public static float roundToNearest16th(float num) {
+		return roundToNearestXth(num, 1/16f);
+	}
 }
