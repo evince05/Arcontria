@@ -184,6 +184,10 @@ public class Cutscene {
 				if (args[2].equalsIgnoreCase("setlocation")) {
 					Vector2 pos = EFMath.vec2FromString(args[3]);
 					entities.get(args[1]).setLocation(pos);
+					return;
+				}
+				else if (args[2].equalsIgnoreCase("setanim")) {
+					entities.get(args[1]).setAnimation(args[3]);
 				}
 			}
 			else {
@@ -195,6 +199,7 @@ public class Cutscene {
 			if (args[1].equalsIgnoreCase("moveto")) {
 				Vector2 targetPos = EFMath.vec2FromString(args[2]);
 				currentCmd = new CutsceneCamMoveCmd(this, targetPos);
+				return;
 			}
 			
 		}
@@ -206,9 +211,11 @@ public class Cutscene {
 			if (args[1] != null) {
 				float time = Float.valueOf(args[1].substring(0, args[1].length() - 1));
 				currentCmd = new CutsceneWaitCmd(this, time);
+				return;
 			}
 			else {
 				EFDebug.error("Could not parse command! Improper format: \"" + cmd + "\"");
+				return;
 			}
 			
 		}

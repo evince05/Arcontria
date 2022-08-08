@@ -38,7 +38,7 @@ public class ArcontriaGame extends ApplicationAdapter {
 		Assets.load();
 		
 		// Settings
-		this.settings = new Settings();
+		//this.settings = new Settings();
 		while (!Assets.assMan.update()) {
 			EFDebug.info("[LOAD] Loading assets (" + (Assets.assMan.getProgress() * 100) + "%)!");
 		}

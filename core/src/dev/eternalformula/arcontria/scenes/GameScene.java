@@ -10,6 +10,8 @@ import dev.eternalformula.arcontria.util.Assets;
 
 public class GameScene extends Scene {
 	
+	private GameSession session;
+	
 	private EFTypingLabel label;
 	private BitmapFont font;
 	
@@ -30,6 +32,8 @@ public class GameScene extends Scene {
 		label.setupWrapping(font, 80);
 		label.setLocation(20, 30);
 		
+		this.session = GameSession.load(this, null);
+		
 		this.csHandler = new CutsceneHandler();
 		csHandler.setCutscene(Cutscene.load("data/cutscenes/saveintro-land.json"));
 		csHandler.play();
@@ -38,6 +42,8 @@ public class GameScene extends Scene {
 	@Override
 	public void draw(SpriteBatch batch, float delta) {
 		batch.begin();
+		
+		session.draw(batch, delta);
 		
 		if (csHandler.isPlayingCutscene()) {
 			csHandler.draw(batch, delta);
@@ -51,6 +57,8 @@ public class GameScene extends Scene {
 		
 		batch.begin();
 		
+		session.drawUI(batch, delta);
+		
 		if (csHandler.isPlayingCutscene()) {
 			csHandler.drawUI(batch, delta);
 		}
@@ -61,6 +69,8 @@ public class GameScene extends Scene {
 
 	@Override
 	public void update(float delta) {
+		
+		session.update(delta);
 		
 		if (csHandler.isPlayingCutscene()) {
 			csHandler.update(delta);

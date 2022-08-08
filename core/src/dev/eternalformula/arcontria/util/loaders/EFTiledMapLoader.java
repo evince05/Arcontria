@@ -1,5 +1,7 @@
 package dev.eternalformula.arcontria.util.loaders;
 
+import org.locationtech.jts.geom.Polygon;
+
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetLoaderParameters;
 import com.badlogic.gdx.assets.AssetManager;
@@ -28,8 +30,9 @@ public class EFTiledMapLoader extends SynchronousAssetLoader<EFTiledMap,
 		TemplateTmxMapLoader loader = new TemplateTmxMapLoader();
 		TiledMap map = loader.load(fileName);
 		Array<EFMapObject> mapObjs = loader.getMapObjects();
+		Array<Polygon> polys = loader.getNavmeshPolygons();
 		
-		return new EFTiledMap(map, mapObjs);
+		return new EFTiledMap(map, mapObjs, polys);
 	}
 
 	@SuppressWarnings("rawtypes")

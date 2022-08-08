@@ -3,44 +3,42 @@ package dev.eternalformula.arcontria.scenes;
 import java.io.File;
 import java.util.UUID;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.fasterxml.jackson.databind.JsonNode;
 
+import dev.eternalformula.arcontria.entity.Entity;
 import dev.eternalformula.arcontria.entity.player.Player;
 import dev.eternalformula.arcontria.entity.player.PlayerData;
-import dev.eternalformula.arcontria.gfx.EGFXUtil;
 import dev.eternalformula.arcontria.level.GameLevel;
+import dev.eternalformula.arcontria.util.EFDebug;
 
-/*
-public class GameSession extends Scene {
+public class GameSession {
+	
+	private GameScene scene;
 	
 	private String saveFolder;
 	
 	private Player player;
 	private GameLevel level;
 	
-	private GameViewportHandler viewportHandler;
-	private SpriteBatch batch;
-	
 	/**
 	 * Loads a GameSession from the given save folder.
 	 * @param saveFolder The location of the save folder.
-	 
+	 */
 	
-	public static GameSession load(String saveFolder) {
-		// Creates an empty GameSession
-		GameSession session = new GameSession();
-		session.saveFolder = saveFolder;
+	public static GameSession load(GameScene scene, String saveFolder) {
 		
-		// Creates the viewport handler
-		GameViewportHandler viewportHandler = new GameViewportHandler(0, 0);
-		session.viewportHandler = viewportHandler;
+		
+		// Creates an empty GameSession
+		GameSession session = new GameSession(scene);
+		session.saveFolder = saveFolder;
+		session.level = new GameLevel(session);
+		/*
 		
 		// Creates the GameLevel
+		 *
 		GameLevel level = GameLevel.load(session, saveFolder);
 		session.level = level;
 		
@@ -60,29 +58,19 @@ public class GameSession extends Scene {
 		session.player = player;
 		
 		//level.setupCamera();
+		 * */
 		return session;
 	}
 	
-	GameSession() {
-		this.batch = new SpriteBatch();
+	GameSession(GameScene scene) {
+		this.scene = scene;
 	}
 	
 	public void save() {
 		
 	}
 
-	@Override
-	public void draw(float delta) {
-		batch.setProjectionMatrix(viewportHandler.getViewport().getCamera().combined);
-		
-		level.draw(batch, delta);
-		
-	}
-
-	@Override
 	public void update(float delta) {
-		viewportHandler.update(delta);
-		
 		level.update(delta);
 		player.handleInput(delta);
 		player.update(delta);
@@ -91,120 +79,162 @@ public class GameSession extends Scene {
 		getGameCamera().position.set(centerCameraPos, 0f);
 	}
 	
-	@Override
 	public void resize(int width, int height) {
-		viewportHandler.resize(width, height);
-	}
-
-	@Override
-	public void dispose() {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	/**
-	 * Gets the camera that is used to render the game.
-	 
-	
-	public OrthographicCamera getGameCamera() {
-		return (OrthographicCamera) viewportHandler.getViewport().getCamera();
-	}
-	
-	public SpriteBatch getBatch() {
-		return batch;
 	}
 	
 	/**
 	 * Gets the proper camera position.
 	 */
 	
-	/*
-	public Vector2 centerCamera(Player player) {
+	public Vector2 centerCamera(Entity entity) {
 		
 		Vector2 cameraPos = new Vector2(getGameCamera().position.x,
 				getGameCamera().position.y);
 		
-		Vector2 playerPos = new Vector2(player.getLocation().x,
-				player.getLocation().y);
+		Vector2 ePos = new Vector2(entity.getLocation().x,
+				entity.getLocation().y);
 		
-		float viewportWidth = viewportHandler.width;
-		float viewportHeight = viewportHandler.height;
+		float viewportWidth = scene.manager.getViewportHandler().getWorldWidth();
+		float viewportHeight = scene.manager.getViewportHandler().getWorldHeight();
 		
-		//System.out.println(playerPos.x + 0.5f);
-		
-		// replace 100 with map.getWidth() or map.getHeight()
-		if (playerPos.x >= viewportWidth / 2f - 0.5f && playerPos.x <= 100 - viewportWidth / 2f - 0.5f) {
-			cameraPos.x = playerPos.x + 0.5f;
+		if (ePos.x >= viewportWidth / 2f - 0.5f && ePos.x <= 100 - viewportWidth / 2f - 0.5f) {
+			cameraPos.x = ePos.x + 0.5f;
 		}
 		
-		if (playerPos.y >= viewportHeight / 2f - 1f && playerPos.y <= 100 - viewportHeight / 2f - 1f) {
-			cameraPos.y = playerPos.y + 1f;
+		if (ePos.y >= viewportHeight / 2f - 1f && ePos.y <= 100 - viewportHeight / 2f - 1f) {
+			cameraPos.y = ePos.y + 1f;
 		}
 		return cameraPos;
-	}*/
+	}
 
-	/**
-	 * Gets the viewport width
-	 */
+
+	public void dispose() {
+		// TODO Auto-generated method stub
 		
-	/*
-	public float getViewportWidth() {
-		return viewportHandler.getViewport().getWorldWidth();
+	}
+
+	protected void loadAssets() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public void load() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public void draw(SpriteBatch batch, float delta) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void drawUI(SpriteBatch batch, float delta) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void onKeyTyped(char key) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void onMouseClicked(int x, int y, int button) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void onMouseReleased(int x, int y, int button) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void onMouseDrag(int x, int y) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	/**
-	 * Gets the viewport height
+	 * Gets the camera that is used to render the game.
 	 */
 	
-	/*
-	public float getViewportHeight() {
-		return viewportHandler.getViewport().getWorldHeight();
+	public OrthographicCamera getGameCamera() {
+		return scene.manager.getGameCamera();
+	}
+	
+	/**
+	 * Sets the level of the game.
+	 * <br>Note that this should be used only to switch levels.
+	 * @param level The level to be switched to.
+	 */
+	
+	public void setLevel(GameLevel level) {
+		this.level = level;
+		level.addEntity(player);
+		setupCamera(player);
+		focusCameraOnEntity(player);
+	}
+	
+	public GameScene getGameScene() {
+		return scene;
 	}
 	
 	public Player getPlayer() {
 		return player;
 	}
 	
-	public GameLevel getLevel() {
-		return level;
+	private void setupCamera(Entity focusEntity) {
+		// Calculates and sets the proper location of the camera.
+		Vector2 entPos = focusEntity.getLocation();
+		Vector2 cameraPos = new Vector2();
+
+		float viewportWidth = scene.manager.getViewportHandler().getWorldWidth();
+		float viewportHeight = scene.manager.getViewportHandler().getWorldHeight();
+
+		float mWidth = level.getMap().getWidth();
+		float mHeight = level.getMap().getHeight();
+
+		if (mWidth <= viewportWidth) {
+			EFDebug.debug("Watch TestLevel.java:setupCamera... line cameraPosX = map.getWidth() / 2f");
+			cameraPos.x = mWidth / 2f;
+		}
+		else {
+			float centerX = viewportWidth / 2f - 0.5f;
+			if (entPos.x < centerX) {
+				cameraPos.x = viewportWidth / 2f;
+			}
+			else if (entPos.x > mWidth - centerX) {
+				cameraPos.x = mWidth - viewportWidth / 2f + 0.5f;
+			}
+			else {
+				cameraPos.x = entPos.x;
+			}
+		}
+
+		if (mHeight <= viewportHeight) {
+			cameraPos.y = mHeight / 2f + 0.5f;
+		}
+		else {
+			float centerY = viewportHeight / 2f - 1f;
+
+			if (entPos.y < centerY) {
+				cameraPos.y = viewportHeight / 2f;
+			}
+			else if (entPos.y > mHeight - centerY) {
+				cameraPos.y = mHeight - viewportHeight / 2f + 1f;
+			}
+			else {
+				cameraPos.y = entPos.y;
+			}
+		}
+		scene.manager.getGameCamera().position.set(cameraPos, 0f);
 	}
 	
-	private static class GameViewportHandler {
-		
-		private ScreenViewport viewport;
-		
-		private int width;
-		private int height;
-		
-		GameViewportHandler(int width, int height) {
-			
-			this.width = width;
-			this.height = height;
-			
-			this.viewport = new ScreenViewport();
-			viewport.setUnitsPerPixel(EGFXUtil.DEFAULT_UPP);
-			viewport.update(width, height);
-		}
-		
-		public void update(float delta) {
-			viewport.update(width, height);
-		}
-		
-		public void resize(int width, int height) {
-			this.width = width;
-			this.height = height;
-		}
-		
-		public ScreenViewport getViewport() {
-			return viewport;
-		}
-		
-		public float getWorldWidth() {
-			return viewport.getWorldWidth();
-		}
-		
-		public float getWorldHeight() {
-			return viewport.getWorldHeight();
-		}
+	private void focusCameraOnEntity(Entity focusEntity) {
+		centerCamera(focusEntity);
 	}
-}*/
+	
+	public String getSaveFolder() {
+		return saveFolder;
+	}
+	
+}

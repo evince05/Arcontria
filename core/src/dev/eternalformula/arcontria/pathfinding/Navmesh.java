@@ -22,17 +22,18 @@ import com.shibabandit.gdx_navmesh.path.NavMeshPathNode;
 import com.shibabandit.gdx_navmesh.path.NavMeshPathRequest;
 import com.shibabandit.gdx_navmesh.path.NavMeshPortal;
 
+import dev.eternalformula.arcontria.level.maps.EFTiledMap;
 import dev.eternalformula.arcontria.util.EFConstants;
 
 public class Navmesh {
 
 	private Array<Polygon> walkables;
 	
-	public Navmesh(TiledMap map, Array<org.locationtech.jts.geom.Polygon> mapObjColliders) {
+	public Navmesh(EFTiledMap map, Array<org.locationtech.jts.geom.Polygon> mapObjColliders) {
 		this.walkables = new Array<Polygon>();
 		
-		float width = (float) map.getProperties().get("width", int.class);// / EFConstants.PPM;
-		float height = (float) map.getProperties().get("height", int.class);// / EFConstants.PPM;
+		float width = (float) map.getProperty("width", int.class);// / EFConstants.PPM;
+		float height = (float) map.getProperty("height", int.class);// / EFConstants.PPM;
 		
 		Polygon initialWalkable = new Polygon(new PolygonPoint[] {
 				new PolygonPoint(0, 0),

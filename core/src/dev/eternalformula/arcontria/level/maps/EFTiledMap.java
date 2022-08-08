@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import org.locationtech.jts.geom.Polygon;
+
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
@@ -14,21 +16,35 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Sort;
 
 import dev.eternalformula.arcontria.level.maps.Map.MapComparator;
+import dev.eternalformula.arcontria.pathfinding.Navmesh;
 
 public class EFTiledMap {
+
+	private int width;
+	private int height;
 	
 	private TiledMap tiledMap;
 	
 	private Array<EFMapObject> mapObjects;
+	private Navmesh navmesh;
 	
-	public EFTiledMap(TiledMap tiledMap, Array<EFMapObject> mapObjects) {
+	public EFTiledMap(TiledMap tiledMap, Array<EFMapObject> mapObjects, Array<Polygon> polygons) {
 		this.tiledMap = tiledMap;
 		this.mapObjects = mapObjects;
+		
+		this.width = tiledMap.getProperties().get("width", Integer.class);
+		this.height = tiledMap.getProperties().get("height", Integer.class);
+		
+		this.navmesh = new Navmesh(this, polygons);
 		zSort();
 	}
 	
 	public void load() {
 		// maybe
+	}
+	
+	public <T> T getProperty(String property, Class<T> clazz) {
+		return tiledMap.getProperties().get(property, clazz);
 	}
 	
 	public void update(float delta) {
@@ -47,6 +63,14 @@ public class EFTiledMap {
 		return tiledMap;
 	}
 	
+	public int getWidth() {
+		return width;
+	}
+	
+	public int getHeight() {
+		return width;
+	}
+	
 	public void dispose() {
 		
 	}
@@ -63,6 +87,4 @@ public class EFTiledMap {
 		}
 		
 	}
-	
-
 }

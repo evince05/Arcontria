@@ -30,8 +30,8 @@ public class PathUtil {
 			 * The entity moves on both axes so it doesn't stutter.
 			 */
 			
-			horizontalVelocity = directionX * (float) Math.sqrt((double) entity.getSpeed());
-			verticalVelocity = directionY * (float) Math.sqrt((double) entity.getSpeed());
+			horizontalVelocity = directionX * (float) Math.sqrt(2) * entity.getSpeed();
+			verticalVelocity = directionY * (float) Math.sqrt(2) * entity.getSpeed();
 			
 			entity.move(horizontalVelocity, verticalVelocity);
 		}

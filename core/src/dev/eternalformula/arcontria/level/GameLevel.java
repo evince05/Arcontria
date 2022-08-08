@@ -14,26 +14,27 @@ import com.badlogic.gdx.physics.box2d.World;
 import box2dLight.RayHandler;
 import dev.eternalformula.arcontria.entity.Entity;
 import dev.eternalformula.arcontria.entity.player.Player;
-import dev.eternalformula.arcontria.entity.player.PlayerData;
 import dev.eternalformula.arcontria.gfx.lighting.DaylightHandler;
 import dev.eternalformula.arcontria.gfx.particles.ParticleHandler;
 import dev.eternalformula.arcontria.inventory.InventoryHandler;
-import dev.eternalformula.arcontria.level.maps.Map;
+import dev.eternalformula.arcontria.level.maps.EFMapRenderer;
+import dev.eternalformula.arcontria.level.maps.EFTiledMap;
 import dev.eternalformula.arcontria.level.maps.MapRenderer;
 import dev.eternalformula.arcontria.physics.WorldContactListener;
+import dev.eternalformula.arcontria.scenes.GameSession;
 //import dev.eternalformula.arcontria.scenes.GameSession;
 import dev.eternalformula.arcontria.util.EFDebug;
 import dev.eternalformula.arcontria.util.Strings;
 
 public class GameLevel {
 	
-	//private GameSession session;
+	private GameSession session;
 	
 	protected List<Entity> entities;
 	private List<Entity> entitiesToRemove;
 	
-	protected Map map;
-	protected MapRenderer mapRenderer;
+	protected EFTiledMap map;
+	protected EFMapRenderer mapRenderer;
 	
 	protected DaylightHandler daylightHandler;
 	protected ParticleHandler particleHandler;
@@ -48,9 +49,8 @@ public class GameLevel {
 	private Music music;
 	
 	private boolean debugEnabled;
-}
 	
-	/*
+	
 	GameLevel(GameSession session) {
 		
 		this.session = session;
@@ -96,7 +96,7 @@ public class GameLevel {
 	 * @param entity The entity to be removed.
 	 */
 	
-	/*
+	
 	public void removeEntity(Entity entity) {
 		entitiesToRemove.add(entity);
 	}
@@ -107,13 +107,13 @@ public class GameLevel {
 		}
 	}
 	
-	public Map getMap() {
+	public EFTiledMap getMap() {
 		return map;
 	}
 	
-	public void setMap(Map map) {
+	public void setMap(EFTiledMap map) {
 		this.map = map;
-		mapRenderer.setMap(map);
+		mapRenderer.setTiledMap(map);
 	}
 	
 	public World getWorld() {
@@ -124,7 +124,7 @@ public class GameLevel {
 		return b2dr;
 	}
 	
-	public MapRenderer getMapRenderer() {
+	public EFMapRenderer getMapRenderer() {
 		return mapRenderer;
 	}
 	
@@ -141,7 +141,6 @@ public class GameLevel {
 	}
 	
 	public void resize(int width, int height) {
-		mapRenderer.resize(width, height);
 	}
 	
 	public void dispose() {
@@ -150,52 +149,6 @@ public class GameLevel {
 		b2dr.dispose();
 		rayHandler.dispose();
 		particleHandler.dispose();
-	}
-	
-	public void setupCamera() {
-		
-		// Calculates and sets the proper location of the camera.
-		Vector2 playerPos = session.getPlayer().getLocation();
-		Vector2 cameraPos = new Vector2();
-		
-		float viewportWidth = session.getViewportWidth();
-		float viewportHeight = session.getViewportHeight();
-		
-		if (map.getWidth() <= viewportWidth) {
-			EFDebug.debug("Watch TestLevel.java:setupCamera... line cameraPosX = map.getWidth() / 2f");
-			cameraPos.x = map.getWidth() / 2f;
-		}
-		else {
-			float centerX = viewportWidth / 2f - 0.5f;
-			if (playerPos.x < centerX) {
-				cameraPos.x = viewportWidth / 2f;
-			}
-			else if (playerPos.x > map.getWidth() - centerX) {
-				cameraPos.x = map.getWidth() - viewportWidth / 2f + 0.5f;
-			}
-			else {
-				cameraPos.x = playerPos.x;
-			}
-		}
-		
-		if (map.getHeight() <= viewportHeight) {
-			cameraPos.y = map.getHeight() / 2f + 0.5f;
-		}
-		else {
-			float centerY = viewportHeight / 2f - 1f;
-			
-			if (playerPos.y < centerY) {
-				cameraPos.y = viewportHeight / 2f;
-			}
-			else if (playerPos.y > map.getHeight() - centerY) {
-				cameraPos.y = map.getHeight() - viewportHeight / 2f + 1f;
-			}
-			else {
-				cameraPos.y = playerPos.y;
-			}
-		}
-		
-		session.getGameCamera().position.set(cameraPos, 0f);
 	}
 	
 	public void update(float delta) {
@@ -304,4 +257,4 @@ public class GameLevel {
 	public GameSession getSession() {
 		return session;
 	}
-}*/
+}
