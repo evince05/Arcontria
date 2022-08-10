@@ -1,0 +1,66 @@
+{
+	"entities": [
+		{"name": "%player%", "scriptName": "%player%", "uuid": "5df649ca-ea87-4905-beae-9de2a9f5372d", "startingLoc": "[x, y]" },
+		{"name": "Ahlos", "scriptName": "ahlos", "uuid": "2a97f1b2-1275-11ed-861d-0242ac120002", "startingLoc": "[x, y]"}
+	],
+	"map": "maps/data/menumap.tmx",
+	"initialCamPos": "[20,18.24]",
+	"scripts": {
+		"main": [
+			"fade in 2s",
+			"wait 3s",
+			"fade out 0.5s",
+			"fade in 1s",
+			"camera moveto [10,10]",
+			"wait 2s",
+			"camera setlocation [20,24]",
+			"exit"
+		],
+		"pScript1": [
+			"dialog dialogLine2",
+			"dialog dialogLine4",
+			"wait 3s",
+			"dialog dialogLine5",
+			"exit"
+		],
+		"pScript2": [
+			"dialog dialogLine3",
+			"dialog dialogLine4",
+			"wait 3s",
+			"dialog dialogLine5",
+			"exit"
+		]
+	},
+	"dialog": {
+		"dialogLine1": {
+			"sender": "2a97f1b2-1275-11ed-861d-0242ac120002",
+			"message": "Woah, take it easy! You hit your head pretty hard..."
+		},
+		"dialogLine2": {
+			"sender": "2a97f1b2-1275-11ed-861d-0242ac120002",
+			"message": "Don't worry about that right now. Everything will be okay, trust me."
+		},
+		"dialogLine3": {
+			"sender": "2a97f1b2-1275-11ed-861d-0242ac120002",
+			"message": "You wont remember by the time you wake up. You've sustained some serious head injuries..."
+		},
+		"dialogLine4": {
+			"sender": "2a97f1b2-1275-11ed-861d-0242ac120002",
+			"message": "Now, I'll be going. You should get some rest... Sweet dreams!"
+		},
+		"dialogLine5": {
+			"sender": "2a97f1b2-1275-11ed-861d-0242ac120002",
+			"message": "Oh, and by the way... Welcome to Arcontria!"
+		}
+	},
+	"prompts": {
+		"prompt1": {
+			"text": "What? Where am I?",
+			"script": "pScript1"
+		},
+		"prompt2": {
+			"text": "My head is swirling, what's going on?!",
+			"script": "pScript2"
+		}
+	}
+}

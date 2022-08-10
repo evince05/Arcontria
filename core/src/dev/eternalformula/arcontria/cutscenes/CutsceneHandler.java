@@ -34,6 +34,12 @@ public class CutsceneHandler {
 	public void update(float delta) {
 		if (cutscene != null) {
 			cutscene.update(delta);
+			
+			if (cutscene.isFinished()) {
+				isPlaying = false;
+				cutscene = null;
+				EFDebug.info("Cutscene finished!");
+			}
 		}
 		
 	}

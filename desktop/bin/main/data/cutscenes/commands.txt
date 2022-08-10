@@ -1,20 +1,22 @@
 entity:
   entity <uuid> moveto [x,y] - Moves the entity to [x, y]
-  entity <uuid> move [x,y] - Moves the entity by [x, y]
-  entity <uuid> setlocation [x,y] - Sets the entity's location to [x,y]
-  entity <uuid> setanim <anim> - Sets the entity's animation
+  (X) entity <uuid> move [x,y] - Moves the entity by [x, y]
+  (X) entity <uuid> setlocation [x,y] - Sets the entity's location to [x,y]
+  (X) entity <uuid> setanim <anim> - Sets the entity's animation
 
 camera:
-  camera setlocation [x,y] - Sets the camera's location
-  camera moveto [x,y] (speed) - Moves the camera to [x,y] with optional speed (speed)
-  camera follow <uuid> - Sets the camera to follow the entity with the specified UUID
+  (X) camera setlocation [x,y] - Sets the camera's location
+  (X) camera moveto [x,y] (speed) - Moves the camera to [x,y] with optional speed (speed)
+  (X) camera follow <uuid> - Sets the camera to follow the entity with the specified UUID
 
 dialog:
   dialog <message> - Opens a dialog pane from the specified dialog line in the cutscene file.
 
 wait:
-  wait <timeInSeconds> - Adds a natural pause to the cutscene.
+  (X) wait <timeInSeconds> - Adds a natural pause to the cutscene.
 
 exit:
-  exit - exits the cutscene with a fade out effect taking 1.4s
-  exit <animationType> <time> - exits the cutscene using animation type with the specified time
+  (X) exit - exits the cutscene
+fade:
+  (X) fade in <time> - Create fadein animation with time (time) in seconds
+  (X) fade out <time> - Create fadeout animation with time (time) in seconds.

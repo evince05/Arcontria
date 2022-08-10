@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import dev.eternalformula.arcontria.ArcontriaGame;
 import dev.eternalformula.arcontria.cutscenes.CutsceneScript.CutsceneCommand;
 import dev.eternalformula.arcontria.cutscenes.commands.CutsceneCamMoveCmd;
+import dev.eternalformula.arcontria.cutscenes.commands.CutsceneFadeCmd;
 import dev.eternalformula.arcontria.cutscenes.commands.CutsceneWaitCmd;
 import dev.eternalformula.arcontria.files.JsonUtil;
 import dev.eternalformula.arcontria.level.maps.EFMapRenderer;
@@ -43,6 +44,8 @@ public class Cutscene {
 	private boolean isWaiting;
 	private float waitElapsedTime;
 	private float waitTotalTime;
+	
+	private boolean isFinished;
 	
 	public static Cutscene load(String file) {
 		return new Cutscene(file);
@@ -133,7 +136,6 @@ public class Cutscene {
 			// If the current command is finished, the script can move to the next command.
 			if (!currentScript.isFinished()) {
 				String cmd = currentScript.getCurrentCommand();
-				System.out.println("Current cmd: " + cmd);
 				parseScriptCommand(cmd);
 			}
 		}
@@ -171,7 +173,9 @@ public class Cutscene {
 	 */
 	
 	public void drawUI(SpriteBatch uiBatch, float delta) {
-		
+		if (currentCmd instanceof CutsceneFadeCmd) {
+			((CutsceneFadeCmd) currentCmd).drawFade(uiBatch, delta);
+		}
 	}
 	
 	private void parseScriptCommand(String cmd) {
@@ -182,12 +186,17 @@ public class Cutscene {
 			
 			if (entities.containsKey(args[1])) {
 				if (args[2].equalsIgnoreCase("setlocation")) {
+					
 					Vector2 pos = EFMath.vec2FromString(args[3]);
 					entities.get(args[1]).setLocation(pos);
+					endSimpleCommand();
 					return;
 				}
 				else if (args[2].equalsIgnoreCase("setanim")) {
+					
 					entities.get(args[1]).setAnimation(args[3]);
+					endSimpleCommand();
+					return;
 				}
 			}
 			else {
@@ -197,8 +206,16 @@ public class Cutscene {
 		}
 		else if (args[0].equalsIgnoreCase("camera")) {
 			if (args[1].equalsIgnoreCase("moveto")) {
+				
 				Vector2 targetPos = EFMath.vec2FromString(args[2]);
 				currentCmd = new CutsceneCamMoveCmd(this, targetPos);
+				return;
+			}
+			else if (args[1].equalsIgnoreCase("setlocation")) {
+				
+				Vector2 camPos = EFMath.vec2FromString(args[2]);
+				ArcontriaGame.GAME.getSceneManager().getGameCamera().position.set(camPos, 0f);
+				endSimpleCommand();
 				return;
 			}
 			
@@ -219,8 +236,34 @@ public class Cutscene {
 			}
 			
 		}
-		else if (args[0].equalsIgnoreCase("exit")) {
+		else if (args[0].equalsIgnoreCase("fade")) {
+			float time = Float.valueOf(args[2].substring(0, args[2].length() - 1));
 			
+			if (args[1].equalsIgnoreCase("in")) {
+				currentCmd = new CutsceneFadeCmd(this, 0, time);
+			}
+			else if (args[1].equalsIgnoreCase("out")) {
+				currentCmd = new CutsceneFadeCmd(this, 1, time);
+			}
 		}
+		else if (args[0].equalsIgnoreCase("exit")) {
+			isFinished = true;
+		}
+		else {
+			System.out.println("No parsing occurred");
+		}
+	}
+	
+	public boolean isFinished() {
+		return isFinished;
+	}
+	
+	/**
+	 * Utility method for ending simple commands.
+	 */
+	
+	private void endSimpleCommand() {
+		isCurrentCmdFinished = true;
+		currentScript.moveToNextCommand();
 	}
 }

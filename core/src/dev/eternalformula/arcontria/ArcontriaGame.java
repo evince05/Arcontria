@@ -109,4 +109,12 @@ public class ArcontriaGame extends ApplicationAdapter {
 	public Settings getSettings() {
 		return settings;
 	}
+	
+	public float getWindowWidth() {
+		return Gdx.graphics.getWidth();
+	}
+	
+	public float getWindowHeight() {
+		return Gdx.graphics.getHeight();
+	}
 }

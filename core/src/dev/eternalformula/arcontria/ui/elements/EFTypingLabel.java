@@ -1,9 +1,12 @@
 package dev.eternalformula.arcontria.ui.elements;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import dev.eternalformula.arcontria.cutscenes.Cutscene;
 import dev.eternalformula.arcontria.gfx.text.FontUtil;
 import dev.eternalformula.arcontria.ui.UIContainer;
 import dev.eternalformula.arcontria.ui.UIElement;
@@ -22,10 +25,13 @@ public class EFTypingLabel extends UIElement {
 	private boolean isFinished;
 	
 	private BitmapFont font;
+	private Color textColor;
 	
-	private String[] displayLines;
+	private List<String> lines;
 	private int currentRow;
 	private int lineWidth;
+	
+	private float lineYOffset;
 	
 	public EFTypingLabel(UIContainer container, String text) {
 		super(container);
@@ -33,6 +39,12 @@ public class EFTypingLabel extends UIElement {
 		
 		this.displayText = new StringBuilder();
 		this.typeSpeed = DEFAULT_TYPE_SPEED;
+		
+		this.lines = new ArrayList<String>();
+		
+		// default values
+		this.lineYOffset = 12f;
+		this.textColor = Color.WHITE;
 	}
 
 	@Override
@@ -53,16 +65,46 @@ public class EFTypingLabel extends UIElement {
 		if (elapsedTime >= 1f / typeSpeed && !isFinished) {
 			elapsedTime = 0f;
 			
-			displayText.append(text.charAt(currentIndex));
-			if (FontUtil.getWidth(font, displayText.toString()) >= lineWidth) {
-				displayLines[currentRow] = displayText.toString();
-				text = text.substring(displayLines[currentRow].length() - 1);
+			// If the next word does not fit on the line, start a new word
+			if (text.charAt(currentIndex) == ' ') {
 				
-				displayText = new StringBuilder();
-				currentRow++;
-				currentIndex = 0;
-				System.out.println("Remaining text: " + text);
+				String nextWord = "";
+				if (text.indexOf(" ", currentIndex + 1) != -1) {
+					// There are multiple words to come
+					
+					// (currentIndex + 1) as the start bound skips over the current space
+					nextWord = text.substring(currentIndex + 1, text.indexOf(" ", currentIndex + 1));
+				}
+				else {
+					// This is the last word of the label
+					nextWord = text.substring(currentIndex + 1, text.length());
+				}
 				
+				if (FontUtil.getWidth(font, displayText + nextWord) >= lineWidth) {
+					// Starts a new line
+					
+					setLine(currentRow, displayText.toString());
+					
+					// Substrings an extra character so the space isn't included at the start of the next line.
+					text = text.substring(displayText.length() + 1);
+					
+					displayText = new StringBuilder();
+					currentRow++;
+					currentIndex = 0;
+					return;
+				}
+				else {
+					// The next word can fit on the line
+					displayText.append(text.charAt(currentIndex));
+					
+					setLine(currentRow, displayText.toString());
+					//displayLines[currentRow] = displayText.toString();
+				}
+			}
+			else {
+				// Appends the next character.
+				displayText.append(text.charAt(currentIndex));
+				setLine(currentRow, displayText.toString());
 			}
 			currentIndex++;
 		
@@ -74,10 +116,19 @@ public class EFTypingLabel extends UIElement {
 
 	@Override
 	public void draw(SpriteBatch uiBatch, float delta) {
-		
+	
 		if (font != null && !text.equals("")) {
-			font.draw(uiBatch, displayText, location.x, location.y);
 			
+			font.setColor(textColor);
+			
+			// Draws each line with appropriate spacing.
+			for (int line = 0; line < lines.size(); line++) {
+				if (lines.get(line) != null && !lines.get(line).equals("")) {
+					font.draw(uiBatch, lines.get(line), location.x, location.y - line * lineYOffset);
+				}
+				
+			}
+			font.setColor(Color.WHITE);
 		}
 	}
 	
@@ -105,6 +156,27 @@ public class EFTypingLabel extends UIElement {
 	public void setupWrapping(BitmapFont font, int lineWidth) {
 		this.font = font;
 		this.lineWidth = lineWidth;
-		this.displayLines = new String[(int) Math.ceil(FontUtil.getWidth(font, text) / lineWidth)];
+	}
+	
+	private void setLine(int index, String s) {
+		if (lines.size() <= index) {
+			lines.add(s);
+		}
+		else {
+			lines.set(index, s);
+		}
+	}
+	
+	/**
+	 * Sets the distance between the top of each line (in px).
+	 * @param lineYOffset The line y offset (magnitude... use positive number).
+	 */
+	
+	public void setLineYOffset(float lineYOffset) {
+		this.lineYOffset = lineYOffset;
+	}
+	
+	public void setColor(Color textColor) {
+		this.textColor = textColor;
 	}
 }

@@ -34,7 +34,7 @@ public class GameSession {
 		// Creates an empty GameSession
 		GameSession session = new GameSession(scene);
 		session.saveFolder = saveFolder;
-		session.level = new GameLevel(session);
+		session.level = GameLevel.load(session, saveFolder);
 		/*
 		
 		// Creates the GameLevel
@@ -71,12 +71,15 @@ public class GameSession {
 	}
 
 	public void update(float delta) {
+
+		/*
 		level.update(delta);
 		player.handleInput(delta);
 		player.update(delta);
 
 		Vector2 centerCameraPos = centerCamera(player);
 		getGameCamera().position.set(centerCameraPos, 0f);
+		*/
 	}
 	
 	public void resize(int width, int height) {

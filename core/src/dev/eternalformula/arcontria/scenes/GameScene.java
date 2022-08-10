@@ -1,5 +1,6 @@
 package dev.eternalformula.arcontria.scenes;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -28,14 +29,15 @@ public class GameScene extends Scene {
 
 	@Override
 	public void load() {
-		this.label = new EFTypingLabel(null, "EFTypingLabel Test Success :)");
-		label.setupWrapping(font, 80);
-		label.setLocation(20, 30);
+		this.label = new EFTypingLabel(null, "Woah, take it easy! You hit your head pretty hard... Don't worry about that right now. Everything will be okay, trust me.");
+		label.setColor(Color.LIME);
+		label.setupWrapping(font, 240);
+		label.setLocation(20, 60);
 		
 		this.session = GameSession.load(this, null);
 		
 		this.csHandler = new CutsceneHandler();
-		csHandler.setCutscene(Cutscene.load("data/cutscenes/saveintro-land.json"));
+		csHandler.setCutscene(Cutscene.load("data/cutscenes/testcutscene.json"));
 		csHandler.play();
 	}
 
@@ -45,9 +47,9 @@ public class GameScene extends Scene {
 		
 		session.draw(batch, delta);
 		
-		if (csHandler.isPlayingCutscene()) {
-			csHandler.draw(batch, delta);
-		}
+		//if (csHandler.isPlayingCutscene()) {
+			//csHandler.draw(batch, delta);
+		//}
 		
 		batch.end();
 	}
