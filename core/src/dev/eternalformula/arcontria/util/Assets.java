@@ -38,6 +38,7 @@ public class Assets {
 		assMan.load("ui/charcreator/charcreator.atlas", TextureAtlas.class);
 		assMan.load("fonts/Habbo.fnt", BitmapFont.class);
 		assMan.load("maps/data/menumap.tmx", EFTiledMap.class);
+		assMan.load("data/cutscenes/saveintro-land/hospitalroom.tmx", EFTiledMap.class);
 	}
 	
 	public static void dispose() {

@@ -4,13 +4,19 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 
 import dev.eternalformula.arcontria.pathfinding.NavigationPath;
+import dev.eternalformula.arcontria.util.EFConstants;
 import dev.eternalformula.arcontria.util.EFDebug;
+import dev.eternalformula.arcontria.util.Strings;
 
 /**
  * A less-meaty version of the LivingEntity, used for cutscenes.
@@ -33,6 +39,8 @@ public class CutsceneEntity {
 	private Map<String, Animation<TextureRegion>> animations;
 	private float elapsedTime;
 	
+	private boolean isCurrentAnimLooping;
+	
 	
 	CutsceneEntity(String name, UUID uuid) {
 		this.name = name;
@@ -40,6 +48,44 @@ public class CutsceneEntity {
 		this.animations = new HashMap<String, Animation<TextureRegion>>();
 		this.elapsedTime = 0f;
 		this.speed = DEFAULT_SPEED;
+		
+		this.isCurrentAnimLooping = true;
+		
+		if (name.equalsIgnoreCase("%player%")) {
+			this.name = "player";
+			loadAnimations();
+		}
+		
+	}
+	
+	private void loadAnimations() {
+		String path = "textures/entities/" + name + "/" + name + ".atlas";
+		
+		// Generic animation prepping
+		TextureAtlas atlas = new TextureAtlas(Gdx.files.internal(path));
+		Array<TextureRegion> frames = new Array<>();
+		
+		// Blink
+		for (int i = 0; i < atlas.getRegions().size; i++) {
+			
+			TextureRegion reg = atlas.getRegions().get(i);
+			String regName = atlas.getRegions().get(i).name;
+			
+			float numFrames = reg.getRegionWidth() / 16f;
+			for (int j = 0; j < numFrames; j++) {
+				frames.add(new TextureRegion(reg, j * 16, 0, 16, reg.getRegionHeight()));
+			}
+			animations.put(regName, new Animation<TextureRegion>(0.125f, frames));
+			frames.clear();
+			
+			
+			
+		}
+		
+		System.out.println("Loaded " + animations.size() + " animations!");
+		
+		
+		
 	}
 	
 	public void setLocation(Vector2 pos) {
@@ -83,12 +129,25 @@ public class CutsceneEntity {
 	
 	public void draw(SpriteBatch batch, float delta) {
 		elapsedTime += delta;
-		batch.draw(currentAnim.getKeyFrame(elapsedTime), location.x, location.y);
+		if (currentAnim != null) {
+			
+			// Gets the textureregion
+			TextureRegion reg = currentAnim.getKeyFrame(elapsedTime, isCurrentAnimLooping);
+			float w = reg.getRegionWidth() / EFConstants.PPM;
+			float h = reg.getRegionHeight() / EFConstants.PPM;
+			
+			batch.draw(reg, location.x, location.y, w, h);
+		}
+		
 	}
 	
-	public void setAnimation(String animName) {
+	public void setAnimation(String animName, boolean looping) {
 		if (animations.get(animName) != null) {
 			this.currentAnim = animations.get(animName);
+			this.isCurrentAnimLooping = looping;
+			
+			
+			EFDebug.info("Set " + name + "'s anim to " + animName);
 		}
 		else {
 			EFDebug.error("Could not set CutsceneEntity animation! Reason: Null");

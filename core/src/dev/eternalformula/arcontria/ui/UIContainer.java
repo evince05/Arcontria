@@ -55,28 +55,43 @@ public class UIContainer extends UIElement {
 	public void onMouseClicked(int x, int y, int button) {
 		
 		children.forEach(e -> {
-			e.onMouseClicked(x, y, button);
+			if (e.isActive()) {
+				e.onMouseClicked(x, y, button);
+			}
+			
 		});
 	}
 
 	@Override
 	public void onMouseReleased(int x, int y, int button) {
 		children.forEach(e -> {
-			e.onMouseReleased(x, y, button);
+			if (e.isActive()) {
+				e.onMouseReleased(x, y, button);
+			}
+			
 		});
 	}
 
+	/**
+	 * Note: if input is messed up, check the e.isActive().
+	 */
 	@Override
 	public void onMouseHovered(int x, int y) {
 		children.forEach(e -> {
-			e.onMouseHovered(x, y);
+			if (e.isActive()) {
+				e.onMouseHovered(x, y);
+			}
+			
 		});
 	}
 	
 	@Override
 	public void onMouseDrag(int x, int y) {
 		children.forEach(e -> {
-			e.onMouseDrag(x, y);
+			if (e.isActive()) {
+				e.onMouseDrag(x, y);
+			}
+			
 		});
 	}
 
@@ -95,7 +110,9 @@ public class UIContainer extends UIElement {
 				uiBatch.draw(skin, location.x, location.y);
 			}
 			for (UIElement e : children) {
-				e.draw(uiBatch, delta);
+				if (e.isVisible()) {
+					e.draw(uiBatch, delta);
+				}
 			}
 		}
 	}

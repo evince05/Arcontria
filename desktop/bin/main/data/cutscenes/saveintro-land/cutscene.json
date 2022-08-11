@@ -1,18 +1,15 @@
 {
 	"entities": [
-		{"name": "%player%", "scriptName": "%player%", "uuid": "5df649ca-ea87-4905-beae-9de2a9f5372d", "startingLoc": "[x, y]" },
-		{"name": "Ahlos", "scriptName": "ahlos", "uuid": "2a97f1b2-1275-11ed-861d-0242ac120002", "startingLoc": "[x, y]"}
+		{"name": "%player%", "scriptName": "%player%", "uuid": "5df649ca-ea87-4905-beae-9de2a9f5372d", "startingLoc": "[6.3125,3.25]"},
+		{"name": "Ahlos", "scriptName": "ahlos", "uuid": "2a97f1b2-1275-11ed-861d-0242ac120002", "startingLoc": "[1,1]"}
 	],
-	"map": "maps/data/menumap.tmx",
-	"initialCamPos": "[20,18.24]",
+	"map": "data/cutscenes/saveintro-land/hospitalroom.tmx",
+	"initialCamPos": "[4,4]",
 	"scripts": {
 		"main": [
-			"wait 3s",
-			"camera moveto [10,10]",
-			"entity 2a97f1b2-1275-11ed-861d-0242ac120002 setanim idleDown",
-			"wait 2s",
-			"dialog dialogLine1",
-			"prompt prompt1"
+			"entity 5df649ca-ea87-4905-beae-9de2a9f5372d setanim blink false",
+			"dialogue EFTypingLabel + Cutscene Test Success! :)",
+			"dialogue Penis penis penis PENIS!"
 		],
 		"pScript1": [
 			"dialog dialogLine2",

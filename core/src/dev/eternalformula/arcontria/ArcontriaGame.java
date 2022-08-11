@@ -84,6 +84,10 @@ public class ArcontriaGame extends ApplicationAdapter {
 		if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_6)) {
 			Gdx.graphics.setWindowedMode(1920, 1080);
 		}
+		
+		if (Gdx.input.isKeyJustPressed(Input.Keys.F11)) {
+			Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+		}
 	}
 	
 	@Override

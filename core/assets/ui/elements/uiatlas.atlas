@@ -1,54 +1,68 @@
 
 uiatlas.png
-size: 256, 128
+size: 512, 128
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
 checkbox
   rotate: false
-  xy: 0, 0
+  xy: 464, 120
   size: 16, 8
   orig: 16, 8
   offset: 0, 0
   index: -1
 colorpickerdisplay
   rotate: false
-  xy: 220, 94
+  xy: 244, 0
   size: 18, 18
   orig: 18, 18
   offset: 0, 0
   index: -1
 colorpickerpane
   rotate: false
-  xy: 0, 12
+  xy: 244, 28
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
+dialoguebox
+  rotate: false
+  xy: 0, 16
+  size: 244, 112
+  orig: 244, 112
+  offset: 0, 0
+  index: -1
 directionbuttons
   rotate: false
-  xy: 100, 78
+  xy: 244, 18
   size: 40, 10
   orig: 40, 10
   offset: 0, 0
   index: -1
+exitdialoguebtn
+  rotate: false
+  xy: 344, 95
+  size: 18, 9
+  orig: 18, 9
+  offset: 0, 0
+  index: -1
 sliderdial
   rotate: false
-  xy: 100, 70
+  xy: 284, 20
   size: 4, 8
   orig: 4, 8
   offset: 0, 0
   index: -1
 sliderpane
   rotate: false
-  xy: 0, 8
+  xy: 0, 12
   size: 52, 4
   orig: 52, 4
   offset: 0, 0
   index: -1
 textfield
   rotate: false
-  xy: 100, 88
+  xy: 344, 104
   size: 120, 24
   orig: 120, 24
   offset: 0, 0

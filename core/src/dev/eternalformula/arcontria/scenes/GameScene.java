@@ -29,7 +29,7 @@ public class GameScene extends Scene {
 
 	@Override
 	public void load() {
-		this.label = new EFTypingLabel(null, "Woah, take it easy! You hit your head pretty hard... Don't worry about that right now. Everything will be okay, trust me.");
+		this.label = new EFTypingLabel(null, "The quick brown fox jumps over the lazy dog. I think this should have started a new line or two by now. Cheers :)");
 		label.setColor(Color.LIME);
 		label.setupWrapping(font, 240);
 		label.setLocation(20, 60);
@@ -37,26 +37,33 @@ public class GameScene extends Scene {
 		this.session = GameSession.load(this, null);
 		
 		this.csHandler = new CutsceneHandler();
-		csHandler.setCutscene(Cutscene.load("data/cutscenes/testcutscene.json"));
+		csHandler.setCutscene(Cutscene.load("data/cutscenes/saveintro-land/cutscene.json"));
 		csHandler.play();
 	}
 
 	@Override
 	public void draw(SpriteBatch batch, float delta) {
+		// Handles fade effects
+		super.draw(batch, delta);
+		
 		batch.begin();
 		
-		session.draw(batch, delta);
 		
-		//if (csHandler.isPlayingCutscene()) {
-			//csHandler.draw(batch, delta);
-		//}
+		
+		if (csHandler.isPlayingCutscene()) {
+			csHandler.draw(batch, delta);
+		}
+		else {
+			session.draw(batch, delta);
+		}
 		
 		batch.end();
 	}
 
 	@Override
 	public void drawUI(SpriteBatch batch, float delta) {
-		
+		// Handles fade effects
+		super.drawUI(batch, delta);
 		batch.begin();
 		
 		session.drawUI(batch, delta);
@@ -64,7 +71,10 @@ public class GameScene extends Scene {
 		if (csHandler.isPlayingCutscene()) {
 			csHandler.drawUI(batch, delta);
 		}
-		label.draw(batch, delta);
+		else {
+			label.draw(batch, delta);
+		}
+		
 		
 		batch.end();
 	}
@@ -72,12 +82,16 @@ public class GameScene extends Scene {
 	@Override
 	public void update(float delta) {
 		
-		session.update(delta);
+		super.update(delta);
 		
 		if (csHandler.isPlayingCutscene()) {
 			csHandler.update(delta);
 		}
-		label.update(delta);
+		else {
+			session.update(delta);
+			label.update(delta);
+		}
+		
 	}
 
 	@Override
@@ -89,7 +103,10 @@ public class GameScene extends Scene {
 	}
 
 	@Override
-	public void onMouseClicked(int x, int y, int button) {	
+	public void onMouseClicked(int x, int y, int button) {
+		if (csHandler.isPlayingCutscene()) {
+			csHandler.onMouseClicked(x, y, button);
+		}
 	}
 
 	@Override

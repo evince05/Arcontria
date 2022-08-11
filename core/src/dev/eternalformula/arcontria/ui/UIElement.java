@@ -21,10 +21,14 @@ public abstract class UIElement {
 	protected Vector2 location;
 	protected Vector2 oldLocation;
 	
+	// Determines whether the UIElement should listen for input methods
+	protected boolean isInteractive;
+	
 	protected UIElement(UIContainer container) {
 		this.container = container;
 		this.visible = true;
 		this.active = true;
+		this.isInteractive = true;
 		this.location = new Vector2(0f, 0f);
 	}
 	
@@ -35,6 +39,7 @@ public abstract class UIElement {
 	protected UIElement() {
 		this.visible = true;
 		this.active = true;
+		this.isInteractive = true;
 		this.location = new Vector2(0f, 0f);
 	}
 
@@ -81,6 +86,14 @@ public abstract class UIElement {
 		this.active = isActive;
 	}
 	
+	public boolean isInteractive() {
+		return isInteractive;
+	}
+	
+	public void setInteractive(boolean interactive) {
+		this.isInteractive = interactive;
+	}
+	
 	/**
 	 * Handles when the mouse clicks on the UIElement.
 	 * @param x The x location of the click.
@@ -89,15 +102,19 @@ public abstract class UIElement {
 	 */
 	
 	public void onMouseClicked(int x, int y, int button) {
-		if (container != null) {
-			if (bounds.contains(x, y)) {
-				container.focusedElement = this;
-				
-				if (container.hasParent()) {
-					container.getParent().focusedElement = this;
+		
+		if (isInteractive) {
+			if (container != null) {
+				if (bounds.contains(x, y)) {
+					container.focusedElement = this;
+					
+					if (container.hasParent()) {
+						container.getParent().focusedElement = this;
+					}
 				}
 			}
 		}
+		
 	}
 	
 	/**

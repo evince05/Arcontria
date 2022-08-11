@@ -1,60 +1,68 @@
+
 player.png
-size: 512, 32
+size: 256, 128
 format: RGBA8888
-filter: Nearest,Nearest
+filter: Nearest, Nearest
 repeat: none
+blink
+  rotate: false
+  xy: 2, 2
+  size: 48, 16
+  orig: 48, 16
+  offset: 0, 0
+  index: -1
 down
   rotate: false
-  xy: 0, 0
+  xy: 68, 88
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 left
   rotate: false
-  xy: 64, 0
+  xy: 68, 20
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 melee_down
   rotate: false
-  xy: 128, 0
+  xy: 2, 88
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 melee_left
   rotate: false
-  xy: 192, 0
+  xy: 134, 88
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 melee_right
   rotate: false
-  xy: 256, 0
+  xy: 2, 54
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 melee_up
   rotate: false
-  xy: 320, 0
+  xy: 68, 54
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 right
   rotate: false
-  xy: 384, 0
+  xy: 2, 20
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 up
   rotate: false
-  xy: 448, 0
+  xy: 134, 54
   size: 64, 32
   orig: 64, 32
   offset: 0, 0

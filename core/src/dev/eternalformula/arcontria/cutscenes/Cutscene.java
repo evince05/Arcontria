@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -14,11 +15,13 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import dev.eternalformula.arcontria.ArcontriaGame;
 import dev.eternalformula.arcontria.cutscenes.CutsceneScript.CutsceneCommand;
 import dev.eternalformula.arcontria.cutscenes.commands.CutsceneCamMoveCmd;
+import dev.eternalformula.arcontria.cutscenes.commands.CutsceneDialogueCmd;
 import dev.eternalformula.arcontria.cutscenes.commands.CutsceneFadeCmd;
 import dev.eternalformula.arcontria.cutscenes.commands.CutsceneWaitCmd;
 import dev.eternalformula.arcontria.files.JsonUtil;
 import dev.eternalformula.arcontria.level.maps.EFMapRenderer;
 import dev.eternalformula.arcontria.level.maps.EFTiledMap;
+import dev.eternalformula.arcontria.ui.elements.EFDialogueBox;
 import dev.eternalformula.arcontria.util.Assets;
 import dev.eternalformula.arcontria.util.EFDebug;
 import dev.eternalformula.arcontria.util.EFMath;
@@ -45,6 +48,9 @@ public class Cutscene {
 	private float waitElapsedTime;
 	private float waitTotalTime;
 	
+	// Dialogue Box
+	private EFDialogueBox dialogueBox;
+	
 	private boolean isFinished;
 	
 	public static Cutscene load(String file) {
@@ -69,6 +75,9 @@ public class Cutscene {
 		
 		map = Assets.get(rootNode.get("map").asText(), EFTiledMap.class);
 		this.mapRend = new EFMapRenderer();
+		
+		this.dialogueBox = new EFDialogueBox("Hello!", 10, 10);
+		dialogueBox.setFont(Assets.get("fonts/Habbo.fnt", BitmapFont.class), 136);
 
 		// Waiting
 		this.isWaiting = false;
@@ -101,7 +110,12 @@ public class Cutscene {
 		entitiesNode.forEach(entity -> {
 			String name = entity.get("name").textValue();
 			UUID uuid = UUID.fromString(entity.get("uuid").textValue());
-			entities.put(entity.get("uuid").textValue(), new CutsceneEntity(name, uuid));
+			Vector2 loc = EFMath.vec2FromString(entity.get("startingLoc").textValue());
+			
+			CutsceneEntity csEntity = new CutsceneEntity(name, uuid);
+			csEntity.setLocation(loc);
+			entities.put(entity.get("uuid").textValue(), csEntity);
+			
 		});
 	}
 	
@@ -151,7 +165,6 @@ public class Cutscene {
 					currentScript.moveToNextCommand();
 				}
 			}
-			
 		}
 	}
 	
@@ -164,6 +177,10 @@ public class Cutscene {
 	public void draw(SpriteBatch batch, float delta) {
 		mapRend.setTiledMap(map);
 		mapRend.draw(batch, delta);
+		
+		entities.forEach((name, entity) -> {
+			entity.draw(batch, delta);
+		});
 	}
 	
 	/**
@@ -175,6 +192,15 @@ public class Cutscene {
 	public void drawUI(SpriteBatch uiBatch, float delta) {
 		if (currentCmd instanceof CutsceneFadeCmd) {
 			((CutsceneFadeCmd) currentCmd).drawFade(uiBatch, delta);
+		}
+		else if (currentCmd instanceof CutsceneDialogueCmd) {
+			((CutsceneDialogueCmd) currentCmd).draw(uiBatch, delta);
+		}
+	}
+	
+	public void onMouseClicked(int x, int y, int button) {
+		if (currentCmd instanceof CutsceneDialogueCmd) {
+			((CutsceneDialogueCmd) currentCmd).onMouseClicked(x, y, button);
 		}
 	}
 	
@@ -194,7 +220,13 @@ public class Cutscene {
 				}
 				else if (args[2].equalsIgnoreCase("setanim")) {
 					
-					entities.get(args[1]).setAnimation(args[3]);
+					boolean looping = true;
+					
+					if (args.length >= 5 && args[4] != null) {
+						looping = Boolean.valueOf(args[4]);
+					}
+					
+					entities.get(args[1]).setAnimation(args[3], looping);
 					endSimpleCommand();
 					return;
 				}
@@ -220,8 +252,12 @@ public class Cutscene {
 			}
 			
 		}
-		else if (args[0].equalsIgnoreCase("dialog")) {
-			
+		else if (args[0].equalsIgnoreCase("dialogue")) {
+			if (args[1] != null) {
+				String dialogue = cmd.substring(args[0].length() + 1);
+				System.out.println("Dialogue: " + dialogue);
+				currentCmd = new CutsceneDialogueCmd(this, dialogue);
+			}
 		}
 		else if (args[0].equalsIgnoreCase("wait")) {
 			

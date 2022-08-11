@@ -55,5 +55,11 @@ public class CutsceneHandler {
 			cutscene.drawUI(uiBatch, delta);
 		}
 	}
+	
+	public void onMouseClicked(int x, int y, int button) {
+		if (cutscene != null) {
+			cutscene.onMouseClicked(x, y, button);
+		}
+	}
 
 }

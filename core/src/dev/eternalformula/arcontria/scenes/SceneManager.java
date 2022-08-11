@@ -1,6 +1,7 @@
 package dev.eternalformula.arcontria.scenes;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -56,7 +57,7 @@ public class SceneManager {
 	
 	public void draw(float delta) {
 		gameBatch.setProjectionMatrix(viewportHandler.getGameViewport().getCamera().combined);
-		
+		Gdx.gl.glEnable(GL20.GL_BLEND);
 		if (currentScene != null) {
 			currentScene.draw(gameBatch, delta);
 		}
@@ -64,6 +65,7 @@ public class SceneManager {
 	
 	public void drawUI(float delta) {
 		uiBatch.setProjectionMatrix(viewportHandler.getUIViewport().getCamera().combined);
+		Gdx.gl.glEnable(GL20.GL_BLEND);
 		
 		if (currentScene != null) {
 			currentScene.drawUI(uiBatch, delta);

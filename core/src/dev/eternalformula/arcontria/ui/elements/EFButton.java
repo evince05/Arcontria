@@ -96,14 +96,13 @@ public class EFButton extends UIElement {
 
 	@Override
 	public void draw(SpriteBatch uiBatch, float delta) {
-		
 		if (isClicked) {
 			uiBatch.draw(clickedSkin, location.x, location.y);
 		}
 		else {
 			uiBatch.draw(skin, location.x, location.y);
 		}
-		
+
 		if (text != null && !text.equals("")) {
 			float width = FontUtil.getWidth(font, text);
 			font.draw(uiBatch, text, location.x + skin.getRegionWidth() / 2f - width / 2f,
