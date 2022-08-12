@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
+import dev.eternalformula.arcontria.cutscenes.Cutscene;
+import dev.eternalformula.arcontria.cutscenes.CutscenePrompt;
 import dev.eternalformula.arcontria.ui.UIContainer;
 import dev.eternalformula.arcontria.ui.actions.ButtonClickAction;
 import dev.eternalformula.arcontria.util.Assets;
@@ -21,19 +23,23 @@ public class EFDialogueBox extends UIContainer {
 	private TextureAtlas uiAtlas;
 	
 	private EFTypingLabel typingLabel;
+	
+	private EFButton[] promptBtns;
 	private EFButton exitBtn;
 	
 	private Rectangle textBoxBounds;
 	
-	private boolean clickToExitEnabled;
+	// Handles display of prompts & exit btn
+	private boolean postTextActionEnabled;
+	
 	private boolean requestingExit;
 	
 	/**
 	 * The amount of time to wait after the label<br>
-	 * finishes before the exit button should be displayed.
+	 * finishes before post text action should occur.
 	 */
 	
-	private final float exitBtnDelayTime;
+	private final float postTextDelayTime;
 	private float transitionTimeElapsed;
 	
 	
@@ -71,7 +77,7 @@ public class EFDialogueBox extends UIContainer {
 		
 		addChildren(typingLabel, exitBtn);
 		
-		this.exitBtnDelayTime = 0.75f;
+		this.postTextDelayTime = 0.75f;
 	}
 	
 	public void setFont(BitmapFont font, int lineWidth) {
@@ -90,12 +96,24 @@ public class EFDialogueBox extends UIContainer {
 	public void update(float delta) {
 		super.update(delta);
 		
-		if (typingLabel.isFinished() && !exitBtn.isVisible()) {
+		if (typingLabel.isFinished() && !postTextActionEnabled) {
 			transitionTimeElapsed += delta;
 			
-			if (transitionTimeElapsed >= exitBtnDelayTime) {
-				exitBtn.setVisible(true);
-				exitBtn.setActive(true);
+			if (transitionTimeElapsed >= postTextDelayTime) {
+				postTextActionEnabled = true;
+				
+				if (promptBtns != null) {
+					// Display prompts
+					for (EFButton btn : promptBtns) {
+						btn.setActive(true);
+						btn.setVisible(true);
+					}
+				}
+				else {
+					// Display exit buton
+					exitBtn.setVisible(true);
+					exitBtn.setActive(true);
+				}				
 			}
 		}
 	}
@@ -109,6 +127,51 @@ public class EFDialogueBox extends UIContainer {
 			EFDebug.info("Requesting text skip!");
 			
 			typingLabel.skipToEnd();
+		}
+	}
+	
+	
+	
+	/**
+	 * Sets the cutscene prompts of the dialogue box.
+	 * @param cutscene The cutscene to which the dialogue box belongs.
+	 * @param prompts An array of prompts that belong to the dialogue box.
+	 */
+	
+	public void setCutscenePrompts(Cutscene cutscene, String[] prompts) {
+		// Create prompt button array
+		this.promptBtns = new EFButton[prompts.length];
+		
+		for (int i = 0; i < prompts.length; i++) {
+			// Gets the prompt
+			CutscenePrompt prompt = cutscene.getPrompt(prompts[i]);
+			
+			// Create the button.
+			EFButton promptBtn = new EFButton(this, (int) location.x + 97, (int) location.y + 5 + 19 * i);
+			
+			// Skins
+			TextureRegion promptReg = uiAtlas.findRegion("promptbox");
+			promptBtn.setSkin(new TextureRegion(promptReg, 0, 0, 142, 18));
+			promptBtn.setClickSkin(new TextureRegion(promptReg, 0, 18, 142, 18));
+			
+			// Text & Visibility
+			promptBtn.setText(prompt.getMessage(), 4f, 0f);
+			promptBtn.setActive(false);
+			promptBtn.setVisible(false);
+			
+			// Set prompt scripts
+			promptBtn.setClickAction(new ButtonClickAction() {
+
+				@Override
+				public void onClick(int x, int y, int button) {
+					cutscene.setScript(prompt.getScript());
+					EFDebug.info("Switching script to " + prompt.getScript());
+				}
+			});
+			
+			// Adds the child to the EFDialogueBox
+			promptBtns[i] = promptBtn;
+			addChild(promptBtn);
 		}
 	}
 }

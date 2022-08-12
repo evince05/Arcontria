@@ -1,22 +1,21 @@
 package dev.eternalformula.arcontria.scenes;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import dev.eternalformula.arcontria.cutscenes.Cutscene;
 import dev.eternalformula.arcontria.cutscenes.CutsceneHandler;
-import dev.eternalformula.arcontria.ui.elements.EFTypingLabel;
-import dev.eternalformula.arcontria.util.Assets;
+import dev.eternalformula.arcontria.gfx.animations.ScreenAnimation;
 
 public class GameScene extends Scene {
 	
 	private GameSession session;
 	
-	private EFTypingLabel label;
-	private BitmapFont font;
+	private ScreenAnimation screenAnim;
 	
 	private CutsceneHandler csHandler;
+	
+	private float screenAlpha;
 
 	public GameScene(SceneManager manager) {
 		super(manager);
@@ -24,15 +23,10 @@ public class GameScene extends Scene {
 
 	@Override
 	protected void loadAssets() {
-		this.font = Assets.get("fonts/Habbo.fnt", BitmapFont.class);
 	}
 
 	@Override
 	public void load() {
-		this.label = new EFTypingLabel(null, "The quick brown fox jumps over the lazy dog. I think this should have started a new line or two by now. Cheers :)");
-		label.setColor(Color.LIME);
-		label.setupWrapping(font, 240);
-		label.setLocation(20, 60);
 		
 		this.session = GameSession.load(this, null);
 		
@@ -45,6 +39,10 @@ public class GameScene extends Scene {
 	public void draw(SpriteBatch batch, float delta) {
 		// Handles fade effects
 		super.draw(batch, delta);
+		
+		if (screenAnim != null) {
+			batch.setColor(new Color(screenAlpha, screenAlpha, screenAlpha, screenAlpha));
+		}
 		
 		batch.begin();
 		
@@ -64,15 +62,17 @@ public class GameScene extends Scene {
 	public void drawUI(SpriteBatch batch, float delta) {
 		// Handles fade effects
 		super.drawUI(batch, delta);
+		
+		if (screenAnim != null) {
+			batch.setColor(new Color(screenAlpha, screenAlpha, screenAlpha, screenAlpha));
+		}
+		
 		batch.begin();
 		
 		session.drawUI(batch, delta);
 		
 		if (csHandler.isPlayingCutscene()) {
 			csHandler.drawUI(batch, delta);
-		}
-		else {
-			label.draw(batch, delta);
 		}
 		
 		
@@ -84,12 +84,16 @@ public class GameScene extends Scene {
 		
 		super.update(delta);
 		
+		if (screenAnim != null) {
+			screenAnim.update(delta);
+			screenAlpha = screenAnim.getAlpha();
+		}
+		
 		if (csHandler.isPlayingCutscene()) {
 			csHandler.update(delta);
 		}
 		else {
 			session.update(delta);
-			label.update(delta);
 		}
 		
 	}
@@ -111,6 +115,9 @@ public class GameScene extends Scene {
 
 	@Override
 	public void onMouseReleased(int x, int y, int button) {
+		if (csHandler.isPlayingCutscene()) {
+			csHandler.onMouseReleased(x, y, button);
+		}
 	}
 
 	@Override
@@ -119,5 +126,17 @@ public class GameScene extends Scene {
 
 	@Override
 	public void dispose() {
+	}
+	
+	public ScreenAnimation getScreenAnimation() {
+		return screenAnim;
+	}
+	
+	public void setScreenAnimation(ScreenAnimation animation) {
+		this.screenAnim = animation;
+	}
+	
+	public float getScreenAlpha() {
+		return screenAlpha;
 	}
 }

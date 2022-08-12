@@ -51,6 +51,6 @@ public class Strings {
 	 */
 	
 	public static String formatColor(Color color) {
-		return vec3(color.r, color.g, color.b);
+		return "[" + color.r + ", " + color.g + ", " + color.b + ", " + color.a + "]";
 	}
 }

@@ -19,8 +19,11 @@ import dev.eternalformula.arcontria.cutscenes.commands.CutsceneDialogueCmd;
 import dev.eternalformula.arcontria.cutscenes.commands.CutsceneFadeCmd;
 import dev.eternalformula.arcontria.cutscenes.commands.CutsceneWaitCmd;
 import dev.eternalformula.arcontria.files.JsonUtil;
+import dev.eternalformula.arcontria.gfx.animations.ScreenAnimation.FadeInAnimation;
+import dev.eternalformula.arcontria.gfx.animations.ScreenAnimation.FadeOutAnimation;
 import dev.eternalformula.arcontria.level.maps.EFMapRenderer;
 import dev.eternalformula.arcontria.level.maps.EFTiledMap;
+import dev.eternalformula.arcontria.scenes.GameScene;
 import dev.eternalformula.arcontria.ui.elements.EFDialogueBox;
 import dev.eternalformula.arcontria.util.Assets;
 import dev.eternalformula.arcontria.util.EFDebug;
@@ -38,18 +41,17 @@ public class Cutscene {
 	
 	private Map<String, CutsceneScript> scripts;
 	private Map<String, CutsceneEntity> entities;
+	private Map<String, CutsceneDialogue> dialogues;
+	private Map<String, CutscenePrompt> prompts;
 	
 	private CutsceneScript currentScript;
 	private CutsceneCommand currentCmd;
 	private boolean isCurrentCmdFinished;
 	
-	// Waiting commands
-	private boolean isWaiting;
-	private float waitElapsedTime;
-	private float waitTotalTime;
-	
 	// Dialogue Box
 	private EFDialogueBox dialogueBox;
+	
+	private boolean fading;
 	
 	private boolean isFinished;
 	
@@ -78,11 +80,6 @@ public class Cutscene {
 		
 		this.dialogueBox = new EFDialogueBox("Hello!", 10, 10);
 		dialogueBox.setFont(Assets.get("fonts/Habbo.fnt", BitmapFont.class), 136);
-
-		// Waiting
-		this.isWaiting = false;
-		this.waitElapsedTime = 0f;
-		this.waitTotalTime = 0f;
 		
 		// Parsing
 		this.isCurrentCmdFinished = true;
@@ -94,6 +91,14 @@ public class Cutscene {
 		// Entities
 		this.entities = new HashMap<String, CutsceneEntity>();
 		loadEntities(rootNode);
+		
+		// Dialogues
+		this.dialogues = new HashMap<String, CutsceneDialogue>();
+		loadDialogues(rootNode);
+		
+		// Prompts
+		this.prompts = new HashMap<String, CutscenePrompt>();
+		loadPrompts(rootNode);
 		
 		// Loads the main script. This will always get run first.
 		this.currentScript = scripts.get("main");
@@ -140,6 +145,65 @@ public class Cutscene {
 	}
 	
 	/**
+	 * Loads the dialogue nodes of the cutscene.
+	 * @param rootNode The root node of the cutscene file.
+	 */
+	
+	private void loadDialogues(JsonNode rootNode) {
+		Iterator<Entry<String, JsonNode>> dialoguesItr = rootNode.get("dialogue").fields();
+		dialoguesItr.forEachRemaining(dialogue -> {
+			JsonNode dialogueNode = dialogue.getValue();
+			
+			// Gets the required params
+			String dialogueName = dialogue.getKey();
+			String senderUUID = dialogueNode.get("sender").textValue();
+			String message = dialogueNode.get("message").textValue();
+			String[] prompts = null;
+		
+			// Only gets the prompts if they exist.
+			if (dialogueNode.has("prompts")) {
+				JsonNode promptsNode = dialogueNode.get("prompts");
+				prompts = new String[promptsNode.size()];
+				
+				// Gets each prompt
+				for (int i = 0; i < prompts.length; i++) {
+					prompts[i] = promptsNode.get(i).textValue();
+				}
+			}
+			
+			if (prompts == null || prompts.length == 0) {
+				// No prompts detected. Using default constructor.
+				dialogues.put(dialogueName, new CutsceneDialogue(senderUUID, message));
+			}
+			else {
+				// Prompts detected, using constructor with prompts
+				dialogues.put(dialogueName, new CutsceneDialogue(senderUUID, message, prompts));
+			}
+		});
+	}
+	
+	/**
+	 * Loads the prompts of the cutscene.
+	 * @param rootNode The root node of the cutscene file.
+	 */
+	
+	private void loadPrompts(JsonNode rootNode) {
+		Iterator<Entry<String, JsonNode>> promptsItr = rootNode.get("prompts").fields();
+		promptsItr.forEachRemaining(prompt -> {
+			JsonNode promptNode = prompt.getValue();
+			
+			// Gets the required params
+			String promptName = prompt.getKey();
+			String msg = promptNode.get("text").textValue();
+			String script = promptNode.get("script").textValue();
+			
+			// Adds the prompt.
+			prompts.put(promptName, new CutscenePrompt(msg, script));
+			
+		});
+	}
+	
+	/**
 	 * Handles the core functionality of the cutscene.
 	 * @param delta Delta time
 	 */
@@ -154,6 +218,16 @@ public class Cutscene {
 			}
 		}
 		else {
+			
+			if (fading) {
+				GameScene scene = (GameScene) ArcontriaGame.GAME.getScene();
+				if (scene.getScreenAnimation().isFinished()) {
+					
+					fading = false;
+					scene.setScreenAnimation(null);
+					endSimpleCommand();
+				}
+			}
 			// Updates the current command
 			if (currentCmd != null) {
 				currentCmd.update(delta);
@@ -176,6 +250,15 @@ public class Cutscene {
 	
 	public void draw(SpriteBatch batch, float delta) {
 		mapRend.setTiledMap(map);
+		
+		if (fading) {
+			
+			mapRend.toggleScreenAlpha(true);
+			// Map transparency for fading
+			GameScene scene = (GameScene) ArcontriaGame.GAME.getScene();
+			mapRend.setScreenAlpha(scene.getScreenAlpha());
+		}
+		
 		mapRend.draw(batch, delta);
 		
 		entities.forEach((name, entity) -> {
@@ -204,7 +287,14 @@ public class Cutscene {
 		}
 	}
 	
+	public void onMouseReleased(int x, int y, int button) {
+		if (currentCmd instanceof CutsceneDialogueCmd) {
+			((CutsceneDialogueCmd) currentCmd).onMouseReleased(x, y, button);
+		}
+	}
+	
 	private void parseScriptCommand(String cmd) {
+		System.out.println("Parsing cmd \"" + cmd + "\"");
 		isCurrentCmdFinished = false;
 		String[] args = cmd.split(" ");
 		
@@ -255,8 +345,7 @@ public class Cutscene {
 		else if (args[0].equalsIgnoreCase("dialogue")) {
 			if (args[1] != null) {
 				String dialogue = cmd.substring(args[0].length() + 1);
-				System.out.println("Dialogue: " + dialogue);
-				currentCmd = new CutsceneDialogueCmd(this, dialogue);
+				currentCmd = new CutsceneDialogueCmd(this, dialogues.get(dialogue));	
 			}
 		}
 		else if (args[0].equalsIgnoreCase("wait")) {
@@ -274,12 +363,17 @@ public class Cutscene {
 		}
 		else if (args[0].equalsIgnoreCase("fade")) {
 			float time = Float.valueOf(args[2].substring(0, args[2].length() - 1));
+			GameScene gs = (GameScene) ArcontriaGame.GAME.getScene();
 			
 			if (args[1].equalsIgnoreCase("in")) {
-				currentCmd = new CutsceneFadeCmd(this, 0, time);
+				gs.setScreenAnimation(new FadeInAnimation(time));
+				fading = true;
+				//currentCmd = new CutsceneFadeCmd(this, 0, time);
 			}
 			else if (args[1].equalsIgnoreCase("out")) {
-				currentCmd = new CutsceneFadeCmd(this, 1, time);
+				gs.setScreenAnimation(new FadeOutAnimation(time));
+				fading = true;
+				//currentCmd = new CutsceneFadeCmd(this, 1, time);
 			}
 		}
 		else if (args[0].equalsIgnoreCase("exit")) {
@@ -301,5 +395,25 @@ public class Cutscene {
 	private void endSimpleCommand() {
 		isCurrentCmdFinished = true;
 		currentScript.moveToNextCommand();
+	}
+	
+	/**
+	 * Sets the script of the cutscene.
+	 * @param scriptName The name of the script.
+	 */
+	
+	public void setScript(String scriptName) {
+		if (scripts.containsKey(scriptName)) {
+			this.currentScript = scripts.get(scriptName);
+			isCurrentCmdFinished = true;
+		}
+		else {
+			EFDebug.error("Could not set the script \"" + scriptName + "\" "
+					+ "in the cutscene! Reason: Script Not Found!");
+		}
+	}
+	
+	public CutscenePrompt getPrompt(String promptName) {
+		return prompts.get(promptName);
 	}
 }

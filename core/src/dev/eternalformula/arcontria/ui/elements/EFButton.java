@@ -19,10 +19,16 @@ public class EFButton extends UIElement {
 	
 	private TextureRegion clickedSkin;
 	private String text;
+	
+	private float textXOffset;
+	private float textYOffset;
 
 	private BitmapFont font;
 	
 	private boolean isClicked;
+	private boolean isHovering;
+	
+	private boolean centerText;
 	
 	/**
 	 * Determines the mode of the button.<br>
@@ -44,6 +50,7 @@ public class EFButton extends UIElement {
 		this.buttonMode = EFButton.DEFAULT_MODE;
 		
 		this.font = Assets.get("fonts/Habbo.fnt", BitmapFont.class);
+		this.centerText = true;
 	}
 	
 	@Override
@@ -84,6 +91,7 @@ public class EFButton extends UIElement {
 
 	@Override
 	public void onMouseHovered(int x, int y) {
+		isHovering = true;
 	}
 
 	@Override
@@ -96,7 +104,7 @@ public class EFButton extends UIElement {
 
 	@Override
 	public void draw(SpriteBatch uiBatch, float delta) {
-		if (isClicked) {
+		if (isClicked || isHovering) {
 			uiBatch.draw(clickedSkin, location.x, location.y);
 		}
 		else {
@@ -104,9 +112,19 @@ public class EFButton extends UIElement {
 		}
 
 		if (text != null && !text.equals("")) {
-			float width = FontUtil.getWidth(font, text);
-			font.draw(uiBatch, text, location.x + skin.getRegionWidth() / 2f - width / 2f,
-					location.y + skin.getRegionHeight() - 2f);
+			// Draws the text
+			if (centerText) {
+				float width = FontUtil.getWidth(font, text);
+				font.draw(uiBatch, text, location.x + skin.getRegionWidth() / 2f - width / 2f,
+						location.y + skin.getRegionHeight() - 2f);
+			}
+			else {
+				font.draw(uiBatch, text, location.x + textXOffset, location.y + 
+						skin.getRegionHeight() - textYOffset);
+			}
+			
+			
+					
 		}
 	}
 	
@@ -142,5 +160,18 @@ public class EFButton extends UIElement {
 	public void setText(String text) {
 		this.text = text;
 	}
-
+	
+	/**
+	 * Sets the text with additional positioning parameters.
+	 * @param text The text of the button.
+	 * @param xOffset The xOffset of the text (from left side)
+	 * @param yOffset The yOffset of the text (from up side)
+	 */
+	
+	public void setText(String text, float xOffset, float yOffset) {
+		this.text = text;
+		this.textXOffset = xOffset;
+		this.textYOffset = yOffset;
+		this.centerText = false;
+	}
 }

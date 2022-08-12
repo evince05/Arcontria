@@ -126,15 +126,18 @@ public abstract class UIElement {
 	
 	public void onMouseReleased(int x, int y, int button) {
 		
-		/*
-		 * if (container != null) {
-		 *
-			Vector2 lastClickPos = ArcontriaGame.GAME.getSceneManager()
-					.getInputHandler().getLastClickLocation();
-			if (bounds.contains(x, y) || bounds.contains(lastClickPos.x, lastClickPos.y)) {
-				container.focusedElement = null;
+		// This method was previously commented out, idk why
+		if (container != null) {
+		 
+			if (bounds != null) {
+				Vector2 lastClickPos = ArcontriaGame.GAME.getSceneManager()
+						.getInputHandler().getLastClickLocation();
+				if (bounds.contains(x, y) || bounds.contains(lastClickPos.x, lastClickPos.y)) {
+					container.focusedElement = null;
+				}
 			}
-		}*/
+			
+		}
 	}
 	
 	/**

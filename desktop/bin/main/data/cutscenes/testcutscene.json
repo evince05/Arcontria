@@ -31,26 +31,32 @@
 			"exit"
 		]
 	},
-	"dialog": {
-		"dialogLine1": {
+	"dialogue": {
+		"dialogueLine1": {
 			"sender": "2a97f1b2-1275-11ed-861d-0242ac120002",
-			"message": "Woah, take it easy! You hit your head pretty hard..."
+			"message": "Woah, take it easy! You hit your head pretty hard...",
+			"prompts": [ "prompt1", "prompt2" ]
 		},
-		"dialogLine2": {
+		"dialogueLine2": {
 			"sender": "2a97f1b2-1275-11ed-861d-0242ac120002",
-			"message": "Don't worry about that right now. Everything will be okay, trust me."
+			"message": "Don't worry about that right now. Everything will be okay, trust me.",
+			"prompts": [],
 		},
-		"dialogLine3": {
+		"dialogueLine3": {
 			"sender": "2a97f1b2-1275-11ed-861d-0242ac120002",
-			"message": "You wont remember by the time you wake up. You've sustained some serious head injuries..."
+			"message": "You wont remember by the time you wake up. You've sustained some serious head injuries...",
+			"prompts": [],
+			
 		},
-		"dialogLine4": {
+		"dialogueLine4": {
 			"sender": "2a97f1b2-1275-11ed-861d-0242ac120002",
-			"message": "Now, I'll be going. You should get some rest... Sweet dreams!"
+			"message": "Now, I'll be going. You should get some rest... Sweet dreams!",
+			"prompts": [],
 		},
-		"dialogLine5": {
+		"dialogueLine5": {
 			"sender": "2a97f1b2-1275-11ed-861d-0242ac120002",
-			"message": "Oh, and by the way... Welcome to Arcontria!"
+			"message": "Oh, and by the way... Welcome to Arcontria!",
+			"prompts": []
 		}
 	},
 	"prompts": {
