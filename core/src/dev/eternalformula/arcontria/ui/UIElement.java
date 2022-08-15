@@ -24,6 +24,8 @@ public abstract class UIElement {
 	// Determines whether the UIElement should listen for input methods
 	protected boolean isInteractive;
 	
+	protected float hoverTime;
+	
 	protected UIElement(UIContainer container) {
 		this.container = container;
 		this.visible = true;

@@ -9,8 +9,8 @@ camera:
   (X) camera moveto [x,y] (speed) - Moves the camera to [x,y] with optional speed (speed)
   (X) camera follow <uuid> - Sets the camera to follow the entity with the specified UUID
 
-dialog:
-  dialog <message> (prompt) - Opens a dialog pane from the specified dialog line in the cutscene file.
+dialogue:
+  dialogue <dialogueMessage...> - Opens a dialog pane from the specified dialog line in the cutscene file.
 	if a prompt is specified, the prompt will display once the dialogue finishes typing.
 wait:
   (X) wait <timeInSeconds> - Adds a natural pause to the cutscene.

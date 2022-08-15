@@ -10,11 +10,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import dev.eternalformula.arcontria.gfx.text.FontUtil;
 import dev.eternalformula.arcontria.ui.UIContainer;
 import dev.eternalformula.arcontria.ui.UIElement;
-import dev.eternalformula.arcontria.util.EFDebug;
+import dev.eternalformula.arcontria.util.Strings;
 
 public class EFTypingLabel extends UIElement {
 	
-	private static final float DEFAULT_TYPE_SPEED = 16f;
+	private static final float DEFAULT_TYPE_SPEED = 22f;
 	private String text;
 	private StringBuilder displayText;
 	
@@ -73,9 +73,8 @@ public class EFTypingLabel extends UIElement {
 
 	@Override
 	public void draw(SpriteBatch uiBatch, float delta) {
-	
-		
-		if (font != null && !text.equals("")) {
+			
+			if (font != null && !text.equals("")) {
 			
 			font.setColor(textColor);
 			
@@ -142,7 +141,8 @@ public class EFTypingLabel extends UIElement {
 				nextWord = text.substring(currentIndex + 1, text.length());
 			}
 			
-			if (FontUtil.getWidth(font, displayText + nextWord) >= lineWidth) {
+			// The space between displayText and nextWord must be included in the calculation.
+			if (FontUtil.getWidth(font, displayText + " " + nextWord) >= lineWidth) {
 				// Starts a new line
 				
 				setLine(currentRow, displayText.toString());
@@ -194,5 +194,22 @@ public class EFTypingLabel extends UIElement {
 	
 	public boolean isFinished() {
 		return isFinished;
+	}
+	
+	/**
+	 * Resets the typing label with a new text. Used mainly for dialogue chaining.
+	 * @param text The new text of the typing label.
+	 */
+	
+	public void resetWithNewText(String text) {
+		// Clears all existing text in the TypingLabel.
+		lines.clear();
+		displayText = new StringBuilder();
+		
+		// Reset appendNewChar() fields.
+		this.currentIndex = 0;
+		this.currentRow = 0;
+		this.isFinished = false;
+		this.text = text;
 	}
 }

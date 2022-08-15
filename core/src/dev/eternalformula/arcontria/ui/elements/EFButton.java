@@ -91,7 +91,12 @@ public class EFButton extends UIElement {
 
 	@Override
 	public void onMouseHovered(int x, int y) {
-		isHovering = true;
+		if (bounds.contains(x, y)) {
+			isHovering = true;
+		}
+		else {
+			isHovering = false;
+		}
 	}
 
 	@Override

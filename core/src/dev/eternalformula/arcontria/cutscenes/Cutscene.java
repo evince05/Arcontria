@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -19,12 +18,12 @@ import dev.eternalformula.arcontria.cutscenes.commands.CutsceneDialogueCmd;
 import dev.eternalformula.arcontria.cutscenes.commands.CutsceneFadeCmd;
 import dev.eternalformula.arcontria.cutscenes.commands.CutsceneWaitCmd;
 import dev.eternalformula.arcontria.files.JsonUtil;
+import dev.eternalformula.arcontria.gfx.EGFXUtil;
 import dev.eternalformula.arcontria.gfx.animations.ScreenAnimation.FadeInAnimation;
 import dev.eternalformula.arcontria.gfx.animations.ScreenAnimation.FadeOutAnimation;
 import dev.eternalformula.arcontria.level.maps.EFMapRenderer;
 import dev.eternalformula.arcontria.level.maps.EFTiledMap;
 import dev.eternalformula.arcontria.scenes.GameScene;
-import dev.eternalformula.arcontria.ui.elements.EFDialogueBox;
 import dev.eternalformula.arcontria.util.Assets;
 import dev.eternalformula.arcontria.util.EFDebug;
 import dev.eternalformula.arcontria.util.EFMath;
@@ -47,9 +46,6 @@ public class Cutscene {
 	private CutsceneScript currentScript;
 	private CutsceneCommand currentCmd;
 	private boolean isCurrentCmdFinished;
-	
-	// Dialogue Box
-	private EFDialogueBox dialogueBox;
 	
 	private boolean fading;
 	
@@ -77,9 +73,6 @@ public class Cutscene {
 		
 		map = Assets.get(rootNode.get("map").asText(), EFTiledMap.class);
 		this.mapRend = new EFMapRenderer();
-		
-		this.dialogueBox = new EFDialogueBox("Hello!", 10, 10);
-		dialogueBox.setFont(Assets.get("fonts/Habbo.fnt", BitmapFont.class), 136);
 		
 		// Parsing
 		this.isCurrentCmdFinished = true;
@@ -221,8 +214,10 @@ public class Cutscene {
 			
 			if (fading) {
 				GameScene scene = (GameScene) ArcontriaGame.GAME.getScene();
+				EGFXUtil.setSceneAlpha(scene.getScreenAnimation().getAlpha());
 				if (scene.getScreenAnimation().isFinished()) {
 					
+					EGFXUtil.setSceneAlpha(0f);
 					fading = false;
 					scene.setScreenAnimation(null);
 					endSimpleCommand();
@@ -251,19 +246,15 @@ public class Cutscene {
 	public void draw(SpriteBatch batch, float delta) {
 		mapRend.setTiledMap(map);
 		
-		if (fading) {
-			
-			mapRend.toggleScreenAlpha(true);
-			// Map transparency for fading
-			GameScene scene = (GameScene) ArcontriaGame.GAME.getScene();
-			mapRend.setScreenAlpha(scene.getScreenAlpha());
-		}
-		
 		mapRend.draw(batch, delta);
 		
 		entities.forEach((name, entity) -> {
 			entity.draw(batch, delta);
 		});
+		
+		if (fading || currentCmd instanceof CutsceneDialogueCmd) {
+			EGFXUtil.drawFadeRect(batch, EGFXUtil.getSceneAlpha());
+		}
 	}
 	
 	/**
@@ -290,6 +281,12 @@ public class Cutscene {
 	public void onMouseReleased(int x, int y, int button) {
 		if (currentCmd instanceof CutsceneDialogueCmd) {
 			((CutsceneDialogueCmd) currentCmd).onMouseReleased(x, y, button);
+		}
+	}
+	
+	public void onMouseHovered(int x, int y) {
+		if (currentCmd instanceof CutsceneDialogueCmd) {
+			((CutsceneDialogueCmd) currentCmd).onMouseHovered(x, y);
 		}
 	}
 	
@@ -344,8 +341,15 @@ public class Cutscene {
 		}
 		else if (args[0].equalsIgnoreCase("dialogue")) {
 			if (args[1] != null) {
-				String dialogue = cmd.substring(args[0].length() + 1);
-				currentCmd = new CutsceneDialogueCmd(this, dialogues.get(dialogue));	
+				
+				// Removes the "dialogue" cmd argument
+				String[] dialoguesArr = new String[args.length - 1];
+				for (int i = 0; i < dialoguesArr.length; i++) {
+					dialoguesArr[i] = args[i + 1];
+				}
+				
+				currentCmd = new CutsceneDialogueCmd(this, dialoguesArr);
+				EGFXUtil.setSceneAlpha(0.3f);
 			}
 		}
 		else if (args[0].equalsIgnoreCase("wait")) {
@@ -366,12 +370,12 @@ public class Cutscene {
 			GameScene gs = (GameScene) ArcontriaGame.GAME.getScene();
 			
 			if (args[1].equalsIgnoreCase("in")) {
-				gs.setScreenAnimation(new FadeInAnimation(time));
+				gs.setScreenAnimation(new FadeInAnimation(EGFXUtil.getSceneAlpha(), time));
 				fading = true;
 				//currentCmd = new CutsceneFadeCmd(this, 0, time);
 			}
 			else if (args[1].equalsIgnoreCase("out")) {
-				gs.setScreenAnimation(new FadeOutAnimation(time));
+				gs.setScreenAnimation(new FadeOutAnimation(EGFXUtil.getSceneAlpha(), time));
 				fading = true;
 				//currentCmd = new CutsceneFadeCmd(this, 1, time);
 			}
@@ -411,6 +415,10 @@ public class Cutscene {
 			EFDebug.error("Could not set the script \"" + scriptName + "\" "
 					+ "in the cutscene! Reason: Script Not Found!");
 		}
+	}
+	
+	public CutsceneDialogue getDialogue(String dialogueName) {
+		return dialogues.get(dialogueName);
 	}
 	
 	public CutscenePrompt getPrompt(String promptName) {

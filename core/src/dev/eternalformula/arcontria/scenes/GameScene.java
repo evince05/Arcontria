@@ -63,10 +63,6 @@ public class GameScene extends Scene {
 		// Handles fade effects
 		super.drawUI(batch, delta);
 		
-		if (screenAnim != null) {
-			batch.setColor(new Color(screenAlpha, screenAlpha, screenAlpha, screenAlpha));
-		}
-		
 		batch.begin();
 		
 		session.drawUI(batch, delta);
@@ -122,6 +118,13 @@ public class GameScene extends Scene {
 
 	@Override
 	public void onMouseDrag(int x, int y) {
+	}
+	
+	@Override
+	public void onMouseHovered(int x, int y) {
+		if (csHandler.isPlayingCutscene()) {
+			csHandler.onMouseHovered(x, y);
+		}
 	}
 
 	@Override

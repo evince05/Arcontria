@@ -7,23 +7,20 @@
 	"initialCamPos": "[4,4]",
 	"scripts": {
 		"main": [
-			"wait 0.5s",
 			"entity 5df649ca-ea87-4905-beae-9de2a9f5372d setanim blink false",
-			"dialogue dialogueLine1",
-			"dialogue dialogueLine2"
+			"wait 0.5s",
+			"dialogue dialogueLine1"
 		],
 		"pScript1": [
-			"dialogue dialogueLine2",
-			"dialogue dialogueLine4",
-			"wait 1.3s",
+			"dialogue dialogueLine2 dialogueLine4",
+			"wait 0.8s",
 			"dialogue dialogueLine5",
 			"fade out 1.2s",
 			"exit"
 		],
 		"pScript2": [
-			"dialogue dialogueLine3",
-			"dialogue dialogueLine4",
-			"wait 1.3s",
+			"dialogue dialogueLine3 dialogueLine4",
+			"wait 0.8s",
 			"dialogue dialogueLine5",
 			"fade out 1.2s",
 			"exit"

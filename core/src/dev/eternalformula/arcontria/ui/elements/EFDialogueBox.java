@@ -1,6 +1,9 @@
 package dev.eternalformula.arcontria.ui.elements;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
@@ -42,6 +45,9 @@ public class EFDialogueBox extends UIContainer {
 	private final float postTextDelayTime;
 	private float transitionTimeElapsed;
 	
+	// Temp
+	private TextureRegion senderPortrait;
+	
 	
 	public EFDialogueBox(String text, int x, int y) {
 		
@@ -60,6 +66,10 @@ public class EFDialogueBox extends UIContainer {
 		
 		// Exit Button
 		this.exitBtn = new EFButton(this, x + 229, y + 7);
+		
+		// Sender Portrait
+		this.senderPortrait = new TextureRegion(new 
+				Texture(Gdx.files.internal("ui/dialogue/demoportrait.png")));
 		
 		// Skins
 		TextureRegion btnRegion = uiAtlas.findRegion("exitdialoguebtn");
@@ -119,6 +129,14 @@ public class EFDialogueBox extends UIContainer {
 	}
 	
 	@Override
+	public void draw(SpriteBatch uiBatch, float delta) {
+		super.draw(uiBatch, delta);
+		
+		// Draw the portrait
+		uiBatch.draw(senderPortrait, location.x + 16, location.y + 32);
+	}
+	
+	@Override
 	public void onMouseClicked(int x, int y, int button) {
 		super.onMouseClicked(x, y, button);
 		
@@ -173,5 +191,23 @@ public class EFDialogueBox extends UIContainer {
 			promptBtns[i] = promptBtn;
 			addChild(promptBtn);
 		}
+	}
+	
+	/**
+	 * Chains a new Cutscene Dialogue to the existing DialogueBox.<br>
+	 * This method should only be used when the existing DialogueBox is finished.
+	 * @param cutscene The cutscene that is active.
+	 * @param text The new dialogue text.
+	 * @param prompts Any existing dialogue prompts.
+	 */
+	
+	public void chainNewDialogue(Cutscene cutscene, String text, String[] prompts) {
+		typingLabel.resetWithNewText(text);
+		
+		if (prompts != null && prompts.length > 0) {
+			setCutscenePrompts(cutscene, prompts);
+		}
+		
+		requestingExit = false;
 	}
 }

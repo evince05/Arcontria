@@ -53,4 +53,13 @@ public class Strings {
 	public static String formatColor(Color color) {
 		return "[" + color.r + ", " + color.g + ", " + color.b + ", " + color.a + "]";
 	}
+	
+	/**
+	 * Puts quotes around the given string.
+	 * @param str The string to be formatted
+	 */
+	
+	public static String inQuotations(String str) {
+		return "\"" + str + "\"";
+	}
 }

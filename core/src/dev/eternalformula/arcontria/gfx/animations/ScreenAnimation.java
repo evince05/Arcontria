@@ -27,10 +27,15 @@ public abstract class ScreenAnimation {
 		return isFinished;
 	}
 	
-	public static class FadeInAnimation extends ScreenAnimation {
+	public static class FadeOutAnimation extends ScreenAnimation {
 
-		public FadeInAnimation(float time) {
+		public FadeOutAnimation(float time) {
 			super(0f, 1f);
+			this.speed = 1f / time;
+		}
+		
+		public FadeOutAnimation(float startingAlpha, float time) {
+			super(startingAlpha, 1f);
 			this.speed = 1f / time;
 		}
 		
@@ -47,10 +52,15 @@ public abstract class ScreenAnimation {
 		}
 	}
 	
-	public static class FadeOutAnimation extends ScreenAnimation {
+	public static class FadeInAnimation extends ScreenAnimation {
 		
-		public FadeOutAnimation(float time) {
+		public FadeInAnimation(float time) {
 			super(1f, 0f);
+			this.speed = 1f / time;
+		}
+		
+		public FadeInAnimation(float startingAlpha, float time) {
+			super(startingAlpha, 0f);
 			this.speed = 1f / time;
 		}
 		

@@ -1,5 +1,7 @@
 package dev.eternalformula.arcontria;
 
+import java.util.Scanner;
+
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -30,6 +32,9 @@ public class ArcontriaGame extends ApplicationAdapter {
 	
 	@Override
 	public void create () {
+		
+		//Uncomment next line when doing OBS recordings
+		//Scanner sc = new Scanner(System.in); sc.next();
 		
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 		Gdx.app.debug(TAG, "Entering Debug Mode!");

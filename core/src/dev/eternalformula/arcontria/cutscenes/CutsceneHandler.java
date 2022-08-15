@@ -67,5 +67,10 @@ public class CutsceneHandler {
 			cutscene.onMouseReleased(x, y, button);
 		}
 	}
-
+	
+	public void onMouseHovered(int x, int y) {
+		if (cutscene != null) {
+			cutscene.onMouseHovered(x, y);
+		}
+	}
 }
