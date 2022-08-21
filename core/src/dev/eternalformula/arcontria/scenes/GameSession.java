@@ -1,16 +1,12 @@
 package dev.eternalformula.arcontria.scenes;
 
-import java.io.File;
-import java.util.UUID;
-
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.fasterxml.jackson.databind.JsonNode;
 
 import dev.eternalformula.arcontria.entity.Entity;
 import dev.eternalformula.arcontria.entity.player.Player;
-import dev.eternalformula.arcontria.entity.player.PlayerData;
+import dev.eternalformula.arcontria.entity.projectiles.ProspectorPickaxe;
 import dev.eternalformula.arcontria.level.GameLevel;
 import dev.eternalformula.arcontria.util.EFDebug;
 
@@ -71,6 +67,15 @@ public class GameSession {
 	}
 
 	public void update(float delta) {
+		level.update(delta);
+		/*
+		if (pickaxe.isFinished()) {
+			direction++;
+			if (direction > 4) {
+				direction = 1;
+			}
+			pickaxe.reset(new Vector2(1, 2), direction);
+		}*/
 
 		/*
 		level.update(delta);
@@ -83,6 +88,7 @@ public class GameSession {
 	}
 	
 	public void resize(int width, int height) {
+		level.resize(width, height);
 	}
 	
 	/**
@@ -127,7 +133,7 @@ public class GameSession {
 	}
 	
 	public void draw(SpriteBatch batch, float delta) {
-		// TODO Auto-generated method stub
+		level.draw(batch, delta);
 		
 	}
 
@@ -142,7 +148,7 @@ public class GameSession {
 	}
 
 	public void onMouseClicked(int x, int y, int button) {
-		// TODO Auto-generated method stub
+		level.onMouseClicked(x, y, button);
 		
 	}
 

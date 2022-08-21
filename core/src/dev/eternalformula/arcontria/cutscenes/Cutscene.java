@@ -15,7 +15,6 @@ import dev.eternalformula.arcontria.ArcontriaGame;
 import dev.eternalformula.arcontria.cutscenes.CutsceneScript.CutsceneCommand;
 import dev.eternalformula.arcontria.cutscenes.commands.CutsceneCamMoveCmd;
 import dev.eternalformula.arcontria.cutscenes.commands.CutsceneDialogueCmd;
-import dev.eternalformula.arcontria.cutscenes.commands.CutsceneFadeCmd;
 import dev.eternalformula.arcontria.cutscenes.commands.CutsceneWaitCmd;
 import dev.eternalformula.arcontria.files.JsonUtil;
 import dev.eternalformula.arcontria.gfx.EGFXUtil;
@@ -216,8 +215,6 @@ public class Cutscene {
 				GameScene scene = (GameScene) ArcontriaGame.GAME.getScene();
 				EGFXUtil.setSceneAlpha(scene.getScreenAnimation().getAlpha());
 				if (scene.getScreenAnimation().isFinished()) {
-					
-					EGFXUtil.setSceneAlpha(0f);
 					fading = false;
 					scene.setScreenAnimation(null);
 					endSimpleCommand();
@@ -264,10 +261,8 @@ public class Cutscene {
 	 */
 	
 	public void drawUI(SpriteBatch uiBatch, float delta) {
-		if (currentCmd instanceof CutsceneFadeCmd) {
-			((CutsceneFadeCmd) currentCmd).drawFade(uiBatch, delta);
-		}
-		else if (currentCmd instanceof CutsceneDialogueCmd) {
+
+		if (currentCmd instanceof CutsceneDialogueCmd) {
 			((CutsceneDialogueCmd) currentCmd).draw(uiBatch, delta);
 		}
 	}

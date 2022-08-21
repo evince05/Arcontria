@@ -9,9 +9,11 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ai.msg.MessageManager;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import dev.eternalformula.arcontria.objects.misc.Changelog;
 import dev.eternalformula.arcontria.scenes.GameScene;
 import dev.eternalformula.arcontria.scenes.Scene;
 import dev.eternalformula.arcontria.scenes.SceneManager;
+import dev.eternalformula.arcontria.scenes.charcreator.CharacterCreatorScene;
 import dev.eternalformula.arcontria.util.Assets;
 import dev.eternalformula.arcontria.util.EFDebug;
 import dev.eternalformula.arcontria.util.Settings;
@@ -33,9 +35,6 @@ public class ArcontriaGame extends ApplicationAdapter {
 	@Override
 	public void create () {
 		
-		//Uncomment next line when doing OBS recordings
-		//Scanner sc = new Scanner(System.in); sc.next();
-		
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 		Gdx.app.debug(TAG, "Entering Debug Mode!");
 		
@@ -54,7 +53,36 @@ public class ArcontriaGame extends ApplicationAdapter {
 		
 		GAME = this;
 		
+		System.out.println("Arcontria Version [" + Changelog.GAME_VERSION + "] Loaded!");
+		System.out.println("\tWelcome back, EternalFormula");
+		System.out.println("\nQuickNav - Enter a number to navigate to the following areas");
+		System.out.println("\t0 - Changelog");
+		System.out.println("\t1 - Character Creator");
+		System.out.println("\t2 - Game Level");
+		
+		/*
+		Scanner sc = new Scanner(System.in);
+		int choice = sc.nextInt();
+		
+		
+		Scene scene = null;
+		if (choice == 1) {
+			scene = new CharacterCreatorScene(sceneManager);
+		}
+		else if (choice == 2) {
+			scene = new GameScene(sceneManager);
+		}
+		
+		if (choice != 0) {
+			sceneManager.setCurrentScene(scene);
+		}
+		else {
+			Changelog.load().print();
+			
+		}*/
+		
 		sceneManager.setCurrentScene(new GameScene(sceneManager));
+		
 	}
 
 	@Override

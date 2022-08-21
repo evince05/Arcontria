@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import dev.eternalformula.arcontria.ArcontriaGame;
+import dev.eternalformula.arcontria.gfx.EGFXUtil;
 import dev.eternalformula.arcontria.gfx.text.FontUtil;
 import dev.eternalformula.arcontria.ui.UIContainer;
 import dev.eternalformula.arcontria.ui.UIElement;
@@ -109,11 +110,14 @@ public class EFButton extends UIElement {
 
 	@Override
 	public void draw(SpriteBatch uiBatch, float delta) {
-		if (isClicked || isHovering) {
+		if (isClicked) {
 			uiBatch.draw(clickedSkin, location.x, location.y);
 		}
 		else {
 			uiBatch.draw(skin, location.x, location.y);
+			if (isHovering) {
+				EGFXUtil.drawAlphaRect(uiBatch, bounds, 0.05f);
+			}
 		}
 
 		if (text != null && !text.equals("")) {

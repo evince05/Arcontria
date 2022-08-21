@@ -104,7 +104,7 @@ public class Dummy extends LivingEntity {
 			amount += 2;
 		}
 		
-		level.getParticleHandler().spawnParticle(new DamageTextParticle(location, amount, isCritStrike));
+		//level.getParticleHandler().spawnParticle(new DamageTextParticle(location, amount, isCritStrike));
 		isHit = true;
 		
 		Vector2 sourceLoc = source.getEntity().getLocation();
@@ -120,13 +120,13 @@ public class Dummy extends LivingEntity {
 	public void draw(SpriteBatch batch, float delta) {
 		elapsedTime += Gdx.graphics.getDeltaTime();
 		TextureRegion texRegion = currentAnimation.getKeyFrame(elapsedTime, true);
-		float width = texRegion.getRegionWidth() / EFConstants.PPM;
-		float height = texRegion.getRegionHeight() / EFConstants.PPM;
+		float w = texRegion.getRegionWidth() / EFConstants.PPM;
+		float h = texRegion.getRegionHeight() / EFConstants.PPM;
 		
 		if (isHit) {
 			batch.setColor(EFConstants.ENTITY_HURT_COLOR);
 		}
-		batch.draw(texRegion, location.x, location.y, width, height);
+		batch.draw(texRegion, location.x, location.y, w, h);
 		batch.setColor(Color.WHITE);
 	}
 

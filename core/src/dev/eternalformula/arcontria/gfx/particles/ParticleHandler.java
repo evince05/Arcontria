@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import dev.eternalformula.arcontria.gfx.text.FontUtil;
 import dev.eternalformula.arcontria.level.GameLevel;
+import dev.eternalformula.arcontria.util.Assets;
 
 public class ParticleHandler {
 	
@@ -21,7 +22,7 @@ public class ParticleHandler {
 		this.level = level;
 		this.activeParticles = new ArrayList<Particle>();
 		this.particlesToRemove = new ArrayList<Particle>();
-		this.textParticleFont = FontUtil.createFont("fonts/alagard.ttf", 16);
+		this.textParticleFont = Assets.get("fonts/Habbo.fnt", BitmapFont.class);
 		textParticleFont.setUseIntegerPositions(false);
 	}
 	

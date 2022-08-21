@@ -61,7 +61,7 @@ public abstract class LivingEntity extends Entity {
 			health -= amount;
 		}
 		
-		level.getParticleHandler().spawnParticle(new DamageTextParticle(location, damageAmount, isCritStrike));
+		//level.getParticleHandler().spawnParticle(new DamageTextParticle(location, damageAmount, isCritStrike));
 	}
 	
 	@Override

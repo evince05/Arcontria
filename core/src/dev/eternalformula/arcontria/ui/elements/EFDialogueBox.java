@@ -69,7 +69,7 @@ public class EFDialogueBox extends UIContainer {
 		
 		// Sender Portrait
 		this.senderPortrait = new TextureRegion(new 
-				Texture(Gdx.files.internal("ui/dialogue/demoportrait.png")));
+				Texture(Gdx.files.internal("ui/dialogue/ahlos.png")));
 		
 		// Skins
 		TextureRegion btnRegion = uiAtlas.findRegion("exitdialoguebtn");

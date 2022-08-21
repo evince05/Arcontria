@@ -37,7 +37,9 @@ public class Assets {
 		assMan.load("ui/elements/uiatlas.atlas", TextureAtlas.class);
 		assMan.load("ui/charcreator/charcreator.atlas", TextureAtlas.class);
 		assMan.load("fonts/Habbo.fnt", BitmapFont.class);
-		assMan.load("maps/data/menumap.tmx", EFTiledMap.class);
+		assMan.load("maps/data/dojo/dojo.tmx", EFTiledMap.class);
+		assMan.load("textures/entities/bosses/udp.atlas", TextureAtlas.class);
+		
 		assMan.load("data/cutscenes/saveintro-land/hospitalroom.tmx", EFTiledMap.class);
 	}
 	

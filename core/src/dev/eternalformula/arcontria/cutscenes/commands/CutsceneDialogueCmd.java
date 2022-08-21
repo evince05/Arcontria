@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import dev.eternalformula.arcontria.cutscenes.Cutscene;
 import dev.eternalformula.arcontria.cutscenes.CutsceneDialogue;
 import dev.eternalformula.arcontria.cutscenes.CutsceneScript.CutsceneCommand;
+import dev.eternalformula.arcontria.gfx.EGFXUtil;
 import dev.eternalformula.arcontria.ui.elements.EFDialogueBox;
 import dev.eternalformula.arcontria.util.Assets;
 import dev.eternalformula.arcontria.util.EFDebug;
@@ -63,6 +64,7 @@ public class CutsceneDialogueCmd extends CutsceneCommand {
 			}
 			else {
 				isFinished = true;
+				EGFXUtil.setSceneAlpha(0f);
 			}
 		}
 	}

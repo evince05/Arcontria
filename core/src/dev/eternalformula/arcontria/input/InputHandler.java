@@ -76,7 +76,11 @@ public class InputHandler implements InputProcessor {
 	@Override
 	public boolean mouseMoved(int screenX, int screenY) {
 		Vector2 coords = unprojectCoordsToUI(screenX, screenY);
-		mgr.getCurrentScene().onMouseHovered((int) coords.x, (int) coords.y);
+		
+		if (mgr.getCurrentScene() != null) {
+			mgr.getCurrentScene().onMouseHovered((int) coords.x, (int) coords.y);
+		}
+		
 		return false;
 	}
 

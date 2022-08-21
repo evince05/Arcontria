@@ -91,6 +91,10 @@ public class LoadScene extends Scene {
 	}
 	
 	@Override
+	public void onMouseHovered(int x, int y) {
+	}
+	
+	@Override
 	public void onMouseDrag(int x, int y) {
 	}
 

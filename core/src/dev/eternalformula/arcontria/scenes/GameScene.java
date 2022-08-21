@@ -32,17 +32,13 @@ public class GameScene extends Scene {
 		
 		this.csHandler = new CutsceneHandler();
 		csHandler.setCutscene(Cutscene.load("data/cutscenes/saveintro-land/cutscene.json"));
-		csHandler.play();
+		//csHandler.play();
 	}
 
 	@Override
 	public void draw(SpriteBatch batch, float delta) {
 		// Handles fade effects
 		super.draw(batch, delta);
-		
-		if (screenAnim != null) {
-			batch.setColor(new Color(screenAlpha, screenAlpha, screenAlpha, screenAlpha));
-		}
 		
 		batch.begin();
 		
@@ -65,10 +61,11 @@ public class GameScene extends Scene {
 		
 		batch.begin();
 		
-		session.drawUI(batch, delta);
-		
 		if (csHandler.isPlayingCutscene()) {
 			csHandler.drawUI(batch, delta);
+		}
+		else {
+			session.drawUI(batch, delta);
 		}
 		
 		
@@ -106,6 +103,9 @@ public class GameScene extends Scene {
 	public void onMouseClicked(int x, int y, int button) {
 		if (csHandler.isPlayingCutscene()) {
 			csHandler.onMouseClicked(x, y, button);
+		}
+		else {
+			session.onMouseClicked(x, y, button);
 		}
 	}
 

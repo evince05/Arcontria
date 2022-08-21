@@ -136,6 +136,11 @@ public class CharacterCreatorScene extends Scene {
 	public void onMouseDrag(int x, int y) {
 		ccContainer.onMouseDrag(x, y);
 	}
+	
+	@Override
+	public void onMouseHovered(int x, int y) {
+		ccContainer.onMouseHovered(x, y);
+	}
 
 	@Override
 	public void dispose() {

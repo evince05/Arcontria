@@ -97,13 +97,19 @@ public class SceneManager {
 	}
 	
 	public void dispose() {
-		currentScene.dispose();
+		if (currentScene != null) {
+			currentScene.dispose();
+		}
+		
 	}
 	
 	public void resize(int width, int height) {
 		viewportHandler.resize(width, height);
 		
-		currentScene.resize(width, height);
+		if (currentScene != null) {
+			currentScene.resize(width, height);
+		}
+		
 	}
 	
 	public static class ViewportHandler {

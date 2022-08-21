@@ -1,0 +1,4 @@
+- Added changelog
+- Began recording Game Version
+- Fixed fading issues for cutscenes
+- Changed hover functionality for buttons (draws alpha rect instead of clickSkin)

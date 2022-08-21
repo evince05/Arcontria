@@ -87,6 +87,7 @@ public class DamageTextParticle extends Particle {
 	@Override
 	public void draw(ParticleHandler handler, SpriteBatch batch, float delta) {
 		handler.getTextParticleFont().setColor(fontColor);
+		handler.getTextParticleFont().getData().setScale(0.125f);
 		handler.getTextParticleFont().draw(batch, damageStr, position.x, position.y);
 	}
 	
