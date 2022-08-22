@@ -29,6 +29,11 @@ public abstract class Entity {
 		this.location = new Vector2(0, 0);
 	}
 	
+	protected Entity() {
+		this.level = null;
+		this.location = new Vector2(0, 0);
+	}
+	
 	public float getX() {
 		return location.x;
 	}
@@ -106,5 +111,9 @@ public abstract class Entity {
 		}
 		*/
 		
+	}
+	
+	public void setLevel(GameLevel level) {
+		this.level = level;
 	}
 }

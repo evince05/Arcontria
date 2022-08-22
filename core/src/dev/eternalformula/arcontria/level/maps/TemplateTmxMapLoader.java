@@ -16,18 +16,13 @@ import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.objects.TextureMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlReader.Element;
 import com.shibabandit.gdx_navmesh.coll.CollUtil;
 
+import dev.eternalformula.arcontria.entity.Entity;
 import dev.eternalformula.arcontria.entity.MapEntityBuilder;
-import dev.eternalformula.arcontria.level.GameLevel;
-import dev.eternalformula.arcontria.physics.B2DUtil;
-import dev.eternalformula.arcontria.physics.PhysicsConstants.PhysicsCategory;
-import dev.eternalformula.arcontria.physics.boxes.MapObjectHitbox;
 import dev.eternalformula.arcontria.util.EFConstants;
 
 /**
@@ -40,6 +35,7 @@ public class TemplateTmxMapLoader extends TmxMapLoader {
 	FileHandle tmxFile;
 	
 	private Array<EFMapObject> mapObjects;
+	private Array<Entity> mapEntities;
 	
 	private Array<org.locationtech.jts.geom.Polygon> polygons;
 	
@@ -47,6 +43,7 @@ public class TemplateTmxMapLoader extends TmxMapLoader {
 		super();
 		this.polygons = new Array<>();
 		this.mapObjects = new Array<EFMapObject>();
+		this.mapEntities = new Array<Entity>();
 	}
 	
 	public Array<EFMapObject> getMapObjects() {
@@ -96,9 +93,9 @@ public class TemplateTmxMapLoader extends TmxMapLoader {
 							if (objProps.containsKey("entityId")) {
 								int entityId = objProps.get("entityId", int.class); // TODO: fix
 								
-								/*level.addEntity(MapEntityBuilder.createEntity(level, entityId, region, x, y,
-										width, height, objProps));
-										*/
+								mapEntities.add(MapEntityBuilder.addEntity(MapEntityBuilder.createEntity(
+										entityId, region, x, y, width, height, objProps)));
+										
 							}
 							else {
 								// Creating polygon for navmesh

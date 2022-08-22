@@ -15,6 +15,8 @@ import dev.eternalformula.arcontria.level.GameLevel;
 import dev.eternalformula.arcontria.physics.boxes.EntityHitbox;
 import dev.eternalformula.arcontria.util.Assets;
 import dev.eternalformula.arcontria.util.EFConstants;
+import dev.eternalformula.arcontria.util.EFDebug;
+import dev.eternalformula.arcontria.util.Strings;
 
 public class UndeadProspector extends LivingEntity {
 
@@ -49,11 +51,11 @@ public class UndeadProspector extends LivingEntity {
 		
 		TextureRegion reg = atlas.findRegion("udp_throw_down");
 		Array<TextureRegion> frames = new Array<TextureRegion>();
-		for (int i = 0; i < 4; i++) {
-			frames.add(new TextureRegion(reg, 0 + 32 * i, 0, 32, 32));
+		for (int i = 0; i < 3; i++) {
+			frames.add(new TextureRegion(reg, 32 * i, 0, 32, 32));
 		}
 		
-		this.shootingDown = new Animation<TextureRegion>(0.09f, frames);
+		this.shootingDown = new Animation<TextureRegion>(0.08f, frames);
 		this.pickaxeReg = new TextureRegion(new Texture(Gdx.files.internal("pickaxe.png")));
 		
 		currentAnimation = idleDown;
@@ -65,6 +67,7 @@ public class UndeadProspector extends LivingEntity {
 		
 		if (canShoot) {
 			currentAnimation = shootingDown;
+			elapsedTime = 0f;
 			canShoot = false;
 			isShooting = true;
 		}
@@ -78,9 +81,10 @@ public class UndeadProspector extends LivingEntity {
 		
 		if (isShooting && currentAnimation.equals(shootingDown)) {
 			if (currentAnimation.getKeyFrameIndex(elapsedTime) == 2) {
-				ProspectorPickaxe axe = new ProspectorPickaxe(level, new Vector2(location.x, location.y - 1f), 4);
+				ProspectorPickaxe axe = new ProspectorPickaxe(level, new Vector2(location.x, location.y - 0.25f), 4);
 				axe.setTex(pickaxeReg);
 				level.addEntity(axe);
+				
 				
 				currentAnimation = idleDown;
 				isShooting = false;
@@ -93,9 +97,10 @@ public class UndeadProspector extends LivingEntity {
 	public void draw(SpriteBatch batch, float delta) {
 		elapsedTime += delta;
 		TextureRegion reg = currentAnimation.getKeyFrame(elapsedTime, true);
+		
 		float w = reg.getRegionWidth() / EFConstants.PPM;
 		float h = reg.getRegionHeight() / EFConstants.PPM;
-		
+
 		if (currentAnimation.equals(shootingDown)) {
 			batch.draw(reg, location.x - 0.5f, location.y, w, h);
 		}

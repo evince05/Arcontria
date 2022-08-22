@@ -5,12 +5,13 @@ import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
 import dev.eternalformula.arcontria.entity.ambient.Lamppost;
+import dev.eternalformula.arcontria.entity.ambient.Torch;
 import dev.eternalformula.arcontria.level.GameLevel;
 import dev.eternalformula.arcontria.physics.PhysicsConstants;
 
@@ -29,13 +30,20 @@ public class MapEntityBuilder {
 	 * @return A new entity created from the given data.
 	 */
 	
-	public static Entity createEntity(GameLevel level, int entityId, TextureRegion region,
+	public static Entity createEntity(int entityId, TextureRegion region,
 			float x, float y, float width, float height, MapProperties props) {
 		
 		Entity entity = null;
 		
 		if (entityId == 0) {
-			entity = new Lamppost(level, region, x, y, entityId);
+			// Lamppost
+			entity = new Lamppost(region, x, y, entityId);
+		}
+		
+		if (entityId == 1) {
+			// Torch
+			entity = createAnimatedEntity(entityId, 
+					new Vector2(x, y), width, height, props);
 		}
 		
 		if (entity != null) {
@@ -52,6 +60,22 @@ public class MapEntityBuilder {
 		
 		return entity;
 		
+	}
+	
+	private static Entity createAnimatedEntity(int entityId,
+			Vector2 location, float width, float height, MapProperties props) {
+		
+		
+		if (entityId == 1) {
+			// Torch
+			String torchId = props.get("torchId", String.class);
+			Torch t = new Torch(torchId);
+			t.setLocation(location);
+			
+			return t;
+			
+		}
+		return null;
 	}
 	
 	private static Body createCustomColliderBody(World world, float x, float y,

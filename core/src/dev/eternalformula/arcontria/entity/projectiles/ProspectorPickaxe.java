@@ -1,13 +1,10 @@
 package dev.eternalformula.arcontria.entity.projectiles;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 
-import dev.eternalformula.arcontria.gfx.EGFXUtil;
 import dev.eternalformula.arcontria.level.GameLevel;
 import dev.eternalformula.arcontria.physics.boxes.ProjectileBox;
 import dev.eternalformula.arcontria.util.EFConstants;
@@ -33,7 +30,10 @@ public class ProspectorPickaxe extends Projectile {
 	private float leftXBound;
 	private float rightXBound;
 	
+	private float rotationSpeed;
 	private float rotation;
+	
+	private float startRotation;
 	private float rotationTime;
 	
 	private TextureRegion reg;
@@ -45,6 +45,7 @@ public class ProspectorPickaxe extends Projectile {
 		
 		// Center point
 		this.pos = new Vector2(0f, 0f);
+		this.rotationSpeed = 900f; // works out to 360 degrees every 0.4s;
 		
 		// Defines bounds and speed
 		if (direction == 1 || direction == 4) {
@@ -64,23 +65,27 @@ public class ProspectorPickaxe extends Projectile {
 			xDirection = 1;
 			usePositiveRoot = false;
 			this.centerPos = new Vector2(origin.x, origin.y + 3f);
+			startRotation = 0f;
 		}
 		else if (direction == 2) {
 			xDirection = -1;
 			pos.x = rightXBound;
-			usePositiveRoot = true;
+			usePositiveRoot = false;
 			this.centerPos = new Vector2(origin.x - 3f, origin.y);
+			startRotation = 90f;
 		}
 		else if (direction == 3) {
 			xDirection = 1;
 			pos.x = leftXBound;
-			usePositiveRoot = false;
+			usePositiveRoot = true;
 			this.centerPos = new Vector2(origin.x + 3f, origin.y);
+			startRotation = 270f;
 		}
 		else if (direction == 4) {
-			xDirection = -1;
+			xDirection = 1;
 			usePositiveRoot = true;
 			this.centerPos = new Vector2(origin.x, origin.y - 3f);
+			startRotation = 180f;
 		}
 		
 		this.rotation = -90f;
@@ -117,7 +122,7 @@ public class ProspectorPickaxe extends Projectile {
 					
 					// X has reached right bound.
 					pos.x = rightXBound;
-					usePositiveRoot = true;
+					usePositiveRoot = false;
 					xDirection = -1;
 				}
 			}
@@ -139,7 +144,7 @@ public class ProspectorPickaxe extends Projectile {
 					
 					// X has reached the left bound.
 					pos.x = leftXBound;
-					usePositiveRoot = false;
+					usePositiveRoot = true;
 					xDirection = 1;
 				}
 			}
@@ -157,11 +162,12 @@ public class ProspectorPickaxe extends Projectile {
 			box.getBody().setTransform(centerPos.x + pos.x + 1/2f, centerPos.y + pos.y + 1/2f, 0f);
 			
 			// Calculates the rotation
+			rotation -= rotationSpeed * delta;
 			rotationTime += delta;
-			rotation = rotationTime / 0.4f * 360f;
 			
 			if (rotationTime >= 0.4f) {
 				rotationTime = 0f;
+				rotation = startRotation;
 			}
 		}
 	}

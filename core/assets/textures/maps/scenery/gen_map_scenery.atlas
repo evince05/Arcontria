@@ -1,0 +1,20 @@
+
+gen_map_scenery.png
+size: 128, 32
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+forest_lamppost
+  rotate: false
+  xy: 64, 0
+  size: 16, 32
+  orig: 16, 32
+  offset: 0, 0
+  index: -1
+torch
+  rotate: false
+  xy: 0, 0
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1

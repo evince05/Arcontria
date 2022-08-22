@@ -86,7 +86,8 @@ public class GameScene extends Scene {
 			csHandler.update(delta);
 		}
 		else {
-			session.update(delta);
+ 
+			
 		}
 		
 	}
