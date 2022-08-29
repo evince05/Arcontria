@@ -22,8 +22,8 @@ public class ParticleHandler {
 		this.level = level;
 		this.activeParticles = new ArrayList<Particle>();
 		this.particlesToRemove = new ArrayList<Particle>();
-		this.textParticleFont = Assets.get("fonts/Habbo.fnt", BitmapFont.class);
-		textParticleFont.setUseIntegerPositions(false);
+		//this.textParticleFont = Assets.get("fonts/Habbo.fnt", BitmapFont.class);
+		//textParticleFont.setUseIntegerPositions(false);
 	}
 	
 	public void spawnParticle(Particle particle) {

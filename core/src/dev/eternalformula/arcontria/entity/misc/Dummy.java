@@ -8,11 +8,11 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
 import dev.eternalformula.arcontria.combat.DamageSource;
 import dev.eternalformula.arcontria.entity.LivingEntity;
-import dev.eternalformula.arcontria.gfx.particles.DamageTextParticle;
 import dev.eternalformula.arcontria.level.GameLevel;
 import dev.eternalformula.arcontria.physics.boxes.EntityColliderBox;
 import dev.eternalformula.arcontria.physics.boxes.EntityHitbox;
@@ -36,14 +36,14 @@ public class Dummy extends LivingEntity {
 	
 	private float hurtAnimationTimer;
 	
-	public Dummy(GameLevel level) {
+	public Dummy(World world, GameLevel level) {
 		super(level);
 		
 		this.width = 1f;
 		this.height = 2f;
 		
-		this.colliderBox = new EntityColliderBox(level, this, BodyType.StaticBody);
-		this.hitbox = new EntityHitbox(level, this);
+		this.colliderBox = new EntityColliderBox(world, this, BodyType.StaticBody);
+		this.hitbox = new EntityHitbox(world, this);
 		
 		initAnimations();
 		

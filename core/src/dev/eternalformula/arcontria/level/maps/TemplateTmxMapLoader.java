@@ -16,11 +16,13 @@ import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.objects.TextureMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlReader.Element;
 import com.shibabandit.gdx_navmesh.coll.CollUtil;
 
+import box2dLight.RayHandler;
 import dev.eternalformula.arcontria.entity.Entity;
 import dev.eternalformula.arcontria.entity.MapEntityBuilder;
 import dev.eternalformula.arcontria.util.EFConstants;
@@ -37,11 +39,16 @@ public class TemplateTmxMapLoader extends TmxMapLoader {
 	private Array<EFMapObject> mapObjects;
 	private Array<Entity> mapEntities;
 	
+	private MapEntityBuilder entityBuilder;
+	
 	private Array<org.locationtech.jts.geom.Polygon> polygons;
 	
-	public TemplateTmxMapLoader() {
+	public TemplateTmxMapLoader(World world, RayHandler handler) {
 		super();
 		this.polygons = new Array<>();
+		
+		this.entityBuilder = new MapEntityBuilder(world, handler);
+		
 		this.mapObjects = new Array<EFMapObject>();
 		this.mapEntities = new Array<Entity>();
 	}
@@ -93,8 +100,8 @@ public class TemplateTmxMapLoader extends TmxMapLoader {
 							if (objProps.containsKey("entityId")) {
 								int entityId = objProps.get("entityId", int.class); // TODO: fix
 								
-								mapEntities.add(MapEntityBuilder.addEntity(MapEntityBuilder.createEntity(
-										entityId, region, x, y, width, height, objProps)));
+								mapEntities.add(entityBuilder.createEntity(
+										entityId, region, x, y, width, height, objProps));
 										
 							}
 							else {
@@ -170,8 +177,16 @@ public class TemplateTmxMapLoader extends TmxMapLoader {
 			for (Element property : e.getChildByName("properties").getChildrenByName("property")) {
 				String name = property.getAttribute("name");
 				String value = property.getAttribute("value");
-				String type = property.getAttribute("type");
-				Object castValue = castProperty(name, value, type);
+				String type = "";
+				Object castValue;
+				
+				if (property.hasAttribute("type")) {
+					type = property.getAttribute("type");
+					castValue = castProperty(name, value, type);
+				}
+				else {
+					castValue = castProperty(name, value, null);
+				}
 				props.put(name, castValue);
 			}
 			return props;
@@ -181,5 +196,9 @@ public class TemplateTmxMapLoader extends TmxMapLoader {
 	
 	public Array<org.locationtech.jts.geom.Polygon> getNavmeshPolygons() {
 		return polygons;
+	}
+	
+	public Array<Entity> getMapEntities() {
+		return mapEntities;
 	}
 }

@@ -1,21 +1,15 @@
 package dev.eternalformula.arcontria.level.maps;
 
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 
 import org.locationtech.jts.geom.Polygon;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.maps.MapLayer;
-import com.badlogic.gdx.maps.MapObject;
-import com.badlogic.gdx.maps.objects.TextureMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Sort;
 
-import dev.eternalformula.arcontria.level.maps.Map.MapComparator;
+import dev.eternalformula.arcontria.entity.Entity;
 import dev.eternalformula.arcontria.pathfinding.Navmesh;
 
 public class EFTiledMap {
@@ -26,11 +20,15 @@ public class EFTiledMap {
 	private TiledMap tiledMap;
 	
 	private Array<EFMapObject> mapObjects;
+	private Array<Entity> mapEntities;
+	
 	private Navmesh navmesh;
 	
-	public EFTiledMap(TiledMap tiledMap, Array<EFMapObject> mapObjects, Array<Polygon> polygons) {
+	public EFTiledMap(TiledMap tiledMap, Array<EFMapObject> mapObjects, Array<Polygon> polygons,
+			Array<Entity> mapEntities) {
 		this.tiledMap = tiledMap;
 		this.mapObjects = mapObjects;
+		this.mapEntities = mapEntities;
 		
 		this.width = tiledMap.getProperties().get("width", Integer.class);
 		this.height = tiledMap.getProperties().get("height", Integer.class);
@@ -63,12 +61,16 @@ public class EFTiledMap {
 		return tiledMap;
 	}
 	
+	public Array<Entity> getMapEntities() {
+		return mapEntities;
+	}
+	
 	public int getWidth() {
 		return width;
 	}
 	
 	public int getHeight() {
-		return width;
+		return height;
 	}
 	
 	public void dispose() {

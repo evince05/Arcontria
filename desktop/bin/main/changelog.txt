@@ -1,4 +1,5 @@
-- Added changelog
-- Began recording Game Version
-- Fixed fading issues for cutscenes
-- Changed hover functionality for buttons (draws alpha rect instead of clickSkin)
+- Added Torches
+- Added MapAreas
+- Major Rehaul of Core (GameLevel is no longer needed in Entity constructors,
+    Asset loading is now handled in each Scene, etc.)
+- Began dividing GameLevel into smaller pieces (MapArea, etc.) for easier management.

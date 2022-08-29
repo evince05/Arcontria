@@ -8,11 +8,13 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.World;
 
 import box2dLight.PointLight;
+import box2dLight.RayHandler;
+import dev.eternalformula.arcontria.ArcontriaGame;
 import dev.eternalformula.arcontria.entity.Entity;
 import dev.eternalformula.arcontria.gfx.lighting.DaylightHandler;
-import dev.eternalformula.arcontria.level.GameLevel;
 import dev.eternalformula.arcontria.physics.boxes.Box;
 import dev.eternalformula.arcontria.physics.boxes.EntityColliderBox;
 import dev.eternalformula.arcontria.util.EFConstants;
@@ -30,33 +32,35 @@ public class Lamppost extends Entity {
 	
 	private PointLight light;
 	
-	public Lamppost(GameLevel level, TextureRegion region, float x, float y, int type) {
-		super(level);
+	public Lamppost(World world, RayHandler rayHandler,
+			TextureRegion region, float x, float y, int type) {
+		super();
 		
 		this.lamppostType = type;
 		this.texRegion = region;
 		this.location = new Vector2(x, y);
 		this.lightColor = new Color(169 / 255f, 119 / 255f, 50 / 255f, 1f);
 		
-		this.lightBody = createLightBody();
+		this.lightBody = createLightBody(world);
 		lightBody.setActive(false);
-		light = new PointLight(level.getRayHandler(), 150, lightColor, 8, 0, 0);
+		light = new PointLight(rayHandler, 
+				150, lightColor, 8, 0, 0);
 		light.setSoftnessLength(0f);
 		light.setXray(true);
 		light.attachToBody(lightBody);
 		
 		this.width = 1f;
 		this.height = 2f;
-		this.colliderBox = new EntityColliderBox(level, this, BodyType.StaticBody);
+		this.colliderBox = new EntityColliderBox(world, this, BodyType.StaticBody);
 	}
 	
-	private Body createLightBody() {
+	private Body createLightBody(World world) {
 		Body body;
 		BodyDef bdef = new BodyDef();
 		bdef.position.set(location.x + 0.5f, location.y + 1.625f);
 		bdef.type = BodyType.StaticBody;
 		bdef.fixedRotation = true;
-		body = level.getWorld().createBody(bdef);
+		body = ArcontriaGame.getCurrentScene().getWorld().createBody(bdef);
 		
 		PolygonShape shape = new PolygonShape();
 		

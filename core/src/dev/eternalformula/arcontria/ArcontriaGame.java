@@ -1,7 +1,5 @@
 package dev.eternalformula.arcontria;
 
-import java.util.Scanner;
-
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -13,7 +11,6 @@ import dev.eternalformula.arcontria.objects.misc.Changelog;
 import dev.eternalformula.arcontria.scenes.GameScene;
 import dev.eternalformula.arcontria.scenes.Scene;
 import dev.eternalformula.arcontria.scenes.SceneManager;
-import dev.eternalformula.arcontria.scenes.charcreator.CharacterCreatorScene;
 import dev.eternalformula.arcontria.util.Assets;
 import dev.eternalformula.arcontria.util.EFDebug;
 import dev.eternalformula.arcontria.util.Settings;
@@ -24,6 +21,7 @@ public class ArcontriaGame extends ApplicationAdapter {
 	public static final String TAG = ArcontriaGame.class.getName();
 	
 	private SceneManager sceneManager;
+	private Assets assets;
 	
 	public static ArcontriaGame GAME;
 	
@@ -38,16 +36,12 @@ public class ArcontriaGame extends ApplicationAdapter {
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 		Gdx.app.debug(TAG, "Entering Debug Mode!");
 		
-		Assets.setupManager();
-		Assets.load();
-		
-		// Settings
-		//this.settings = new Settings();
-		while (!Assets.assMan.update()) {
-			EFDebug.info("[LOAD] Loading assets (" + (Assets.assMan.getProgress() * 100) + "%)!");
-		}
+		this.assets = new Assets();
+		assets.loadDefaultAssets();
+		assets.update();
 		
 		this.sceneManager = new SceneManager();
+		sceneManager.setCurrentScene(new GameScene(sceneManager));
 		
 		msgManager = MessageManager.getInstance();
 		
@@ -80,8 +74,7 @@ public class ArcontriaGame extends ApplicationAdapter {
 			Changelog.load().print();
 			
 		}*/
-		
-		sceneManager.setCurrentScene(new GameScene(sceneManager));
+	
 		
 	}
 
@@ -153,5 +146,9 @@ public class ArcontriaGame extends ApplicationAdapter {
 	
 	public float getWindowHeight() {
 		return Gdx.graphics.getHeight();
+	}
+	
+	public static Scene getCurrentScene() {
+		return ArcontriaGame.GAME.getScene();
 	}
 }

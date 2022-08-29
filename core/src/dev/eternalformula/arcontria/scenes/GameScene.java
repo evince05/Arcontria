@@ -1,11 +1,15 @@
 package dev.eternalformula.arcontria.scenes;
 
-import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
-import dev.eternalformula.arcontria.cutscenes.Cutscene;
 import dev.eternalformula.arcontria.cutscenes.CutsceneHandler;
 import dev.eternalformula.arcontria.gfx.animations.ScreenAnimation;
+import dev.eternalformula.arcontria.level.maps.EFTiledMap;
+import dev.eternalformula.arcontria.util.Assets;
+import dev.eternalformula.arcontria.util.loaders.EFTiledMapLoader;
 
 public class GameScene extends Scene {
 	
@@ -19,10 +23,19 @@ public class GameScene extends Scene {
 
 	public GameScene(SceneManager manager) {
 		super(manager);
+		
+		rayHandler.setAmbientLight(0.4f);
 	}
 
 	@Override
 	protected void loadAssets() {
+		Assets.setLoader(EFTiledMap.class, new EFTiledMapLoader(
+				new InternalFileHandleResolver(), world, rayHandler));
+		Assets.load("textures/maps/scenery/gen_map_scenery.atlas", TextureAtlas.class);
+		Assets.load("data/particles/smoke/smoke.particle", ParticleEffect.class);
+		Assets.load("maps/data/mines/mine-level-1.tmx", EFTiledMap.class);
+		//Assets.load("maps/data/dojo/dojo.tmx", EFTiledMap.class);
+		Assets.updateInstance();
 	}
 
 	@Override
@@ -31,7 +44,6 @@ public class GameScene extends Scene {
 		this.session = GameSession.load(this, null);
 		
 		this.csHandler = new CutsceneHandler();
-		csHandler.setCutscene(Cutscene.load("data/cutscenes/saveintro-land/cutscene.json"));
 		//csHandler.play();
 	}
 
@@ -76,6 +88,11 @@ public class GameScene extends Scene {
 	public void update(float delta) {
 		
 		super.update(delta);
+		session.getGameCamera().update();
+		
+		world.step(1 / 60f, 6, 2);
+		rayHandler.update();
+		rayHandler.setCombinedMatrix(manager.getGameCamera());
 		
 		if (screenAnim != null) {
 			screenAnim.update(delta);
@@ -86,6 +103,7 @@ public class GameScene extends Scene {
 			csHandler.update(delta);
 		}
 		else {
+			session.update(delta);
  
 			
 		}
@@ -130,6 +148,7 @@ public class GameScene extends Scene {
 
 	@Override
 	public void dispose() {
+		super.dispose();
 	}
 	
 	public ScreenAnimation getScreenAnimation() {

@@ -1,6 +1,7 @@
 package dev.eternalformula.arcontria.scenes.charcreator;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -8,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 import dev.eternalformula.arcontria.ArcontriaGame;
+import dev.eternalformula.arcontria.level.maps.EFTiledMap;
 import dev.eternalformula.arcontria.scenes.Scene;
 import dev.eternalformula.arcontria.scenes.SceneManager;
 import dev.eternalformula.arcontria.scenes.charcreator.tabs.CCBootsTab;
@@ -22,6 +24,7 @@ import dev.eternalformula.arcontria.ui.UIContainer;
 import dev.eternalformula.arcontria.ui.charcreator.CCPlayerPreview;
 import dev.eternalformula.arcontria.ui.charcreator.MenuMapBackground;
 import dev.eternalformula.arcontria.util.Assets;
+import dev.eternalformula.arcontria.util.loaders.EFTiledMapLoader;
 
 public class CharacterCreatorScene extends Scene {
 
@@ -43,8 +46,11 @@ public class CharacterCreatorScene extends Scene {
 	
 	@Override
 	public void loadAssets() {
-		Assets.assMan.load("ui/charcreator/playerbuilder/playerbuilder.atlas", TextureAtlas.class);
-		Assets.assMan.finishLoading();
+		Assets.setLoader(EFTiledMap.class, new EFTiledMapLoader(new InternalFileHandleResolver(),
+				world, rayHandler));
+		Assets.load("ui/charcreator/playerbuilder/playerbuilder.atlas", TextureAtlas.class);
+		Assets.load("maps/data/menumap.tmx", EFTiledMap.class);
+		Assets.updateInstance();
 	}
 
 	@Override

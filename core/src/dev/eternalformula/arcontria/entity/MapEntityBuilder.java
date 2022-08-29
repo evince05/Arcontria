@@ -10,12 +10,20 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
+import box2dLight.RayHandler;
 import dev.eternalformula.arcontria.entity.ambient.Lamppost;
 import dev.eternalformula.arcontria.entity.ambient.Torch;
-import dev.eternalformula.arcontria.level.GameLevel;
 import dev.eternalformula.arcontria.physics.PhysicsConstants;
 
 public class MapEntityBuilder {
+	
+	private World world;
+	private RayHandler rayHandler;
+	
+	public MapEntityBuilder(World world, RayHandler rayHandler) {
+		this.world = world;
+		this.rayHandler = rayHandler;
+	}
 	
 	/**
 	 * Creates a new map entity from the given data.
@@ -30,14 +38,14 @@ public class MapEntityBuilder {
 	 * @return A new entity created from the given data.
 	 */
 	
-	public static Entity createEntity(int entityId, TextureRegion region,
+	public Entity createEntity(int entityId, TextureRegion region,
 			float x, float y, float width, float height, MapProperties props) {
 		
 		Entity entity = null;
 		
 		if (entityId == 0) {
 			// Lamppost
-			entity = new Lamppost(region, x, y, entityId);
+			entity = new Lamppost(world, rayHandler, region, x, y, entityId);
 		}
 		
 		if (entityId == 1) {
@@ -62,15 +70,14 @@ public class MapEntityBuilder {
 		
 	}
 	
-	private static Entity createAnimatedEntity(int entityId,
+	private Entity createAnimatedEntity(int entityId,
 			Vector2 location, float width, float height, MapProperties props) {
 		
 		
 		if (entityId == 1) {
 			// Torch
 			String torchId = props.get("torchId", String.class);
-			Torch t = new Torch(torchId);
-			t.setLocation(location);
+			Torch t = new Torch(world, rayHandler, location, torchId);
 			
 			return t;
 			

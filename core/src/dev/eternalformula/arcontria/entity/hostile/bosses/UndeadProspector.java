@@ -39,7 +39,7 @@ public class UndeadProspector extends LivingEntity {
 		width = 1f;
 		height = 2f;
 		this.location = location;
-		this.hitbox = new EntityHitbox(level, this);
+		this.hitbox = new EntityHitbox(level.getWorld(), this);
 		
 		shootingCooldown = 3f;
 		shootingTimer = 0f;
