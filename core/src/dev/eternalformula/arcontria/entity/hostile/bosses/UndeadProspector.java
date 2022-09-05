@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
 import dev.eternalformula.arcontria.entity.LivingEntity;
@@ -107,5 +108,11 @@ public class UndeadProspector extends LivingEntity {
 		else {
 			batch.draw(reg, location.x, location.y, w, h);
 		}
+	}
+
+	@Override
+	public void destroyBodies(World world) {
+		// TODO Auto-generated method stub
+		
 	}
 }

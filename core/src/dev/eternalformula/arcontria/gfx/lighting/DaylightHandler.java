@@ -3,6 +3,7 @@ package dev.eternalformula.arcontria.gfx.lighting;
 import com.badlogic.gdx.graphics.Color;
 
 import dev.eternalformula.arcontria.level.GameLevel;
+import dev.eternalformula.arcontria.util.EFMath;
 
 public class DaylightHandler {
 	
@@ -22,6 +23,9 @@ public class DaylightHandler {
 	public static final float SUNRISE_END_TIME = 937.5f;
 	
 	public static final float FULL_DAY_LENGTH = 3000f;
+	
+	// A single minute in-game is equivalent to this value.
+	public static final float TIME_SINGLE_MINUTE = 25 / 12f;
 	
 	// How much time is added to the counter every tick.
 	private static final float TIME_INCREMENT_STEP = 0.069444f;
@@ -51,6 +55,8 @@ public class DaylightHandler {
 	// measured in generic units.
 	private float currentTime;
 	
+	private float roundedTime;
+	
 	// The time elapsed during a color transition.
 	private float elapsedTransitionTime;
 	
@@ -67,7 +73,7 @@ public class DaylightHandler {
 		
 		// Default tint color, nothing is applied.
 		this.currentColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-		this.currentTime = 1125f;
+		this.currentTime = SUNRISE_START_TIME - 10f;
 		
 		this.transitionTime = 0f;
 		this.transitionRateR = 0f;
@@ -205,6 +211,7 @@ public class DaylightHandler {
 	
 	public String getFormattedWorldTime() {
 		// 1f = 28.8 seconds (in game)
+		
 		float elapsedTimeInSeconds = currentTime * 28.8f;
 		float elapsedTimeInHours = elapsedTimeInSeconds / 3600f;
 		
@@ -217,7 +224,10 @@ public class DaylightHandler {
 			 */
 		}
 		float numMinutes = (elapsedTimeInHours - numHours) * 60;
-
+		
+		// Rounds the number of elapsed minutes to the current 10 minute interval
+		numMinutes = EFMath.floorToNearestXth(numMinutes, 10f);
+		
 		// Formats the time in a string formatted in regular time [hours:minutes{AM/PM}]
 		StringBuilder formattedTime = new StringBuilder();
 		if (numHours > 12) {

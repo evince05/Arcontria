@@ -28,6 +28,10 @@ public class CCItemDisplayBox extends UIElement {
 	@Override
 	public void onMouseDrag(int x, int y) {
 	}
+	
+	@Override
+	public void onMouseWheelScrolled(int amount) {
+	}
 
 	@Override
 	public void update(float delta) {

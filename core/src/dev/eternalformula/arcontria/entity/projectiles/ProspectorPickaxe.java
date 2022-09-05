@@ -215,7 +215,9 @@ public class ProspectorPickaxe extends Projectile {
 		return isFinished;
 	}
 	
-	public void destroyBody(World world) {
+	@Override
+	public void destroyBodies(World world) {
+		System.out.println("Bye");
 		world.destroyBody(box.getBody());
 	}
 }

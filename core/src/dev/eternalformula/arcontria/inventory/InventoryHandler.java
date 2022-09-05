@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import dev.eternalformula.arcontria.gfx.EGFXUtil;
 import dev.eternalformula.arcontria.gfx.text.FontUtil;
 import dev.eternalformula.arcontria.level.GameLevel;
+import dev.eternalformula.arcontria.util.Assets;
 import dev.eternalformula.arcontria.util.EFConstants;
 
 /**
@@ -33,7 +34,7 @@ public class InventoryHandler {
 		this.inventoryOpen = false;
 		
 		this.texture = new Texture(Gdx.files.internal("ui/inventory/inventory.png"));
-		//this.font = FontUtil.createBasicFont("fonts/alagard.ttf", 16);
+		this.font = Assets.get("fonts/Habbo.fnt", BitmapFont.class);
 	}
 	
 	public boolean isInventoryOpen() {
@@ -68,7 +69,7 @@ public class InventoryHandler {
 	
 	public void draw(SpriteBatch batch, float delta) {
 		
-		batch.draw(texture, 0, 0, texture.getWidth() * EGFXUtil.RENDER_SCALE, texture.getHeight() * EGFXUtil.RENDER_SCALE);
+		batch.draw(texture, 0, 0, texture.getWidth(), texture.getHeight());
 		
 		font.setColor(EFConstants.INVENTORY_TEXT_COLOR);
 		font.getData().setScale(EGFXUtil.RENDER_SCALE);

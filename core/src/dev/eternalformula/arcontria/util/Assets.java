@@ -3,6 +3,7 @@ package dev.eternalformula.arcontria.util;
 import com.badlogic.gdx.assets.AssetLoaderParameters;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.AssetLoader;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
@@ -41,6 +42,7 @@ public class Assets {
 		instance.assMan.load("ui/charcreator/charcreator.atlas", TextureAtlas.class);
 		instance.assMan.load("fonts/Habbo.fnt", BitmapFont.class);
 		instance.assMan.load("textures/entities/bosses/udp.atlas", TextureAtlas.class);
+		instance.assMan.load("sfx/mines/rockbreak.wav", Sound.class);
 	}
 	
 	public static <T> void load(String fileName, Class<T> type) {

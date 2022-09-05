@@ -6,6 +6,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
 
 import dev.eternalformula.arcontria.scenes.SceneManager;
+import dev.eternalformula.arcontria.util.Strings;
 
 public class InputHandler implements InputProcessor {
 
@@ -86,6 +87,9 @@ public class InputHandler implements InputProcessor {
 
 	@Override
 	public boolean scrolled(float amountX, float amountY) {
+		if (mgr.getCurrentScene() != null) {
+			mgr.getCurrentScene().onMouseWheelScrolled((int) amountY);
+		}
 		return false;
 	}
 	

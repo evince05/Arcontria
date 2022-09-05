@@ -106,11 +106,14 @@ public class GameSession {
 		float viewportWidth = scene.manager.getViewportHandler().getWorldWidth();
 		float viewportHeight = scene.manager.getViewportHandler().getWorldHeight();
 		
-		if (ePos.x >= viewportWidth / 2f - 0.5f && ePos.x <= 100 - viewportWidth / 2f - 0.5f) {
+		if (ePos.x >= viewportWidth / 2f - 0.5f && ePos.x <= 
+				level.getMapArea().getMapWidth() - viewportWidth / 2f - 0.5f) {
+			
 			cameraPos.x = ePos.x + 0.5f;
 		}
 		
-		if (ePos.y >= viewportHeight / 2f - 1f && ePos.y <= 100 - viewportHeight / 2f - 1f) {
+		if (ePos.y >= viewportHeight / 2f - 1f && ePos.y <=
+				level.getMapArea().getMapHeight() - viewportHeight / 2f - 1f) {
 			cameraPos.y = ePos.y + 1f;
 		}
 		return cameraPos;
@@ -138,7 +141,7 @@ public class GameSession {
 	}
 
 	public void drawUI(SpriteBatch batch, float delta) {
-		// TODO Auto-generated method stub
+		level.drawUI(batch, delta);
 		
 	}
 
@@ -149,11 +152,14 @@ public class GameSession {
 
 	public void onMouseClicked(int x, int y, int button) {
 		level.onMouseClicked(x, y, button);
-		
+	}
+	
+	public void onMouseHovered(int x, int y) {
+		level.onMouseHovered(x, y);
 	}
 
 	public void onMouseReleased(int x, int y, int button) {
-		// TODO Auto-generated method stub
+		level.onMouseReleased(x, y, button);
 		
 	}
 
@@ -162,12 +168,20 @@ public class GameSession {
 		
 	}
 	
+	public void onMouseWheelScrolled(int amount) {
+		level.onMouseWheelScrolled(amount);
+	}
+	
 	/**
 	 * Gets the camera that is used to render the game.
 	 */
 	
 	public OrthographicCamera getGameCamera() {
 		return scene.manager.getGameCamera();
+	}
+	
+	public GameLevel getLevel() {
+		return level;
 	}
 	
 	/**
@@ -199,8 +213,8 @@ public class GameSession {
 		float viewportWidth = scene.manager.getViewportHandler().getWorldWidth();
 		float viewportHeight = scene.manager.getViewportHandler().getWorldHeight();
 
-		float mWidth = level.getMap().getWidth();
-		float mHeight = level.getMap().getHeight();
+		float mWidth = level.getMapArea().getMapWidth();
+		float mHeight = level.getMapArea().getMapHeight();
 
 		if (mWidth <= viewportWidth) {
 			EFDebug.debug("Watch TestLevel.java:setupCamera... line cameraPosX = map.getWidth() / 2f");

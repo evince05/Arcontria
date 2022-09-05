@@ -57,6 +57,14 @@ public abstract class Scene {
 	
 	public abstract void onMouseDrag(int x, int y);
 	
+	/**
+	 * Handles when the mouse wheel is scrolled.
+	 * @param direction 1 if the mouse wheel is being scrolled down,
+	 * -1 if it is being scrolled up.
+	 */
+	
+	public abstract void onMouseWheelScrolled(int direction);
+	
 	public void dispose() {
 		world.dispose();
 		rayHandler.dispose();

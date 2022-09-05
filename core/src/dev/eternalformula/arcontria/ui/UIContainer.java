@@ -101,6 +101,12 @@ public class UIContainer extends UIElement {
 			e.update(delta);
 		}
 	}
+	
+	public void onMouseWheelScrolled(int amount) {
+		for (UIElement e : children) {
+			e.onMouseWheelScrolled(amount);
+		}
+	}
 
 	@Override
 	public void draw(SpriteBatch uiBatch, float delta) {

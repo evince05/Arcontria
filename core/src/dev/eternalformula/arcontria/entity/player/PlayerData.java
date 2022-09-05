@@ -97,7 +97,7 @@ public class PlayerData {
 	}
 	
 	public float getTotalDistanceTravelled() {
-		return distanceTravelledSession + (float) stats.getRuntimeValue("distance-travlled", float.class);
+		return distanceTravelledSession + (float) stats.getRuntimeValue("distance-travelled", float.class);
 	}
 	
 	public boolean isAchievementCompleted(String achievementId) {

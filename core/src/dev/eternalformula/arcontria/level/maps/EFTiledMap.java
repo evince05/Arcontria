@@ -74,7 +74,7 @@ public class EFTiledMap {
 	}
 	
 	public void dispose() {
-		
+		tiledMap.dispose();
 	}
 	
 	private void zSort() {

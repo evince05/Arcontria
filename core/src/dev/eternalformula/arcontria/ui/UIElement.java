@@ -158,6 +158,7 @@ public abstract class UIElement {
 	
 	public abstract void onMouseDrag(int x, int y);
 	
+	public abstract void onMouseWheelScrolled(int amount);
 	
 	/**
 	 * Handles when a key is typed.

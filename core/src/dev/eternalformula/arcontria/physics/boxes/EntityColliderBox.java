@@ -32,6 +32,26 @@ public class EntityColliderBox extends Box {
 		body.setUserData(this);
 	}
 	
+	/**
+	 * EntityColliderBox
+	 * @param surroundEntity True if the box should surround the entire entity.
+	 */
+	
+	public EntityColliderBox(World world, Entity entity, BodyType bodyType, boolean surroundEntity) {
+		this.entity = entity;
+		this.id = UUID.randomUUID();
+		
+		float height = entity.getHeight();
+		if (!surroundEntity) {
+			height = entity.getHeight() / 8f;
+		}
+		
+		this.body = B2DUtil.createBody(world, entity.getLocation().x + entity.getWidth() / 2f,
+				entity.getLocation().y + entity.getHeight() / 2f, entity.getWidth(), height,
+				bodyType, PhysicsCategory.ENTITY_COLLIDER, this);
+		body.setUserData(this);
+	}
+	
 	
 	public Entity getEntity() {
 		return entity;

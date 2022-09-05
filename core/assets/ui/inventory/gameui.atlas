@@ -1,0 +1,69 @@
+
+gameui.png
+size: 256, 64
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+clocktimedisplay
+  rotate: false
+  xy: 173, 8
+  size: 48, 56
+  orig: 48, 56
+  offset: 0, 0
+  index: -1
+daytime
+  rotate: false
+  xy: 221, 0
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+hotbar
+  rotate: false
+  xy: 0, 44
+  size: 173, 20
+  orig: 173, 20
+  offset: 0, 0
+  index: -1
+invbtn
+  rotate: false
+  xy: 136, 26
+  size: 36, 18
+  orig: 36, 18
+  offset: 0, 0
+  index: -1
+nighttime
+  rotate: false
+  xy: 32, 12
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+questbtn
+  rotate: false
+  xy: 100, 26
+  size: 36, 18
+  orig: 36, 18
+  offset: 0, 0
+  index: -1
+settingsbtn
+  rotate: false
+  xy: 64, 26
+  size: 36, 18
+  orig: 36, 18
+  offset: 0, 0
+  index: -1
+sunrise
+  rotate: false
+  xy: 221, 32
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+sunset
+  rotate: false
+  xy: 0, 12
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1

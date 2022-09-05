@@ -17,11 +17,12 @@ import dev.eternalformula.arcontria.ArcontriaGame;
 
 public class NoiseGenerator {
 	
-	private static final float DEFAULT_FREQUENCY = 1 / 16f;
+	private static final float DEFAULT_FREQUENCY = 1 / 32f;
 	private static final int DEFAULT_OCTAVE_COUNT = 5;
 	private static final int DEFAULT_SCALE_FACTOR = 4;
 	private static final float DEFAULT_LACUNARITY = 1.75f;
-	private static final float DEFAULT_GAIN = 0.5f;
+	private static final float DEFAULT_GAIN = 4/7f;
+	private static final float DEFAULT_FOAM_SHARPNESS = 1f;
 	
 	/**
 	 * Creates a noise grid using FractalNoise.
@@ -33,7 +34,8 @@ public class NoiseGenerator {
 	
 	public static float[][] createNoiseGrid(int seed, int width, int height) {
 		return createNoiseGrid(seed, width, height, DEFAULT_SCALE_FACTOR, 
-				DEFAULT_FREQUENCY, DEFAULT_OCTAVE_COUNT, DEFAULT_LACUNARITY, DEFAULT_GAIN);
+				DEFAULT_FREQUENCY, DEFAULT_OCTAVE_COUNT, DEFAULT_LACUNARITY, DEFAULT_GAIN,
+				DEFAULT_FOAM_SHARPNESS);
 	}
 	
 	/**
@@ -50,9 +52,10 @@ public class NoiseGenerator {
 	 */
 	
 	public static float[][] createNoiseGrid(int seed, int width, int height, int scaleFactor,
-			float frequency, int octaves, float lacunarity, float gain) {
+			float frequency, int octaves, float lacunarity, float gain, float foamSharpness) {
 		// Creates the noise object
-		FractalNoise fracNoise = new FractalNoise(seed, frequency, octaves, lacunarity, gain);
+		FractalNoise fracNoise = new FractalNoise(seed, frequency, octaves, lacunarity,
+				gain, foamSharpness);
 		
 		// Creates the enlarged noise grid
 		float[][] enlargedGrid = new float[height * scaleFactor][width * scaleFactor];
@@ -63,6 +66,28 @@ public class NoiseGenerator {
 				// Get the value of the noise at the current pos
 				enlargedGrid[row][col] = 
 						fracNoise.singleSimplexFractalRidgedMulti(col, row) / 2f + 0.5f;
+			}
+		}
+		
+		// Creates the downscaled noise grid and returns
+		return resizeNoiseGrid(enlargedGrid, scaleFactor);
+	}
+	
+	public static float[][] createOreGrid(int seed, int width, int height, int scaleFactor,
+			float frequency, int octaves, float lacunarity, float gain, float foamSharpness) {
+		// Creates the noise object
+		FractalNoise fracNoise = new FractalNoise(seed, frequency, octaves, lacunarity,
+				gain, foamSharpness);
+		
+		// Creates the enlarged noise grid
+		float[][] enlargedGrid = new float[height * scaleFactor][width * scaleFactor];
+		
+		for (int row = 0; row < height * scaleFactor; row++) {
+			for (int col = 0; col < width * scaleFactor; col++) {
+				
+				// Get the value of the noise at the current pos
+				enlargedGrid[row][col] = 
+						fracNoise.singleFoamFractalBillow(col, row) / 2f + 0.5f;
 			}
 		}
 		

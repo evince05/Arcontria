@@ -6,7 +6,7 @@ filter: Nearest, Nearest
 repeat: none
 checkbox
   rotate: false
-  xy: 344, 60
+  xy: 464, 84
   size: 16, 8
   orig: 16, 8
   offset: 0, 0
@@ -55,7 +55,7 @@ promptbox
   index: -1
 sliderdial
   rotate: false
-  xy: 464, 84
+  xy: 424, 60
   size: 4, 8
   orig: 4, 8
   offset: 0, 0
@@ -72,5 +72,19 @@ textfield
   xy: 344, 68
   size: 120, 24
   orig: 120, 24
+  offset: 0, 0
+  index: -1
+tooltip
+  rotate: false
+  xy: 344, 32
+  size: 64, 18
+  orig: 64, 18
+  offset: 0, 0
+  index: -1
+tooltip-long
+  rotate: false
+  xy: 344, 50
+  size: 80, 18
+  orig: 80, 18
   offset: 0, 0
   index: -1

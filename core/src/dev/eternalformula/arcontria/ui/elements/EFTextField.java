@@ -48,14 +48,14 @@ public class EFTextField extends UIElement {
 
 	@Override
 	public void onMouseHovered(int x, int y) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void onMouseDrag(int x, int y) {
-		// TODO Auto-generated method stub
-		
+	}
+	
+	@Override
+	public void onMouseWheelScrolled(int amount) {
 	}
 
 	@Override

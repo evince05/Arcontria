@@ -12,8 +12,10 @@ public class FractalNoise {
 	private float lacunarity;
 	private float gain;
 	private float fractalBounding;
+	private float foamSharpness;
 	
 	public static final float F2f = 0.3660254f;
+	public static final float F3f = 0.33333334f;
 	public static final float G2f = 0.21132487f;
     public static final float H2f = 0.42264974f;
 	
@@ -38,16 +40,18 @@ public class FractalNoise {
      */
     public FractalNoise(int seed, float frequency, int octaves)
     {
-        this(seed, frequency, octaves, 2f, 0.5f);
+        this(seed, frequency, octaves, 2f, 0.5f, 1f);
     }
     
-    public FractalNoise(int seed, float frequency, int octaves, float lacunarity, float gain)
+    public FractalNoise(int seed, float frequency, int octaves, float lacunarity,
+    		float gain, float foamSharpness)
     {
         this.seed = seed;
         this.frequency = Math.max(0.0001f, frequency);
         this.octaves = octaves;
         this.lacunarity = lacunarity;
         this.gain = gain;
+        this.foamSharpness = foamSharpness;
         calculateFractalBounding();
     }
     
@@ -60,8 +64,77 @@ public class FractalNoise {
         }
         fractalBounding = 1 / ampFractal;
     }
-
     
+    public float singleFoam(int seed, float x, float y) {
+        final float p0 = x;
+        final float p1 = x * -0.5f + y * 0.8660254037844386f;
+        final float p2 = x * -0.5f + y * -0.8660254037844387f;
+
+        float xin = p2;
+        float yin = p0;
+        final float a = valueNoise(seed, xin, yin);
+        seed += 0x9E3779BD;
+        seed ^= seed >>> 14;
+        xin = p1;
+        yin = p2;
+        final float b = valueNoise(seed, xin + a, yin);
+        seed += 0x9E3779BD;
+        seed ^= seed >>> 14;
+        xin = p0;
+        yin = p1;
+        final float c = valueNoise(seed, xin + b, yin);
+        final float result = (a + b + c) * F3f;
+        final float sharp = foamSharpness * 2.2f;
+        final float diff = 0.5f - result;
+        final int sign = Float.floatToIntBits(diff) >> 31, one = sign | 1;
+        return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
+    }
+	
+	/**
+     * Produces noise from 0 to 1, instead of the normal -1 to 1.
+     * @param seed
+     * @param x
+     * @param y
+     * @return noise from 0 to 1.
+     */
+    protected float valueNoise (int seed, float x, float y) {
+        int xFloor = x >= 0 ? (int) x : (int) x - 1;
+        x -= xFloor;
+        x *= x * (3 - 2 * x);
+        int yFloor = y >= 0 ? (int) y : (int) y - 1;
+        y -= yFloor;
+        y *= y * (3 - 2 * y);
+        xFloor *= 0xD1B55;
+        yFloor *= 0xABC99;
+        return ((1 - y) * ((1 - x) * hashPart1024(xFloor, yFloor, seed) + x * hashPart1024(xFloor + 0xD1B55, yFloor, seed))
+            + y * ((1 - x) * hashPart1024(xFloor, yFloor + 0xABC99, seed) + x * hashPart1024(xFloor + 0xD1B55, yFloor + 0xABC99, seed)))
+            * 0x1p-10f + 0.5f;
+    }
+    
+    private static int hashPart1024(final int x, final int y, int s) {
+        s += x ^ y;
+        return (s ^ (s << 19 | s >>> 13) ^ (s << 5 | s >>> 27) ^ 0xD1B54A35) * 0x125493 >> 22;
+    }
+	
+	public float singleFoamFractalBillow(float x, float y) {
+		x *= frequency;
+		y *= frequency;
+		
+        int seed = this.seed;
+        float sum = Math.abs(singleFoam(seed, x, y)) * 2 - 1;
+        float amp = 1, t;
+
+        for (int i = 1; i < octaves; i++) {
+            t = x;
+            x = y * lacunarity;
+            y = t * lacunarity;
+
+            amp *= gain;
+            sum += (Math.abs(singleFoam(++seed, x, y)) * 2 - 1) * amp;
+        }
+
+        return sum * fractalBounding;
+	}
 
 	public float singleSimplexFractalFBM(float x, float y) {
         int seed = this.seed;

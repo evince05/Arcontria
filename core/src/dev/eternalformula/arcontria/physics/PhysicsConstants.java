@@ -14,6 +14,7 @@ public class PhysicsConstants {
 	public static final short BIT_MAPOBJECT_HITBOX = 256;
 	public static final short BIT_MAP_BOUNDS = 512;
 	public static final short BIT_PROJECTILE_COLLIDER = 1024;
+	public static final short BIT_BREAKABLEOBJ_HITBOX = 2048;
 	
 	public static final Color DEFAULT_B2DR_STATIC_COLOR = Color.GREEN;
 	public static final Color DEFAULT_B2DR_DYNAMIC_COLOR = Color.PINK;
@@ -39,7 +40,7 @@ public class PhysicsConstants {
 				new Color(0f, 0f, 0f, 0f)),
 		PLAYER_ATTACKBOX(
 				BIT_PLAYER_ATTACKBOX,
-				BIT_ENTITY_HITBOX,
+				(short) (BIT_ENTITY_HITBOX | BIT_BREAKABLEOBJ_HITBOX),
 				//(short) (GROUP_ATTACKBOX_NONCOLLIDE | GROUP_COLLIDER_NONCOLLIDE),
 				new Color(0f, 0f, 0f, 0f)),
 		PLAYER_COLLIDER(
@@ -66,7 +67,12 @@ public class PhysicsConstants {
 		MAPOBJECT_HITBOX(
 				BIT_MAPOBJECT_HITBOX,
 				BIT_PLAYER_HITBOX, true,
+				new Color(0f, 0f, 0f, 0f)),
+		BREAKABLEOBJ_HITBOX(
+				BIT_BREAKABLEOBJ_HITBOX,
+				BIT_PLAYER_ATTACKBOX, true,
 				new Color(0f, 0f, 0f, 0f));
+				
 		
 		private short cBits; // Bits which the object is (doesn't collide with)
 		private short mBits; // Bits which the object is not (collides with)

@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 import dev.eternalformula.arcontria.cutscenes.CutsceneHandler;
 import dev.eternalformula.arcontria.gfx.animations.ScreenAnimation;
+import dev.eternalformula.arcontria.level.GameLevel;
 import dev.eternalformula.arcontria.level.maps.EFTiledMap;
 import dev.eternalformula.arcontria.util.Assets;
 import dev.eternalformula.arcontria.util.loaders.EFTiledMapLoader;
@@ -32,6 +33,7 @@ public class GameScene extends Scene {
 		Assets.setLoader(EFTiledMap.class, new EFTiledMapLoader(
 				new InternalFileHandleResolver(), world, rayHandler));
 		Assets.load("textures/maps/scenery/gen_map_scenery.atlas", TextureAtlas.class);
+		Assets.load("ui/inventory/gameui.atlas", TextureAtlas.class);
 		Assets.load("data/particles/smoke/smoke.particle", ParticleEffect.class);
 		Assets.load("maps/data/mines/mine-level-1.tmx", EFTiledMap.class);
 		//Assets.load("maps/data/dojo/dojo.tmx", EFTiledMap.class);
@@ -133,6 +135,9 @@ public class GameScene extends Scene {
 		if (csHandler.isPlayingCutscene()) {
 			csHandler.onMouseReleased(x, y, button);
 		}
+		else {
+			session.onMouseReleased(x, y, button);
+		}
 	}
 
 	@Override
@@ -144,6 +149,14 @@ public class GameScene extends Scene {
 		if (csHandler.isPlayingCutscene()) {
 			csHandler.onMouseHovered(x, y);
 		}
+		else {
+			session.onMouseHovered(x, y);
+		}
+	}
+	
+	@Override
+	public void onMouseWheelScrolled(int amount) {
+		session.onMouseWheelScrolled(amount);
 	}
 
 	@Override
@@ -161,5 +174,12 @@ public class GameScene extends Scene {
 	
 	public float getScreenAlpha() {
 		return screenAlpha;
+	}
+	
+	public GameLevel getLevel() {
+		if (session.getLevel() != null) {
+			return session.getLevel();
+		}
+		return null;
 	}
 }

@@ -49,4 +49,8 @@ public class EFMapRenderer {
 	public void toggleScreenAlpha(boolean shouldUseAlpha) {
 		this.shouldUseAlpha = shouldUseAlpha;
 	}
+
+	public void dispose() {
+		mapRenderer.dispose();
+	}
 }

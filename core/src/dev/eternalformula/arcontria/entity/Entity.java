@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.World;
 
 import dev.eternalformula.arcontria.level.GameLevel;
 
@@ -116,4 +117,9 @@ public abstract class Entity {
 	public void setLevel(GameLevel level) {
 		this.level = level;
 	}
+
+	/**
+	 * Breaks the rock and yields ore.
+	 */
+	public abstract void destroyBodies(World world);
 }

@@ -12,6 +12,7 @@ import dev.eternalformula.arcontria.ui.UIContainer;
 import dev.eternalformula.arcontria.ui.UIElement;
 import dev.eternalformula.arcontria.ui.actions.ButtonClickAction;
 import dev.eternalformula.arcontria.util.Assets;
+import dev.eternalformula.arcontria.util.EFDebug;
 
 public class EFButton extends UIElement {
 	
@@ -26,10 +27,13 @@ public class EFButton extends UIElement {
 
 	private BitmapFont font;
 	
+	private EFTooltip tooltip;
+	
 	private boolean isClicked;
 	private boolean isHovering;
 	
 	private boolean centerText;
+	private boolean drawTooltip;
 	
 	/**
 	 * Determines the mode of the button.<br>
@@ -97,15 +101,24 @@ public class EFButton extends UIElement {
 		}
 		else {
 			isHovering = false;
+			hoverTime = 0f;
+			drawTooltip = false;
 		}
 	}
 
 	@Override
 	public void onMouseDrag(int x, int y) {
 	}
+	
+	@Override
+	public void onMouseWheelScrolled(int amount) {
+	}
 
 	@Override
 	public void update(float delta) {
+		if (isHovering) {
+			hoverTime += delta;
+		}
 	}
 
 	@Override
@@ -117,6 +130,14 @@ public class EFButton extends UIElement {
 			uiBatch.draw(skin, location.x, location.y);
 			if (isHovering) {
 				EGFXUtil.drawAlphaRect(uiBatch, bounds, 0.05f);
+				
+				if (hoverTime >= 0.4f && !drawTooltip) {
+					drawTooltip = true;
+				}
+				
+				if (drawTooltip) {
+					tooltip.draw(uiBatch, delta);
+				}
 			}
 		}
 
@@ -168,6 +189,21 @@ public class EFButton extends UIElement {
 	
 	public void setText(String text) {
 		this.text = text;
+	}
+	
+	public void setTooltip(String tooltipText, boolean drawAbove) {
+		this.tooltip = new EFTooltip(tooltipText);
+		
+		float width = skin.getRegionWidth();
+		float height = skin.getRegionHeight();
+		
+		if (drawAbove) {
+			tooltip.setLocation(location.x + width * 0.8f, location.y + height * 0.75f);
+		}
+		else {
+			tooltip.setLocation(location.x + width * 0.8f, location.y - height * 0.75f);
+		}
+		
 	}
 	
 	/**

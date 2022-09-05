@@ -1,13 +1,23 @@
 package dev.eternalformula.arcontria.entity.misc;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
+import dev.eternalformula.arcontria.ArcontriaGame;
 import dev.eternalformula.arcontria.entity.Entity;
+import dev.eternalformula.arcontria.level.GameLevel;
+import dev.eternalformula.arcontria.physics.boxes.Box;
+import dev.eternalformula.arcontria.physics.boxes.BreakableObjHitbox;
+import dev.eternalformula.arcontria.physics.boxes.EntityColliderBox;
+import dev.eternalformula.arcontria.scenes.GameScene;
 import dev.eternalformula.arcontria.util.Assets;
 import dev.eternalformula.arcontria.util.EFConstants;
 
@@ -18,9 +28,15 @@ public class MineRock extends Entity {
 	public static final int ORE_2 = 2;
 	
 	private Animation<TextureRegion> animation;
+	private Animation<TextureRegion> breakAnim; 
 	private float elapsedTime;
 	
-	public MineRock(Vector2 location, int rockType) {
+	private Box colliderBox;
+	private Box rockHitbox;
+	
+	private boolean isBeingDestroyed;
+	
+	public MineRock(World world, Vector2 location, int rockType) {
 		super();
 		setLocation(location);
 		
@@ -43,10 +59,24 @@ public class MineRock extends Entity {
 			// One frame
 			animation = new Animation<TextureRegion>(1f, rockReg);
 		}
+		frames.clear();
 		
-		currentAnimation = animation;
+		TextureRegion breakReg = genMapScenery.findRegion("stone-break-anim");
+		for (int i = 0; i < 5; i++) {
+			frames.add(new TextureRegion(breakReg, i * 16, 0, 16, 16));
+		}
+		breakAnim = new Animation<TextureRegion>(0.15f, frames);
+		breakAnim.setPlayMode(PlayMode.NORMAL);
+		frames.clear();
+		
 		width = 1f;
 		height = 1f;
+		
+		// Box
+		this.colliderBox = new EntityColliderBox(world, this, BodyType.StaticBody, true);
+		this.rockHitbox = new BreakableObjHitbox(world, this);
+		
+		currentAnimation = animation;
 	}
 	
 	@Override
@@ -54,13 +84,17 @@ public class MineRock extends Entity {
 		super.update(delta);
 		
 		if (currentAnimation.isAnimationFinished(elapsedTime)) {
+			if (currentAnimation.equals(breakAnim)) {
+				GameLevel level = ((GameScene) ArcontriaGame.getCurrentScene()).getLevel();
+				level.removeEntity(this);
+			}
 			elapsedTime = 0f;
 		}
 	}
 	
 	@Override
 	public void draw(SpriteBatch batch, float delta) {
-		TextureRegion reg = currentAnimation.getKeyFrame(elapsedTime, true);
+		TextureRegion reg = currentAnimation.getKeyFrame(elapsedTime);
 		float w = reg.getRegionWidth() / EFConstants.PPM;
 		float h = reg.getRegionHeight() / EFConstants.PPM;
 		
@@ -74,7 +108,20 @@ public class MineRock extends Entity {
 	 */
 	
 	public void destroy() {
-		// TODO: Code this lol
+		if (!isBeingDestroyed) {
+			isBeingDestroyed = true;
+			elapsedTime = 0f;
+			currentAnimation = breakAnim;
+			
+			Sound rockBreak = Assets.get("sfx/mines/rockbreak.wav", Sound.class);
+			rockBreak.play(0.21f);
+		}
+	}
+	
+	@Override
+	public void destroyBodies(World world) {
+		world.destroyBody(colliderBox.getBody());
+		world.destroyBody(rockHitbox.getBody());
 	}
 
 }

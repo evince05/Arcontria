@@ -83,6 +83,11 @@ public class EFMath {
 		return Math.round(num * reciprocal) / reciprocal;
 	}
 	
+	public static float floorToNearestXth(float num, float x) {
+		float reciprocal = 1f / x;
+		return (float) Math.floor(num * reciprocal) / reciprocal;
+	}
+	
 	/**
 	 * Rounds the specified number to the nearest 16th. Used mainly to adjust the camera for pixels.
 	 * @param num The number to round

@@ -136,4 +136,10 @@ public class Torch extends Entity {
 		pEffect.draw(batch);
 	}
 
+	@Override
+	public void destroyBodies(World world) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

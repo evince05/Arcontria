@@ -1,6 +1,5 @@
 package dev.eternalformula.arcontria.level.areas;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.objects.PolygonMapObject;
@@ -11,6 +10,7 @@ import com.badlogic.gdx.utils.Array;
 
 import dev.eternalformula.arcontria.entity.Entity;
 import dev.eternalformula.arcontria.entity.misc.MineRock;
+import dev.eternalformula.arcontria.entity.projectiles.ProspectorPickaxe;
 import dev.eternalformula.arcontria.level.GameLevel;
 import dev.eternalformula.arcontria.level.maps.EFTiledMap;
 import dev.eternalformula.arcontria.objects.noise.NoiseGenerator;
@@ -61,31 +61,30 @@ public class MineArea extends MapArea {
 	private void generateRocksAndOres() {
 		
 		baseNoiseGrid = NoiseGenerator.createNoiseGrid(MathUtils.random(1000000),
-				map.getWidth(), map.getHeight());
+				map.getWidth(), map.getHeight(), 4, 1 / 32f, 4, 2f, 0.5f, 0.5f);
 		
 		
-		oreGrid = NoiseGenerator.createNoiseGrid(MathUtils.random(100000), 
-				map.getWidth(), map.getHeight(), 4, 1 / 16f, 2, 1.75f, 0.5f);
+		oreGrid = NoiseGenerator.createOreGrid(MathUtils.random(1000000), 
+				map.getWidth(), map.getHeight(), 4, 1 / 16f, 4, 4/3f, 3/4f, 0.5f);
 		
 		for (int y = baseNoiseGrid.length - 1; y >= 0; y--) {
 			for (int x = 0; x < baseNoiseGrid[0].length; x++) {
 				
-				if (baseNoiseGrid[y][x] <= 0.55f && isSpawnable(x, y)) {
+				if (baseNoiseGrid[y][x] <= 0.6f && isSpawnable(x, y)) {
 					
 					int oreType = 0;
-					if (baseNoiseGrid[y][x] <= 0.45f) {
+					if (baseNoiseGrid[y][x] <= 0.55f) {
 						// Ore
-						if (oreGrid[y][x] <= 0.3f) {
+						if (oreGrid[y][x] >= 0.325f) {
 							oreType = MineRock.ORE_2;
 						}
-						else if (oreGrid[y][x] <= 0.4f) {
+						else if (oreGrid[y][x] >= 0.25f) {
 							oreType = MineRock.ORE_1;
 						}
-						
 					}
 					
 					// Stone is present
-					entities.add(new MineRock(new Vector2(x, y), oreType));
+					entities.add(new MineRock(level.getWorld(), new Vector2(x, y), oreType));
 				}
 			}
 		}
@@ -105,6 +104,12 @@ public class MineArea extends MapArea {
 		
 		for (Entity e : entities) {
 			e.update(delta);
+			
+			if (e instanceof ProspectorPickaxe) {
+				if (((ProspectorPickaxe) e).isFinished()) {
+					removeEntity(e);
+				}
+			}
 		}
 	}
 	

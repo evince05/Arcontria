@@ -61,13 +61,18 @@ public class EGFXUtil {
 	}
 	
 	/**
-	 * Draws a colored, filled rectangle.
+	 * Draws a colored rectangle.
 	 * @param batch The batch to use
 	 * @param color The color to use
 	 * @param rect The rectangle to draw.
+	 * @param isFilled True if the rectangle should be filled, otherwise false.
 	 */
 	
 	public static void drawColorRect(SpriteBatch batch, Color color, Rectangle rect) {
+		drawColorRect(batch, color, rect, true);
+	}
+	
+	public static void drawColorRect(SpriteBatch batch, Color color, Rectangle rect, boolean isFilled) {
 		batch.end();
 		
 		// Get the shape renderer
@@ -81,9 +86,11 @@ public class EGFXUtil {
 		
 		// Draws the rect
 		shapeRend.begin();
-		shapeRend.set(ShapeType.Filled);
+		shapeRend.set(isFilled ? ShapeType.Filled : ShapeType.Line);
 		shapeRend.setColor(color);
+		
 		shapeRend.rect(rect.x, rect.y, rect.width, rect.height);
+		
 		shapeRend.end();
 		
 		// Stop alpha

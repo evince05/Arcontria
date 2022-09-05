@@ -8,14 +8,18 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 
+import dev.eternalformula.arcontria.ArcontriaGame;
 import dev.eternalformula.arcontria.combat.DamageSource;
 import dev.eternalformula.arcontria.entity.LivingEntity;
+import dev.eternalformula.arcontria.entity.misc.MineRock;
 import dev.eternalformula.arcontria.physics.boxes.Box;
+import dev.eternalformula.arcontria.physics.boxes.BreakableObjHitbox;
 import dev.eternalformula.arcontria.physics.boxes.EntityHitbox;
 import dev.eternalformula.arcontria.physics.boxes.MapObjectHitbox;
 import dev.eternalformula.arcontria.physics.boxes.PlayerAttackBox;
 import dev.eternalformula.arcontria.physics.boxes.PlayerHitbox;
 import dev.eternalformula.arcontria.physics.boxes.ProjectileBox;
+import dev.eternalformula.arcontria.scenes.GameScene;
 import dev.eternalformula.arcontria.util.EFDebug;
 
 public class WorldContactListener implements ContactListener {
@@ -116,8 +120,7 @@ public class WorldContactListener implements ContactListener {
 		}
 	}
 	
-	public void handleBoxEndContact(Contact concact, Box boxA, Box boxB) {
-		System.out.println("ending contact");
+	public void handleBoxEndContact(Contact contact, Box boxA, Box boxB) {
 		if ((boxA instanceof PlayerHitbox || boxB instanceof PlayerHitbox) &&
 				(boxA instanceof MapObjectHitbox || boxB instanceof MapObjectHitbox)) {
 			
@@ -132,6 +135,21 @@ public class WorldContactListener implements ContactListener {
 				objHitbox.getMapObject().beginReappearAnimation();
 			}
 			return;
+		}
+		
+		// Note: Must destroy bodies on endContact
+		if ((boxA instanceof PlayerAttackBox || boxB instanceof PlayerAttackBox) && 
+				(boxA instanceof BreakableObjHitbox || boxB instanceof BreakableObjHitbox)) {
+			
+			// Gets the hitbox
+			BreakableObjHitbox box = (BreakableObjHitbox) 
+					(boxA instanceof BreakableObjHitbox ? boxA : boxB);
+			
+			if (box.getEntity() instanceof MineRock) {
+				((MineRock) box.getEntity()).destroy();
+			}
+			return;
+			
 		}
 	}
 

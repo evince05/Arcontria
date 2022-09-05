@@ -1,6 +1,5 @@
 package dev.eternalformula.arcontria.entity.player;
 
-import java.io.File;
 import java.util.UUID;
 
 import com.badlogic.gdx.Gdx;
@@ -11,11 +10,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
 import dev.eternalformula.arcontria.entity.LivingEntity;
-import dev.eternalformula.arcontria.files.FileUtil;
 import dev.eternalformula.arcontria.input.Controllable;
+import dev.eternalformula.arcontria.inventory.PlayerInventory;
+import dev.eternalformula.arcontria.items.Item;
+import dev.eternalformula.arcontria.items.Material;
 import dev.eternalformula.arcontria.level.GameLevel;
 import dev.eternalformula.arcontria.physics.boxes.PlayerAttackBox;
 import dev.eternalformula.arcontria.physics.boxes.PlayerColliderBox;
@@ -68,6 +70,7 @@ public class Player extends LivingEntity implements Controllable {
 	private PlayerAttackBox attackBox;
 	
 	private PlayerData playerData;
+	private PlayerInventory inventory;
 	
 	/*
 	 * Determines if the player is currently behind any MapObject
@@ -212,6 +215,17 @@ public class Player extends LivingEntity implements Controllable {
 		this.hitbox = new PlayerHitbox(level, this);
 		this.colliderBox = new PlayerColliderBox(level, this);
 		this.attackBox = new PlayerAttackBox(level, this);
+		
+		this.inventory = PlayerInventory.createInventoryForPlayer(this);
+		inventory.addItem(new Item(Material.BREAD, 10));
+		
+		System.out.println("Item: " + inventory.getItem(0).toDebugString());
+	}
+	
+	@Override
+	public void update(float delta) {
+		super.update(delta);
+		handleInput(delta);
 	}
 
 	@Override
@@ -386,6 +400,10 @@ public class Player extends LivingEntity implements Controllable {
 	
 	public void setBehindMapObject(boolean isBehindMapObject) {
 		this.isBehindMapObject = isBehindMapObject;
+	}
+	
+	@Override
+	public void destroyBodies(World world) {
 	}
 	
 	public PlayerData getPlayerData() {

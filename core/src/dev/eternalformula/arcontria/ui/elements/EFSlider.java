@@ -61,6 +61,10 @@ public class EFSlider extends UIElement {
 	}
 	
 	@Override
+	public void onMouseWheelScrolled(int amount) {
+	}
+	
+	@Override
 	public void onMouseDrag(int x, int y) {
 		
 		if (container.focusedElement != null) {
