@@ -56,7 +56,8 @@ public class PhysicsConstants {
 				new Color(0f, 0f, 0f, 0f)),
 		PROJECTILE_COLLIDER(
 				BIT_PROJECTILE_COLLIDER,
-				(short) (BIT_PLAYER_HITBOX | BIT_ENTITY_HITBOX | BIT_MAPOBJECT_COLLIDER),
+				(short) (BIT_PLAYER_HITBOX | BIT_ENTITY_HITBOX | BIT_MAPOBJECT_COLLIDER
+						| BIT_BREAKABLEOBJ_HITBOX),
 				true,
 				//(short) (GROUP_ATTACKBOX_NONCOLLIDE | GROUP_COLLIDER_NONCOLLIDE),
 				new Color(0f, 0f, 0f, 0f)),
@@ -70,7 +71,7 @@ public class PhysicsConstants {
 				new Color(0f, 0f, 0f, 0f)),
 		BREAKABLEOBJ_HITBOX(
 				BIT_BREAKABLEOBJ_HITBOX,
-				BIT_PLAYER_ATTACKBOX, true,
+				(short) (BIT_PLAYER_ATTACKBOX | BIT_PROJECTILE_COLLIDER), true,
 				new Color(0f, 0f, 0f, 0f));
 				
 		

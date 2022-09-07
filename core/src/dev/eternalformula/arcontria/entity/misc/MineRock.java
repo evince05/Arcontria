@@ -13,6 +13,8 @@ import com.badlogic.gdx.utils.Array;
 
 import dev.eternalformula.arcontria.ArcontriaGame;
 import dev.eternalformula.arcontria.entity.Entity;
+import dev.eternalformula.arcontria.items.Item;
+import dev.eternalformula.arcontria.items.Material;
 import dev.eternalformula.arcontria.level.GameLevel;
 import dev.eternalformula.arcontria.physics.boxes.Box;
 import dev.eternalformula.arcontria.physics.boxes.BreakableObjHitbox;
@@ -31,6 +33,8 @@ public class MineRock extends Entity {
 	private Animation<TextureRegion> breakAnim; 
 	private float elapsedTime;
 	
+	private int rockType;
+	
 	private Box colliderBox;
 	private Box rockHitbox;
 	
@@ -39,6 +43,7 @@ public class MineRock extends Entity {
 	public MineRock(World world, Vector2 location, int rockType) {
 		super();
 		setLocation(location);
+		this.rockType = rockType;
 		
 		TextureAtlas genMapScenery = Assets.get("textures/maps/scenery/gen_map_scenery.atlas",
 				TextureAtlas.class);
@@ -115,6 +120,21 @@ public class MineRock extends Entity {
 			
 			Sound rockBreak = Assets.get("sfx/mines/rockbreak.wav", Sound.class);
 			rockBreak.play(0.21f);
+			
+			ItemEntity entity = null;
+			
+			// Spawns the rock
+			if (rockType == MineRock.STONE) {
+				entity = new ItemEntity(new Item(Material.STONE, 1));
+			}
+			else if (rockType == MineRock.ORE_1) {
+				entity = new ItemEntity(new Item(Material.ORE_1, 1));
+			}
+			else if (rockType == MineRock.ORE_2) {
+				entity = new ItemEntity(new Item(Material.ORE_2, 2));
+			}
+			entity.setLocation(location);
+			((GameScene) ArcontriaGame.getCurrentScene()).getLevel().addEntity(entity);
 		}
 	}
 	

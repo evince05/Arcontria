@@ -26,7 +26,6 @@ public class WorldContactListener implements ContactListener {
 
 	@Override
 	public void beginContact(Contact contact) {
-		EFDebug.info("Contact Detected!");
 		
 		Fixture fa = contact.getFixtureA();
 		Fixture fb = contact.getFixtureB();
@@ -76,7 +75,6 @@ public class WorldContactListener implements ContactListener {
 	}
 	
 	public void handleBoxContact(Contact contact, Box boxA, Box boxB) {
-		EFDebug.debug("handling box contact");
 		if ((boxA instanceof PlayerAttackBox || boxB instanceof PlayerAttackBox) &&
 				(boxA instanceof EntityHitbox || boxB instanceof EntityHitbox)) {
 			
@@ -91,8 +89,6 @@ public class WorldContactListener implements ContactListener {
 		
 		if ((boxA instanceof PlayerHitbox || boxB instanceof PlayerHitbox) &&
 				(boxA instanceof MapObjectHitbox || boxB instanceof MapObjectHitbox)) {
-			
-			System.out.println("contact");
 			
 			// Gets the boxes.
 			PlayerHitbox pHitbox = (PlayerHitbox) (boxA instanceof PlayerHitbox ? boxA : boxB);
@@ -117,6 +113,24 @@ public class WorldContactListener implements ContactListener {
 			((LivingEntity) eBox.getEntity()).damage(new DamageSource(pBox.getProjectile()), 100, false);
 			return;
 					
+		}
+		
+		if ((boxA instanceof ProjectileBox || boxB instanceof ProjectileBox) &&
+				(boxA instanceof BreakableObjHitbox || boxB instanceof BreakableObjHitbox)) {
+			
+			BreakableObjHitbox box = (BreakableObjHitbox)
+					(boxA instanceof BreakableObjHitbox ? boxA : boxB);
+			
+			if (box.getEntity() instanceof MineRock) {
+				((MineRock) box.getEntity()).destroy();
+			}
+			
+			// Destroys the projectile
+			ProjectileBox projBox = (ProjectileBox)
+					(boxA instanceof ProjectileBox ? boxA : boxB);
+			projBox.getProjectile().destroy();
+			
+			return;
 		}
 	}
 	

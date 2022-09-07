@@ -32,10 +32,13 @@ public class GameScene extends Scene {
 	protected void loadAssets() {
 		Assets.setLoader(EFTiledMap.class, new EFTiledMapLoader(
 				new InternalFileHandleResolver(), world, rayHandler));
+		Assets.load("textures/items/itematlas.atlas", TextureAtlas.class);
 		Assets.load("textures/maps/scenery/gen_map_scenery.atlas", TextureAtlas.class);
 		Assets.load("ui/inventory/gameui.atlas", TextureAtlas.class);
 		Assets.load("data/particles/smoke/smoke.particle", ParticleEffect.class);
 		Assets.load("maps/data/mines/mine-level-1.tmx", EFTiledMap.class);
+		Assets.load("textures/entities/projectiles/projectiles.atlas", TextureAtlas.class);
+		
 		//Assets.load("maps/data/dojo/dojo.tmx", EFTiledMap.class);
 		Assets.updateInstance();
 	}

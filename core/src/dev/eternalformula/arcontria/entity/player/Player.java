@@ -14,6 +14,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
 import dev.eternalformula.arcontria.entity.LivingEntity;
+import dev.eternalformula.arcontria.entity.projectiles.DeconProjectile;
 import dev.eternalformula.arcontria.input.Controllable;
 import dev.eternalformula.arcontria.inventory.PlayerInventory;
 import dev.eternalformula.arcontria.items.Item;
@@ -54,13 +55,20 @@ public class Player extends LivingEntity implements Controllable {
 	private Animation<TextureRegion> weaponAnimationRight;
 	
 	private Animation<TextureRegion> weaponAnimation;
+	
+	private Animation<TextureRegion> deconUp;
+	private Animation<TextureRegion> deconLeft;
+	private Animation<TextureRegion> deconRight;
+	private Animation<TextureRegion> deconDown;
 
 	private String name;
 	private UUID uuid;
 	
 	private boolean isAttacking;
+	private boolean isMining;
 	
 	private float attackingTime;
+	private float miningTime;
 	
 	private Sound sound;
 	private Sound meleeSound;
@@ -174,6 +182,35 @@ public class Player extends LivingEntity implements Controllable {
 		attackingRight = new Animation<TextureRegion>(0.0625f, frames);
 		frames.clear();
 		
+		region = atlas.findRegion("deconstructor-up");
+		for (int i = 0; i < 4; i++) {
+			frames.add(new TextureRegion(region, i * 16, 0, 16, 32));
+		}
+		deconUp = new Animation<TextureRegion>(0.0625f, frames);
+		frames.clear();
+		
+		region = atlas.findRegion("deconstructor-down");
+		for (int i = 0; i < 4; i++) {
+			frames.add(new TextureRegion(region, i * 16, 0, 16, 32));
+		}
+		deconDown = new Animation<TextureRegion>(0.0625f, frames);
+		frames.clear();
+		
+		region = atlas.findRegion("deconstructor-left");
+		for (int i = 0; i < 4; i++) {
+			frames.add(new TextureRegion(region, i * 32, 0, 32, 32));
+		}
+		deconLeft = new Animation<TextureRegion>(0.0625f, frames);
+		frames.clear();
+		
+		region = atlas.findRegion("deconstructor-right");
+		for (int i = 0; i < 4; i++) {
+			frames.add(new TextureRegion(region, i * 32, 0, 32, 32));
+		}
+		deconRight = new Animation<TextureRegion>(0.0625f, frames);
+		frames.clear();
+		
+		
 		// Weapon
 		atlas = new TextureAtlas(Gdx.files.internal("textures/animations/player_weapons.atlas"));
 		
@@ -217,7 +254,8 @@ public class Player extends LivingEntity implements Controllable {
 		this.attackBox = new PlayerAttackBox(level, this);
 		
 		this.inventory = PlayerInventory.createInventoryForPlayer(this);
-		inventory.addItem(new Item(Material.BREAD, 10));
+		inventory.addItem(new Item(Material.DECONSTRUCTOR, 1));
+		inventory.addItem(new Item(Material.POTION_OF_SPEED, 1));
 		
 		System.out.println("Item: " + inventory.getItem(0).toDebugString());
 	}
@@ -262,30 +300,41 @@ public class Player extends LivingEntity implements Controllable {
 				attackBox.getBody().setActive(false);
 			}
 		}
+		else if (isMining) {
+			
+			miningTime += delta;
+			if (currentAnimation.isAnimationFinished(miningTime)) {
+				isMining = false;
+				miningTime = 0f;
+			}
+		}
 		
 		float horizontalForce = 0;
 		float verticalForce = 0;
 		
-		if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-			direction = 1;
-			verticalForce = speed;
-		}
-		else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-			direction = 4;
-			verticalForce = -speed;
-		}
-		
-		if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-			direction = 2;
-			horizontalForce = -speed;
-		}
-		else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-			direction = 3;
-			horizontalForce = speed;
+		if (!isAttacking && !isMining) {
+			if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+
+				direction = 1;
+				verticalForce = speed;
+			}
+			else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+				direction = 4;
+				verticalForce = -speed;
+			}
+
+			if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+				direction = 2;
+				horizontalForce = -speed;
+			}
+			else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+				direction = 3;
+				horizontalForce = speed;
+			}
 		}
 		
 		if (Math.abs(horizontalForce) > 0 || Math.abs(verticalForce) > 0) {
-			
+
 			// Note that the distance moved from this method is roughly equal to (speed * Gdx.graphics.getDeltaTime())
 			move(horizontalForce, verticalForce);
 		}
@@ -295,17 +344,21 @@ public class Player extends LivingEntity implements Controllable {
 		}
 		
 		
+		
 		if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-			isAttacking = true;
+			
+			isMining = true;
+			spawnDeconstructorOrb();
+			/*isAttacking = true;
 			setWeaponAnimation();
 			meleeSound.play(0.3f);
-			
+			*/
 		}
 		
 		if (isMoving) {
 			soundTimer += delta;
-			if (soundTimer >= 0.28f) {
-				soundTimer -= 0.28f;
+			if (soundTimer >= 0.26f) {
+				soundTimer -= 0.26f;
 				sound.play(0.75f);
 			}
 		}
@@ -328,6 +381,18 @@ public class Player extends LivingEntity implements Controllable {
 				return attackingRight;
 			case 4:
 				return attackingDown;
+			}
+		}
+		else if (isMining) {
+			switch(direction) {
+			case 1:
+				return deconUp;
+			case 2:
+				return deconLeft;
+			case 3:
+				return deconRight;
+			case 4:
+				return deconDown;
 			}
 		}
 		else {
@@ -360,6 +425,32 @@ public class Player extends LivingEntity implements Controllable {
 		return idleDown;
 	}
 	
+	private void spawnDeconstructorOrb() {
+		Vector2 loc = null;
+		Vector2 vel = null;
+		
+		if (direction == 1) {
+			loc = new Vector2(location.x + width / 2f, location.y + height);
+			vel = new Vector2(0f, 7.5f);
+		}
+		else if (direction == 2) {
+			loc = new Vector2(location.x, location.y + height / 2f);
+			vel = new Vector2(-7.5f, 0f);
+		}
+		else if (direction == 3) {
+			loc = new Vector2(location.x + width, location.y + height / 2f);
+			vel = new Vector2(7.5f, 0f);
+		}
+		else if (direction == 4) {
+			loc = new Vector2(location.x + width / 2f, location.y);
+			vel = new Vector2(0f, -7.5f);
+		}
+		
+		DeconProjectile deconProj = new DeconProjectile(level, loc);
+		deconProj.applyVelocity(vel);
+		level.addEntity(deconProj);
+	}
+	
 	private void setWeaponAnimation() {
 		if (direction == 1) {
 			weaponAnimation = weaponAnimationUp;
@@ -373,11 +464,12 @@ public class Player extends LivingEntity implements Controllable {
 		else if (direction == 4) {
 			weaponAnimation = weaponAnimationDown;
 		}
+		
+		
 	}
 	
 	@Override
 	public void draw(SpriteBatch batch, float delta) {
-		super.draw(batch, delta);
 	
 		if (isAttacking) {
 			TextureRegion texRegion = weaponAnimation.getKeyFrame(attackingTime, true);
@@ -385,6 +477,21 @@ public class Player extends LivingEntity implements Controllable {
 			float height = texRegion.getRegionHeight() / EFConstants.PPM;
 			float xOffset = (texRegion.getRegionWidth() / (EFConstants.PPM * 2f)) - 0.5f; // the 0.5f is half of the player's width
 			batch.draw(texRegion, location.x - xOffset, location.y, width, height);
+		}
+		else if (isMining) {
+			elapsedTime += delta;
+			TextureRegion texRegion = currentAnimation.getKeyFrame(miningTime, true);
+			float w = texRegion.getRegionWidth() / EFConstants.PPM;
+			float h = texRegion.getRegionHeight() / EFConstants.PPM;
+			
+			float xOffset = 0;
+			if (currentAnimation.equals(deconLeft) || currentAnimation.equals(deconRight)) {
+				xOffset = w / 4f;
+			}
+			batch.draw(texRegion, location.x - xOffset, location.y, w, h);
+		}
+		else {
+			super.draw(batch, delta);
 		}
 		
 	}
@@ -404,6 +511,10 @@ public class Player extends LivingEntity implements Controllable {
 	
 	@Override
 	public void destroyBodies(World world) {
+	}
+	
+	public PlayerInventory getInventory() {
+		return inventory;
 	}
 	
 	public PlayerData getPlayerData() {

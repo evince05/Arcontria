@@ -22,4 +22,8 @@ public abstract class Projectile extends Entity {
 	public ProjectileBox getBox() {
 		return box;
 	}
+	
+	public void destroy() {
+		level.removeEntity(this);
+	}
 }
