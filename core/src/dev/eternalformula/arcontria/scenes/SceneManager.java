@@ -100,7 +100,6 @@ public class SceneManager {
 		if (currentScene != null) {
 			currentScene.dispose();
 		}
-		
 	}
 	
 	public void resize(int width, int height) {

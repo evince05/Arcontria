@@ -10,20 +10,18 @@ public class EFDebug {
 	
 	private float deltaTime;
 	
-	private long lastTime;
-	
 	public EFDebug() {
-		lastTime = System.currentTimeMillis();
 	}
 	
 	public void update(float delta) {
+		
 		deltaTime += delta;
 		
-		if ((System.currentTimeMillis() - lastTime) / 1000 >= 2) {
+		if (deltaTime >= 2f) {
 			EFDebug.info("Running " + Gdx.graphics.getFramesPerSecond() + 
 					" FPS. Heap Size: " + Gdx.app.getJavaHeap() / 1000000f + "MB");
 			
-			lastTime = System.currentTimeMillis();
+			deltaTime = 0f;
 		}
 	}
 	

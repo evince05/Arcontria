@@ -4,8 +4,9 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
+import dev.eternalformula.arcontria.ecs.components.AnimationComponent;
+import dev.eternalformula.arcontria.ecs.templates.Player;
 import dev.eternalformula.arcontria.entity.Entity;
-import dev.eternalformula.arcontria.entity.player.Player;
 import dev.eternalformula.arcontria.entity.projectiles.ProspectorPickaxe;
 import dev.eternalformula.arcontria.level.GameLevel;
 import dev.eternalformula.arcontria.util.EFDebug;
@@ -31,6 +32,7 @@ public class GameSession {
 		GameSession session = new GameSession(scene);
 		session.saveFolder = saveFolder;
 		session.level = GameLevel.load(session, saveFolder);
+		session.player = Player.loadPlayer(saveFolder);
 		/*
 		
 		// Creates the GameLevel
@@ -121,7 +123,7 @@ public class GameSession {
 
 
 	public void dispose() {
-		// TODO Auto-generated method stub
+		player.dispose();
 		
 	}
 
@@ -191,10 +193,12 @@ public class GameSession {
 	 */
 	
 	public void setLevel(GameLevel level) {
-		this.level = level;
+	
+		/*this.level = level;
 		level.addEntity(player);
 		setupCamera(player);
 		focusCameraOnEntity(player);
+		*/
 	}
 	
 	public GameScene getGameScene() {

@@ -69,13 +69,10 @@ public class GameLevel {
 		music.setVolume(0.35f);
 		
 		// load map from session entry point
-		this.mapArea = new MineArea(this, Assets.get("maps/data/mines/mine-level-1.tmx", EFTiledMap.class));
-		
-		this.player = Player.create(this, "Elliott", UUID.randomUUID());
-		player.setLocation(10.5f, 12f);
-		session.getGameCamera().position.set(player.getLocation().x + 0.5f, player.getLocation().y + 1f, 0f);		
+		this.mapArea = new MineArea(this, Assets.get("maps/data/mines/mine-level-1.tmx", EFTiledMap.class));	
 		
 		playerHud = new PlayerHUD(player);
+		
 		playerHud.getClock().setDaylightHandler(daylightHandler);
 		
 	}
@@ -141,9 +138,8 @@ public class GameLevel {
 		}
 		
 		mapArea.update(delta);
-		player.update(delta);
 		
-		session.getGameCamera().position.set(session.centerCamera(player), 0f);
+		//session.getGameCamera().position.set(session.centerCamera(player), 0f);
 		
 		daylightHandler.update();
 		particleHandler.update(delta);
@@ -175,11 +171,6 @@ public class GameLevel {
 	public void draw(SpriteBatch batch, float delta) {
 		
 		mapArea.draw(batch, delta);
-		player.draw(batch, delta);
-		
-		batch.end();
-		getRayHandler().render();
-		batch.begin();
 		
 		particleHandler.draw(batch, delta);
 		

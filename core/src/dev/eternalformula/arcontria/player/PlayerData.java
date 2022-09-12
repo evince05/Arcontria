@@ -1,4 +1,4 @@
-package dev.eternalformula.arcontria.entity.player;
+package dev.eternalformula.arcontria.player;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import dev.eternalformula.arcontria.ecs.templates.Player;
 import dev.eternalformula.arcontria.files.FileUtil;
 import dev.eternalformula.arcontria.files.JsonUtil;
 import dev.eternalformula.arcontria.objects.achievements.AchievementHandler;
@@ -54,6 +55,8 @@ public class PlayerData {
 	
 	public void save(Player player) {
 		ObjectMapper objMapper = new ObjectMapper();
+		
+		HealthComponent health = 
 		ObjectNode rootNode = objMapper.createObjectNode();
 		
 		String name = player.getName();

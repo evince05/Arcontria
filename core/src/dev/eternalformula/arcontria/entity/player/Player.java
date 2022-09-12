@@ -23,6 +23,7 @@ import dev.eternalformula.arcontria.level.GameLevel;
 import dev.eternalformula.arcontria.physics.boxes.PlayerAttackBox;
 import dev.eternalformula.arcontria.physics.boxes.PlayerColliderBox;
 import dev.eternalformula.arcontria.physics.boxes.PlayerHitbox;
+import dev.eternalformula.arcontria.player.PlayerData;
 import dev.eternalformula.arcontria.util.EFConstants;
 
 /**
@@ -154,6 +155,7 @@ public class Player extends LivingEntity implements Controllable {
 		idleRight = new Animation<TextureRegion>(1f, frames.get(0));
 		frames.clear();
 		
+		/*
 		region = atlas.findRegion("melee_down");
 		for (int i = 0; i < 4; i++) {
 			frames.add(new TextureRegion(region, i * 16, 0, 16, 32));
@@ -181,7 +183,7 @@ public class Player extends LivingEntity implements Controllable {
 		}
 		attackingRight = new Animation<TextureRegion>(0.0625f, frames);
 		frames.clear();
-		
+		*/
 		region = atlas.findRegion("deconstructor-up");
 		for (int i = 0; i < 4; i++) {
 			frames.add(new TextureRegion(region, i * 16, 0, 16, 32));

@@ -44,8 +44,8 @@ public class PlayerHUD extends UIContainer {
 	private void initElements() {
 		
 		TextureAtlas uiAtlas = Assets.get("ui/inventory/gameui.atlas", TextureAtlas.class);
-		this.hotbar = new PlayerHotbar(player.getInventory());
-		addChildren(hotbar);
+		//this.hotbar = new PlayerHotbar(player.getInventory());
+		//addChildren(hotbar);
 		
 		this.worldClock = new WorldClock();
 		addChildren(worldClock);

@@ -53,28 +53,28 @@ left
   orig: 64, 32
   offset: 0, 0
   index: -1
-melee_down
+melee-down
   rotate: false
   xy: 256, 0
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
-melee_left
+melee-left
   rotate: false
   xy: 576, 0
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
-melee_right
+melee-right
   rotate: false
   xy: 320, 0
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
-melee_up
+melee-up
   rotate: false
   xy: 512, 0
   size: 64, 32

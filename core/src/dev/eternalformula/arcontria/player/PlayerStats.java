@@ -1,4 +1,4 @@
-package dev.eternalformula.arcontria.entity.player;
+package dev.eternalformula.arcontria.player;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,0 +1,97 @@
+{
+	"up": {
+		"frames": 4,
+		"frameW": 16,
+		"frameH": 32,
+		"animName": "moving-up",
+		"frameTime": 0.125,
+		"hasIdle": true
+	},
+	"left": {
+		"frames": 4,
+		"frameW": 16,
+		"frameH": 32,
+		"animName": "moving-left",
+		"frameTime": 0.125,
+		"hasIdle": true
+	},
+	"right": {
+		"frames": 4,
+		"frameW": 16,
+		"frameH": 32,
+		"animName": "moving-right",
+		"frameTime": 0.125,
+		"hasIdle": true
+	},
+	"down": {
+		"frames": 4,
+		"frameW": 16,
+		"frameH": 32,
+		"animName": "moving-down",
+		"frameTime": 0.125,
+		"hasIdle": true
+	},
+	"melee-up": {
+		"frames": 4,
+		"frameW": 16,
+		"frameH": 32,
+		"animName": "attackingMelee-up",
+		"frameTime": 0.0625
+	},
+	"melee-left": {
+		"frames": 4,
+		"frameW": 16,
+		"frameH": 32,
+		"animName": "attackingMelee-left",
+		"frameTime": 0.0625
+	},
+	"melee-right": {
+		"frames": 4,
+		"frameW": 16,
+		"frameH": 32,
+		"animName": "attackingMelee-right",
+		"frameTime": 0.0625
+	},
+	"melee-down": {
+		"frames": 4,
+		"frameW": 16,
+		"frameH": 32,
+		"animName": "attackingMelee-down",
+		"frameTime": 0.0625
+	},
+	"deconstructor-up": {
+		"frames": 4,
+		"frameW": 16,
+		"frameH": 32,
+		"animName": "mining-up",
+		"frameTime": 0.0625
+	},
+	"deconstructor-left": {
+		"frames": 4,
+		"frameW": 32,
+		"frameH": 32,
+		"animName": "mining-left",
+		"frameTime": 0.0625
+	},
+	"deconstructor-right": {
+		"frames": 4,
+		"frameW": 32,
+		"frameH": 32,
+		"animName": "mining-right",
+		"frameTime": 0.0625
+	},
+	"deconstructor-down": {
+		"frames": 4,
+		"frameW": 16,
+		"frameH": 32,
+		"animName": "mining-down",
+		"frameTime": 0.0625
+	},
+	"blink": {
+		"frames": 4,
+		"frameW": 16,
+		"frameH": 32,
+		"animName": "mining-up",
+		"frameTime": 0.0625
+	}
+}

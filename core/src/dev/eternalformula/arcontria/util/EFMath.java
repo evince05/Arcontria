@@ -1,5 +1,6 @@
 package dev.eternalformula.arcontria.util;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 public class EFMath {
@@ -95,5 +96,44 @@ public class EFMath {
 	
 	public static float roundToNearest16th(float num) {
 		return roundToNearestXth(num, 1/16f);
+	}
+	
+	public static int toAscii(char c) {
+		return (int) c;
+	}
+	
+	public static char toChar(int ascii) {
+		return (char) ascii;
+	}
+	
+	/**
+	 * Gets a random letter, uppercase or lowercase.
+	 */
+	
+	public static char getRandomLetter() {
+		boolean uppercase = MathUtils.randomBoolean();
+		int letterCase = uppercase ? 0 : 1;
+		
+		return getRandomLetter(letterCase);
+	}
+	
+	/**
+	 * Gets a random letter.
+	 * @param letterCase 0 for uppercase, 1 for lowercase
+	 */
+	
+	public static char getRandomLetter(int letterCase) {
+		int start = 0;
+		int end = 0;
+		
+		if (letterCase == 0) {
+			start = 65;
+			end = 90;
+		}
+		else {
+			start = 97;
+			end = 122;
+		}
+		return toChar(MathUtils.random(start, end));
 	}
 }

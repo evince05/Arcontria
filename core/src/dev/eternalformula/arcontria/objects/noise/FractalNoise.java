@@ -18,6 +18,72 @@ public class FractalNoise {
 	public static final float F3f = 0.33333334f;
 	public static final float G2f = 0.21132487f;
     public static final float H2f = 0.42264974f;
+    
+    public enum NoiseConstants {
+    	NOISE_CONST_A(0.321f),
+    	NOISE_CONST_B(0.140f),
+    	NOISE_CONST_C(0.470f),
+    	NOISE_CONST_D(0.856f),
+    	NOISE_CONST_E(0.138f),
+    	NOISE_CONST_F(0.243f),
+    	NOISE_CONST_G(0.368f),
+    	NOISE_CONST_H(0.753f),
+    	NOISE_CONST_I(0.472f),
+    	NOISE_CONST_J(0.568f),
+    	NOISE_CONST_K(0.187f),
+    	NOISE_CONST_L(0.019f),
+    	NOISE_CONST_M(0.034f),
+    	NOISE_CONST_N(0.720f),
+    	NOISE_CONST_O(0.964f),
+    	NOISE_CONST_P(0.112f),
+    	NOISE_CONST_Q(0.026f),
+    	NOISE_CONST_R(0.285f),
+    	NOISE_CONST_S(0.460f),
+    	NOISE_CONST_T(0.103f),
+    	NOISE_CONST_U(0.616f),
+    	NOISE_CONST_V(0.860f),
+    	NOISE_CONST_W(0.382f),
+    	NOISE_CONST_X(0.575f),
+    	NOISE_CONST_Y(0.559f),
+    	NOISE_CONST_Z(0.723f);
+    	
+    	private final float num;
+    	
+    	NoiseConstants(float num) {
+    		this.num = num;
+    	}
+    	
+    	public static float get(char c) {
+    		return NoiseConstants.values()[c - 97].num;
+    	}
+    	
+    }
+    public static final float NOISE_CONST_A = 0.321f;
+    public static final float NOISE_CONST_B = 0.140f;
+    public static final float NOISE_CONST_C = 0.470f;
+    public static final float NOISE_CONST_D = 0.856f;
+    public static final float NOISE_CONST_E = 0.138f;
+    public static final float NOISE_CONST_F = 0.243f;
+    public static final float NOISE_CONST_G = 0.368f;
+    public static final float NOISE_CONST_H = 0.753f;
+    public static final float NOISE_CONST_I = 0.472f;
+    public static final float NOISE_CONST_J = 0.568f;
+    public static final float NOISE_CONST_K = 0.187f;
+    public static final float NOISE_CONST_L = 0.019f;
+    public static final float NOISE_CONST_M = 0.034f;
+    public static final float NOISE_CONST_N = 0.720f;
+    public static final float NOISE_CONST_O = 0.964f;
+    public static final float NOISE_CONST_P = 0.112f;
+    public static final float NOISE_CONST_Q = 0.026f;
+    public static final float NOISE_CONST_R = 0.285f;
+    public static final float NOISE_CONST_S = 0.460f;
+    public static final float NOISE_CONST_T = 0.103f;
+    public static final float NOISE_CONST_U = 0.616f;
+    public static final float NOISE_CONST_V = 0.860f;
+    public static final float NOISE_CONST_W = 0.382f;
+    public static final float NOISE_CONST_X = 0.575f;
+    public static final float NOISE_CONST_Y = 0.559f;
+    public static final float NOISE_CONST_Z = 0.723f;
 	
 	/**
      * A constructor that takes only a parameter for the Noise's seed, which should produce different results for

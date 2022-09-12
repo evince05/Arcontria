@@ -1,11 +1,21 @@
 package dev.eternalformula.arcontria.scenes;
 
+import java.io.File;
+
+import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 import dev.eternalformula.arcontria.cutscenes.CutsceneHandler;
+import dev.eternalformula.arcontria.ecs.systems.AnimationSystem;
+import dev.eternalformula.arcontria.ecs.systems.CameraFocusSystem;
+import dev.eternalformula.arcontria.ecs.systems.HealthSystem;
+import dev.eternalformula.arcontria.ecs.systems.MovementSystem;
+import dev.eternalformula.arcontria.ecs.systems.PlayerControlSystem;
+import dev.eternalformula.arcontria.ecs.systems.RenderingSystem;
+import dev.eternalformula.arcontria.files.FileUtil;
 import dev.eternalformula.arcontria.gfx.animations.ScreenAnimation;
 import dev.eternalformula.arcontria.level.GameLevel;
 import dev.eternalformula.arcontria.level.maps.EFTiledMap;
@@ -21,6 +31,8 @@ public class GameScene extends Scene {
 	private CutsceneHandler csHandler;
 	
 	private float screenAlpha;
+	
+	public static final PooledEngine ENGINE = new PooledEngine();
 
 	public GameScene(SceneManager manager) {
 		super(manager);
@@ -38,6 +50,7 @@ public class GameScene extends Scene {
 		Assets.load("data/particles/smoke/smoke.particle", ParticleEffect.class);
 		Assets.load("maps/data/mines/mine-level-1.tmx", EFTiledMap.class);
 		Assets.load("textures/entities/projectiles/projectiles.atlas", TextureAtlas.class);
+		Assets.load("textures/entities/player/player.atlas", TextureAtlas.class);
 		
 		//Assets.load("maps/data/dojo/dojo.tmx", EFTiledMap.class);
 		Assets.updateInstance();
@@ -45,8 +58,13 @@ public class GameScene extends Scene {
 
 	@Override
 	public void load() {
-		
-		this.session = GameSession.load(this, null);
+		ENGINE.addSystem(new HealthSystem());
+		ENGINE.addSystem(new RenderingSystem(manager.getGameBatch()));
+		ENGINE.addSystem(new AnimationSystem());
+		ENGINE.addSystem(new CameraFocusSystem(manager.getGameCamera()));
+		ENGINE.addSystem(new PlayerControlSystem());
+		ENGINE.addSystem(new MovementSystem());
+		this.session = GameSession.load(this, FileUtil.SAVES_FOLDER_LOCATION + File.separator + "TestRun");
 		
 		this.csHandler = new CutsceneHandler();
 		//csHandler.play();
@@ -66,6 +84,11 @@ public class GameScene extends Scene {
 		}
 		else {
 			session.draw(batch, delta);
+			ENGINE.update(delta);
+			
+			batch.end();
+			rayHandler.render();
+			batch.begin();
 		}
 		
 		batch.end();
@@ -83,8 +106,7 @@ public class GameScene extends Scene {
 		}
 		else {
 			session.drawUI(batch, delta);
-		}
-		
+		}		
 		
 		batch.end();
 	}
@@ -109,8 +131,6 @@ public class GameScene extends Scene {
 		}
 		else {
 			session.update(delta);
- 
-			
 		}
 		
 	}
@@ -165,6 +185,8 @@ public class GameScene extends Scene {
 	@Override
 	public void dispose() {
 		super.dispose();
+		
+		session.dispose();
 	}
 	
 	public ScreenAnimation getScreenAnimation() {
