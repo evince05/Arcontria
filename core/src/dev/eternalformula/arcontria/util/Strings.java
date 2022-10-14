@@ -62,4 +62,18 @@ public class Strings {
 	public static String inQuotations(String str) {
 		return "\"" + str + "\"";
 	}
+	
+	/**
+	 * Determines whether the string "str" contains the text "containedText".<br>
+	 * Not case-sensitive.
+	 * 
+	 * @param str The string
+	 * @param containedText The text to be checked in the string "str"
+	 * @return True if the string "str" contains a non-case-sensitive match of <br>
+	 * 		the string "containedText", otherwise false.
+	 */
+	public static boolean containsIgnoreCase(String str, String containedText) {
+		return str.toLowerCase().contains(containedText.toLowerCase());
+		
+	}
 }

@@ -1,0 +1,15 @@
+{
+	"recipes": [
+	{
+		"searchName": "Locarum Bar",
+		"ingredients": [
+		{
+			"material": "locarum_ore", "amount": 4
+		}
+		],
+		"result": {
+			"material": "locarum_bar", "amount": 1
+		}			
+	}
+	]
+}

@@ -256,8 +256,6 @@ public class Player extends LivingEntity implements Controllable {
 		this.attackBox = new PlayerAttackBox(level, this);
 		
 		this.inventory = PlayerInventory.createInventoryForPlayer(this);
-		inventory.addItem(new Item(Material.DECONSTRUCTOR, 1));
-		inventory.addItem(new Item(Material.POTION_OF_SPEED, 1));
 		
 		System.out.println("Item: " + inventory.getItem(0).toDebugString());
 	}

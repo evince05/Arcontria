@@ -1,0 +1,19 @@
+{
+	"name": "vismada_clobo",
+	"displayName": "Vismada Clobo",
+	"lore": [
+		"The Vismada Clobo combines the comfort of a",
+		"warm tunic and the protection of pure vismada."
+	],
+	"maxStackSize": 999,
+	"consumable": false,
+	"equipable": true,
+	"equipableStats": [
+	{
+		"buff": "defense", "amount": 2
+	},
+	{
+		"buff": "happiness", "amount": 1
+	}
+	]
+}

@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import dev.eternalformula.arcontria.ecs.components.MotionComponent;
 import dev.eternalformula.arcontria.ecs.components.PlayerComponent;
 import dev.eternalformula.arcontria.ecs.components.PositionComponent;
+import dev.eternalformula.arcontria.ui.GameUIManager;
 
 public class PlayerControlSystem extends IteratingSystem {
 
@@ -34,6 +35,10 @@ public class PlayerControlSystem extends IteratingSystem {
 		}
 		if (Gdx.input.isKeyPressed(Input.Keys.D)) {
 			motionComp.velocity.x = motionComp.speed;
+		}
+		
+		if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+			GameUIManager.getInstance().toggleRecipeWindow();
 		}
 	}
 }

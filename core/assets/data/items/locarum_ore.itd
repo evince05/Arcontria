@@ -1,0 +1,11 @@
+{
+	"name": "locarum_ore",
+	"displayName": "Locarum Ore",
+	"lore": [
+		"Known for its shiny green aura, Locarum Ore is",
+		"a rare gem found deep in the Arcontrian mines."
+	],
+	"maxStackSize": 999,
+	"isConsumable": false,
+	"isEquipable": false
+}

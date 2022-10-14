@@ -136,4 +136,18 @@ public class EFMath {
 		}
 		return toChar(MathUtils.random(start, end));
 	}
+	
+	/**
+	 * Gets the absolute distance between two vectors.
+	 * @param vecA The first vector
+	 * @param vecB The second vector
+	 * @return The absolute distance between vecA and vecB.
+	 */
+	
+	public static float getDistance(Vector2 vecA, Vector2 vecB) {
+		float diffX = vecB.x - vecA.x;
+		float diffY = vecB.y - vecA.y;
+		
+		return (float) Math.sqrt(Math.pow(diffX, 2) + Math.pow(diffY, 2));
+	}
 }

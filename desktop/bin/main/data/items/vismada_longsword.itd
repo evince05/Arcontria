@@ -1,0 +1,12 @@
+{
+	"name": "vismada_longsword",
+	"displayName": "Vismada Longsword",
+	"maxStackSize": 1,
+	"lore": [
+		"The Vismada Longsword is a sharp sword used",
+		"to defend oneself from the monsters of",
+		"the ancient mines."
+	],
+	"consumable": false,
+	"equipable": false
+}

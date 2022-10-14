@@ -72,6 +72,10 @@ public abstract class UIElement {
 		return bounds;
 	}
 	
+	public UIContainer getContainer() {
+		return container;
+	}
+	
 	public boolean isVisible() {
 		return visible;
 	}
@@ -135,7 +139,8 @@ public abstract class UIElement {
 				Vector2 lastClickPos = ArcontriaGame.GAME.getSceneManager()
 						.getInputHandler().getLastClickLocation();
 				if (bounds.contains(x, y) || bounds.contains(lastClickPos.x, lastClickPos.y)) {
-					container.focusedElement = null;
+					// TODO: Monitor this line. If this needs to be uncommented, maybe add something like "lastFocusedElement"?
+					//container.focusedElement = null;
 				}
 			}
 			
@@ -178,6 +183,6 @@ public abstract class UIElement {
 	 * Draws the UIElement.
 	 */
 	
-	public abstract void draw(SpriteBatch uiBatch, float delta);
+	protected abstract void draw(SpriteBatch uiBatch, float delta);
 	
 }

@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import dev.eternalformula.arcontria.gfx.EGFXUtil;
 import dev.eternalformula.arcontria.input.InputHandler;
+import dev.eternalformula.arcontria.sfx.SoundManager;
 import dev.eternalformula.arcontria.util.EFDebug;
 import dev.eternalformula.arcontria.util.Strings;
 
@@ -24,6 +25,8 @@ public class SceneManager {
 	private ShapeRenderer shapeRend;
 	private EFDebug debug;
 	
+	private SoundManager soundMgr;
+	
 	private Scene currentScene;
 	
 	public SceneManager() {
@@ -34,6 +37,8 @@ public class SceneManager {
 		this.uiBatch = new SpriteBatch();
 		this.shapeRend = new ShapeRenderer();
 		this.debug = new EFDebug();
+		this.soundMgr = new SoundManager();
+		soundMgr.initSounds();
 	}
 	
 	

@@ -1,0 +1,18 @@
+{
+	"recipes": [
+	{
+		"searchName": "Chest",
+		"ingredients": [
+		{
+			"material": "acrono_wood", "amount": 40
+		},
+		{
+			"material": "rudiam_bar", "amount": 1
+		}
+		],
+		"result": {
+			"material": "chest", "amount": 1
+		}
+	}
+	]
+}

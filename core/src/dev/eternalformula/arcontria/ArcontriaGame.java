@@ -40,12 +40,12 @@ public class ArcontriaGame extends ApplicationAdapter {
 		assets.loadDefaultAssets();
 		assets.update();
 		
+		GAME = this;
+		
 		this.sceneManager = new SceneManager();
 		sceneManager.setCurrentScene(new GameScene(sceneManager));
 		
 		msgManager = MessageManager.getInstance();
-		
-		GAME = this;
 		
 		System.out.println("Arcontria Version [" + Changelog.GAME_VERSION + "] Loaded!");
 		System.out.println("\tWelcome back, EternalFormula");

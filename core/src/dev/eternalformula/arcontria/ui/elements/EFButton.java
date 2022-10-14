@@ -13,6 +13,7 @@ import dev.eternalformula.arcontria.ui.UIElement;
 import dev.eternalformula.arcontria.ui.actions.ButtonClickAction;
 import dev.eternalformula.arcontria.util.Assets;
 import dev.eternalformula.arcontria.util.EFDebug;
+import dev.eternalformula.arcontria.util.Strings;
 
 public class EFButton extends UIElement {
 	
@@ -41,7 +42,7 @@ public class EFButton extends UIElement {
 	 * <b>1</b> - Toggle
 	 */
 	
-	private int buttonMode;
+	protected int buttonMode;
 	
 	private ButtonClickAction btnClickAction;
 		
@@ -118,6 +119,12 @@ public class EFButton extends UIElement {
 	public void update(float delta) {
 		if (isHovering) {
 			hoverTime += delta;
+		}
+		
+		if (buttonMode == EFButton.TOGGLE_MODE) {
+			if (isClicked && !container.focusedElement.equals(this)) {
+				isClicked = false;
+			}
 		}
 	}
 

@@ -2,13 +2,13 @@ package dev.eternalformula.arcontria.physics;
 
 import java.util.concurrent.ThreadLocalRandom;
 
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 
-import dev.eternalformula.arcontria.ArcontriaGame;
 import dev.eternalformula.arcontria.combat.DamageSource;
 import dev.eternalformula.arcontria.entity.LivingEntity;
 import dev.eternalformula.arcontria.entity.misc.MineRock;
@@ -19,8 +19,6 @@ import dev.eternalformula.arcontria.physics.boxes.MapObjectHitbox;
 import dev.eternalformula.arcontria.physics.boxes.PlayerAttackBox;
 import dev.eternalformula.arcontria.physics.boxes.PlayerHitbox;
 import dev.eternalformula.arcontria.physics.boxes.ProjectileBox;
-import dev.eternalformula.arcontria.scenes.GameScene;
-import dev.eternalformula.arcontria.util.EFDebug;
 
 public class WorldContactListener implements ContactListener {
 
@@ -30,40 +28,25 @@ public class WorldContactListener implements ContactListener {
 		Fixture fa = contact.getFixtureA();
 		Fixture fb = contact.getFixtureB();
 		
-		if (fa == null || fb == null) {
+		if (fa.getBody().getUserData() instanceof Entity) {
+			Entity ent = (Entity) fa.getBody().getUserData();
+			entityCollision(ent, fb);
 			return;
 		}
-		
-		if (fa.getUserData() == null || fb.getUserData() == null) {
-			EFDebug.debug("One of two userdata objects are null. Returning");
+		else if (fb.getBody().getUserData() instanceof Entity) {
+			Entity ent = (Entity) fb.getBody().getUserData();
+			entityCollision(ent, fa);
 			return;
 		}
-		
-		Box boxA = (Box) fa.getUserData();
-		Box boxB = (Box) fb.getUserData();
-		
-		handleBoxContact(contact, boxA, boxB);
+	}
+	
+	private void entityCollision(Entity entity, Fixture fixB) {
+		System.out.println("Entity Collision!");
 	}
 
 	@Override
 	public void endContact(Contact contact) {
-		
-		Fixture fa = contact.getFixtureA();
-		Fixture fb = contact.getFixtureB();
-		
-		if (fa == null || fb == null) {
-			return;
-		}
-		
-		if (fa.getUserData() == null || fb.getUserData() == null) {
-			EFDebug.debug("One of two userdata objects are null. Returning");
-			return;
-		}
-		
-		Box boxA = (Box) fa.getUserData();
-		Box boxB = (Box) fb.getUserData();
-		
-		handleBoxEndContact(contact, boxA, boxB);
+		System.out.println("Ending contact!");
 	}
 
 	@Override

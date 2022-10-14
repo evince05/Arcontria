@@ -1,0 +1,15 @@
+{
+	"recipes": [
+	{
+		"searchName": "Vismada Bar",
+		"ingredients": [
+		{
+			"material": "vismada_ore", "amount": 4
+		}
+		],
+		"result": {
+			"material": "vismada_bar", "amount": 1
+		}
+	}
+	]
+}

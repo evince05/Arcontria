@@ -1,0 +1,11 @@
+{
+	"name": "locarum_bar",
+	"displayName": "Locarum Bar",
+	"lore": [
+		"Locarum Bars are highly durable, and they",
+		"are valued for their beautiful green hue."
+	],
+	"maxStackSize": 999,
+	"isConsumable": false,
+	"isEquipable": false
+}

@@ -95,11 +95,11 @@ public class MenuMapBackground {
 		float absRemainX = Math.abs(targetPos.x - currentPos.x);
 		float absRemainY = Math.abs(targetPos.y - currentPos.y);
 		
-		if (absRemainX > 0 && absRemainX < 0.0125) {
+		if (absRemainX > 0 && absRemainX < 0.0125f) {
 			currentPos.x = targetPos.x;
 		}
 		
-		if (absRemainY > 0 && absRemainY < 0.0125) {
+		if (absRemainY > 0 && absRemainY < 0.0125f) {
 			currentPos.y = targetPos.y;
 		}
 	}

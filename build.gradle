@@ -38,6 +38,7 @@ allprojects {
 
 project(":desktop") {
     apply plugin: "java-library"
+	println("loading desktop")
 
 
     dependencies {

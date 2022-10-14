@@ -1,5 +1,5 @@
-- Added Torches
-- Added MapAreas
-- Major Rehaul of Core (GameLevel is no longer needed in Entity constructors,
-    Asset loading is now handled in each Scene, etc.)
-- Began dividing GameLevel into smaller pieces (MapArea, etc.) for easier management.
+- [DEV] Redesigned core of game to use ECS rather than pure OOP. (still working on this).
+- [FEATURE - InProg] Added recipes and quests
+- [FEATURE - InProg] Added HUD UI
+- [FEATURE - InProg] Added mines using Simplex Noise Generation!
+- [FEATURE - Stable] Created RecipeWindow UI + Backend

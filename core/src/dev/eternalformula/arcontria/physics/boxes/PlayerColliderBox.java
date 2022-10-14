@@ -18,7 +18,7 @@ public class PlayerColliderBox extends Box {
 	public PlayerColliderBox(GameLevel level, Player player) {
 		this.player = player;
 		this.body = B2DUtil.createBody(level.getWorld(), player.getLocation().x + 0.5f,
-				player.getLocation().y, 1, 0.25f, BodyType.DynamicBody,
+				player.getLocation().y, 14 / 16f, 0.25f, BodyType.DynamicBody,
 				PhysicsCategory.PLAYER_COLLIDER, this);
 		this.id = UUID.randomUUID();
 	}

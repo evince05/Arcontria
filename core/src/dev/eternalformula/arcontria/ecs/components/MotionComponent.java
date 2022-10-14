@@ -12,12 +12,15 @@ public class MotionComponent implements Component {
 	public static final float DEFAULT_ENTITY_SPEED = 1.5f;
 	
 	public Vector2 velocity;
+	public Vector2 acceleration;
+	
 	public boolean isMoving;
 	
 	public MotionComponent() {
 		this.speed = DEFAULT_ENTITY_SPEED;
 		this.direction = 4;
 		this.velocity = new Vector2(0f, 0f);
+		this.acceleration = new Vector2(0f, 0f);
 	}
 	
 	public float speed;

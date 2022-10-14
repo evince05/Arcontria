@@ -1,0 +1,13 @@
+{
+	"name": "vismada_bar",
+	"displayName": "Vismada Bar",
+	"lore": [
+		"The pure chemical",
+		"compositiion of the",
+		"Vismada Bar causes it",
+		"to be highly valuable."
+	],
+	"maxStackSize": 999,
+	"consumable": false,
+	"equipable": false
+}

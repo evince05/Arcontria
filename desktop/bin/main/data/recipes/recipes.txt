@@ -1,0 +1,6 @@
+data/recipes/chest.rcp
+data/recipes/locarum_bar.rcp
+data/recipes/rudiam_bar.rcp
+data/recipes/vismada_bar.rcp
+data/recipes/vismada_closhi.rcp
+data/recipes/vismada_longsword.rcp

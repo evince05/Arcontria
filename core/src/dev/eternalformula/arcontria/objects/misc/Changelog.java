@@ -12,7 +12,7 @@ import com.badlogic.gdx.files.FileHandle;
 
 public class Changelog {
 	
-	public static final String GAME_VERSION = "Alpha 0.0.2";
+	public static final String GAME_VERSION = "Alpha 0.0.3 (devbuild)";
 	private FileHandle logFile;
 	
 	Changelog() {

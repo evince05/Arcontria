@@ -1,0 +1,12 @@
+{
+	"name": "vismada_ore",
+	"displayName": "Vismada Ore",
+	"lore": [
+		"Found deep in the ancient mines,",
+		"Vismada Ore is highly sought after for",
+		"its beautiful pink hue."
+	],
+	"maxStackSize": 999,
+	"consumable": false,
+	"equipable": false
+}

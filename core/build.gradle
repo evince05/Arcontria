@@ -4,3 +4,28 @@ sourceCompatibility = 1.8
 sourceSets.main.java.srcDirs = [ "src/" ]
 
 eclipse.project.name = appName + "-core"
+
+task writeAllAssetsToFile {
+	println("hey")
+	println("prelast")
+        // projectfolder/assets
+        def coreAssetsFolder = new File("${project.rootDir}/core/assets/")
+        def recipesFolder = new File("${project.rootDir}/core/assets/data/recipes")
+        // projectfolder/core/assets/assets.txt
+        def recipesFile = new File(recipesFolder, "recipes.txt")
+		println("last")
+        // delete that file in case we've already created it
+        recipesFile.delete()
+
+        // iterate through all files inside that folder
+        // convert it to a relative path
+        // and append it to assets.txt the file
+        fileTree(recipesFolder).matching() {
+        	include "**/*.rcp"
+        }.each {
+        	file ->
+        	recipesFile.append(coreAssetsFolder.relativePath(file) + "\n")
+       	}
+}
+
+compileJava.dependsOn writeAllAssetsToFile

@@ -1,0 +1,10 @@
+{
+	"name": "chest",
+	"displayName": "Chest",
+	"lore": [
+		"Allows storage of items."
+	],
+	"maxStackSize": 999,
+	"consumable": false,
+	"equipable": false
+}

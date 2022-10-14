@@ -109,7 +109,7 @@ public class UIContainer extends UIElement {
 	}
 
 	@Override
-	public void draw(SpriteBatch uiBatch, float delta) {
+	protected void draw(SpriteBatch uiBatch, float delta) {
 		if (visible) {
 			
 			if (skin != null) {

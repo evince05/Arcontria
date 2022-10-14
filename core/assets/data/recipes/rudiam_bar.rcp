@@ -1,0 +1,15 @@
+{
+	"recipes": [
+	{
+		"searchName": "Rudiam Bar",
+		"ingredients": [
+		{
+			"material": "rudiam_ore", "amount": 4
+		}
+		],
+		"result": {
+			"material": "rudiam_bar", "amount": 1
+		}
+	}
+	]
+}

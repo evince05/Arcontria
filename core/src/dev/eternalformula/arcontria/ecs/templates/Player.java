@@ -16,12 +16,16 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Base64Coder;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import dev.eternalformula.arcontria.ArcontriaGame;
+import dev.eternalformula.arcontria.ecs.components.AmbientSoundComponent;
 import dev.eternalformula.arcontria.ecs.components.AnimationComponent;
 import dev.eternalformula.arcontria.ecs.components.CameraFocusComponent;
 import dev.eternalformula.arcontria.ecs.components.HealthComponent;
@@ -31,8 +35,12 @@ import dev.eternalformula.arcontria.ecs.components.PositionComponent;
 import dev.eternalformula.arcontria.ecs.components.StateComponent;
 import dev.eternalformula.arcontria.ecs.components.StateComponent.State;
 import dev.eternalformula.arcontria.ecs.components.TextureComponent;
+import dev.eternalformula.arcontria.ecs.components.physics.ColliderComponent;
 import dev.eternalformula.arcontria.files.JsonUtil;
+import dev.eternalformula.arcontria.physics.B2DUtil;
+import dev.eternalformula.arcontria.physics.PhysicsConstants.PhysicsCategory;
 import dev.eternalformula.arcontria.scenes.GameScene;
+import dev.eternalformula.arcontria.sfx.SoundManager.Sounds;
 import dev.eternalformula.arcontria.util.Assets;
 import dev.eternalformula.arcontria.util.EFDebug;
 import dev.eternalformula.arcontria.util.EFUtil;
@@ -44,6 +52,8 @@ public class Player {
 	
 	private String saveDirectory;
 	
+	public static float pickupItemRange = 3f;
+	
 	/**
 	 * Creates a new player object
 	 */
@@ -54,7 +64,7 @@ public class Player {
 		return playerEntity.getComponent(component);
 	}
 	
-	public static Player loadPlayer(String saveDirectory) {
+	public static Player loadPlayer(World world, String saveDirectory) {
 		
 		try {
 			
@@ -92,13 +102,27 @@ public class Player {
 				AnimationComponent animComp = loadAnimationComponent();
 				TextureComponent texComp = GameScene.ENGINE.createComponent
 						(TextureComponent.class);
+				
 				PositionComponent posComp = GameScene.ENGINE.createComponent
 						(PositionComponent.class);
+				posComp.setPosition(new Vector2(13f, 16f));
 				MotionComponent motionComp = GameScene.ENGINE.createComponent
 						(MotionComponent.class);
 				CameraFocusComponent cfComp = GameScene.ENGINE.createComponent
 						(CameraFocusComponent.class);
 				
+				AmbientSoundComponent asComp = GameScene.ENGINE.createComponent
+						(AmbientSoundComponent.class);
+				asComp.sound = Sounds.TORCH_CRACKLE;
+				
+				ColliderComponent collComp = GameScene.ENGINE.createComponent
+						(ColliderComponent.class);
+				
+				collComp.b2dBody = B2DUtil.createBody(world, posComp.getX(), posComp.getY(),
+						1f, 2f, BodyType.DynamicBody, PhysicsCategory.PLAYER_COLLIDER, playerEntity);
+				
+				playerEntity.add(collComp);
+				playerEntity.add(asComp);
 				playerEntity.add(playerComp);
 				playerEntity.add(healthComp);
 				playerEntity.add(stateComp);
@@ -111,7 +135,6 @@ public class Player {
 				
 				System.out.println("Welcome back, " + playerComp.getName() + "!");
 				System.out.println("You have $" + ((int) playerComp.getBalance()));
-				posComp.setPosition(new Vector2(13f, 16f));
 				motionComp.setDirection(4);
 				stateComp.setState(State.IDLE);
 
@@ -209,6 +232,10 @@ public class Player {
 		TextureComponent texComp = GameScene.ENGINE.createComponent(TextureComponent.class);
 		
 		CameraFocusComponent camComp = GameScene.ENGINE.createComponent(CameraFocusComponent.class);
+		AmbientSoundComponent asc = GameScene.ENGINE.createComponent(AmbientSoundComponent.class);
+		asc.sound = Sounds.TORCH_CRACKLE;
+		
+		entity.add(asc);
 		
 		entity.add(playerComp);
 		entity.add(healthComp);
@@ -278,6 +305,10 @@ public class Player {
 	
 	public void dispose() {
 		savePlayer(saveDirectory);
+	}
+	
+	public Entity getPlayerEntity() {
+		return playerEntity;
 	}
 
 }

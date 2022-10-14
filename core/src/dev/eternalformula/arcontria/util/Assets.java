@@ -7,6 +7,8 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
+import dev.eternalformula.arcontria.sfx.SoundManager;
+
 public class Assets {
 	
 	private AssetManager assMan;
@@ -41,6 +43,9 @@ public class Assets {
 		instance.assMan.load("ui/elements/uiatlas.atlas", TextureAtlas.class);
 		instance.assMan.load("ui/charcreator/charcreator.atlas", TextureAtlas.class);
 		instance.assMan.load("fonts/Habbo.fnt", BitmapFont.class);
+		instance.assMan.load("fonts/dogica-8.fnt", BitmapFont.class);
+		instance.assMan.load("fonts/pixelfj-8.fnt", BitmapFont.class);
+		instance.assMan.load("fonts/pixelfj-16.fnt", BitmapFont.class);
 		instance.assMan.load("textures/entities/bosses/udp.atlas", TextureAtlas.class);
 		instance.assMan.load("sfx/mines/rockbreak.wav", Sound.class);
 	}
@@ -55,7 +60,6 @@ public class Assets {
 	}
 	
 	public static void updateInstance() {
-		System.out.println("No assman? " + instance.assMan == null);
 		instance.update();
 	}
 	

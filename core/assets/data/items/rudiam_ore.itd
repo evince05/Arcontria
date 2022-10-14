@@ -1,0 +1,11 @@
+{
+	"name": "rudiam_ore",
+	"displayName": "Rudiam Ore",
+	"lore": [
+		"A durable, common metal ore. Used in",
+		"many basic recipes."
+	],
+	"maxStackSize": 999,
+	"consumable": false,
+	"equipable": false
+}

@@ -1,0 +1,11 @@
+{
+	"name": "rudiam_bar",
+	"displayName": "Rudiam Bar",
+	"lore": [
+		"A bar of pure Rudiam. Used in",
+		"many basic recipes."
+	],
+	"maxStackSize": 999,
+	"consumable": false,
+	"equipable": false
+}

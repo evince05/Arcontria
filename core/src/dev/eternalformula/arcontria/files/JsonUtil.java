@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -72,6 +73,14 @@ public class JsonUtil {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	/**
+	 * @see JsonUtil#getRootNode(String).
+	 */
+	
+	public static JsonNode getRootNode(FileHandle handle) {
+		return getRootNode(handle.path());
 	}
 	
 	/**

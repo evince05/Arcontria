@@ -1,0 +1,10 @@
+{
+	"name": "acrono_wood",
+	"displayName": "Arcono Wood",
+	"lore": [
+		"Has a sweet, warm smell!"
+	],
+	"maxStackSize": 999,
+	"isConsumable": false,
+	"isEquipable": false
+}

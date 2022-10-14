@@ -1,0 +1,18 @@
+{
+	"recipes": [
+	{
+		"searchName": "Vismada Closhi",
+		"ingredients": [
+		{
+			"material": "vismada_bar", "amount": 8
+		},
+		{
+			"material": "locarum_ore", "amount": 4
+		}
+		],
+		"result": {
+			"material": "vismada_closhi", "amount": 1
+		}
+	}
+	]
+}

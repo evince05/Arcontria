@@ -69,7 +69,7 @@ public class B2DUtil {
 	public static Body createBody(World world, float centerX, float centerY,
 			float width, float height, BodyType bodyType, PhysicsCategory category,
 			Object userData) {
-		EFDebug.info("Creating box2d body");
+
 		Body body;
 		BodyDef def = new BodyDef();
 		def.type = bodyType;
@@ -87,7 +87,8 @@ public class B2DUtil {
 		fdef.filter.maskBits = category.getMBits();
 		fdef.isSensor = category.isSensor();
 		
-		body.createFixture(fdef).setUserData(userData);
+		body.createFixture(fdef);
+		body.setUserData(userData);
 		shape.dispose();
 		return body;
 	}

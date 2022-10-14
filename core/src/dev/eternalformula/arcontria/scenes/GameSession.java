@@ -4,16 +4,20 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
-import dev.eternalformula.arcontria.ecs.components.AnimationComponent;
+import dev.eternalformula.arcontria.ArcontriaGame;
+import dev.eternalformula.arcontria.ecs.systems.quests.IncompleteQuestSystem;
 import dev.eternalformula.arcontria.ecs.templates.Player;
 import dev.eternalformula.arcontria.entity.Entity;
-import dev.eternalformula.arcontria.entity.projectiles.ProspectorPickaxe;
+import dev.eternalformula.arcontria.items.RecipeLoader;
 import dev.eternalformula.arcontria.level.GameLevel;
+import dev.eternalformula.arcontria.ui.GameUIManager;
 import dev.eternalformula.arcontria.util.EFDebug;
+import dev.eternalformula.arcontria.util.Strings;
 
 public class GameSession {
 	
 	private GameScene scene;
+	private GameUIManager uiManager;
 	
 	private String saveFolder;
 	
@@ -27,12 +31,14 @@ public class GameSession {
 	
 	public static GameSession load(GameScene scene, String saveFolder) {
 		
+		RecipeLoader.getInstance().loadRecipes();
+		IncompleteQuestSystem.loadQuests(scene.ENGINE, saveFolder);
 		
 		// Creates an empty GameSession
 		GameSession session = new GameSession(scene);
 		session.saveFolder = saveFolder;
 		session.level = GameLevel.load(session, saveFolder);
-		session.player = Player.loadPlayer(saveFolder);
+		session.player = Player.loadPlayer(scene.getWorld(), saveFolder);
 		/*
 		
 		// Creates the GameLevel
@@ -62,6 +68,8 @@ public class GameSession {
 	
 	GameSession(GameScene scene) {
 		this.scene = scene;
+		
+		this.uiManager = new GameUIManager();
 	}
 	
 	public void save() {
@@ -70,6 +78,8 @@ public class GameSession {
 
 	public void update(float delta) {
 		level.update(delta);
+		
+		uiManager.update(delta);
 		/*
 		if (pickaxe.isFinished()) {
 			direction++;
@@ -145,33 +155,41 @@ public class GameSession {
 	public void drawUI(SpriteBatch batch, float delta) {
 		level.drawUI(batch, delta);
 		
+		uiManager.draw(batch, delta);
 	}
 
 	public void onKeyTyped(char key) {
-		// TODO Auto-generated method stub
-		
+		uiManager.onKeyTyped(key);
 	}
 
 	public void onMouseClicked(int x, int y, int button) {
 		level.onMouseClicked(x, y, button);
+		
+		uiManager.onMouseClicked(x, y, button);
 	}
 	
 	public void onMouseHovered(int x, int y) {
 		level.onMouseHovered(x, y);
+		
+		uiManager.onMouseHovered(x, y);
 	}
 
 	public void onMouseReleased(int x, int y, int button) {
 		level.onMouseReleased(x, y, button);
 		
+		uiManager.onMouseReleased(x, y, button);
+		
 	}
 
 	public void onMouseDrag(int x, int y) {
-		// TODO Auto-generated method stub
+		uiManager.onMouseDrag(x, y);
 		
 	}
 	
 	public void onMouseWheelScrolled(int amount) {
 		level.onMouseWheelScrolled(amount);
+		
+		uiManager.onMouseWheelScrolled(amount);
 	}
 	
 	/**

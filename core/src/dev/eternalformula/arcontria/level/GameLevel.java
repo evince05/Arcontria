@@ -45,8 +45,6 @@ public class GameLevel {
 	
 	protected Box2DDebugRenderer b2dr;
 	
-	protected InventoryHandler inventoryHandler;
-	
 	protected float timeDebugAccumulator;
 	private Music music;
 	
@@ -60,7 +58,6 @@ public class GameLevel {
 		this.session = session;
 		this.daylightHandler = new DaylightHandler(this);
 		this.particleHandler = new ParticleHandler(this);
-		this.inventoryHandler = new InventoryHandler(this, null);
 		
 		this.b2dr = new Box2DDebugRenderer();
 		b2dr.setDrawInactiveBodies(false);
@@ -144,10 +141,6 @@ public class GameLevel {
 		daylightHandler.update();
 		particleHandler.update(delta);
 		
-		if (inventoryHandler.isInventoryOpen()) {
-			inventoryHandler.update(delta);
-		}
-		
 		playerHud.update(delta);
 		
 		// Lights
@@ -161,10 +154,6 @@ public class GameLevel {
 		
 		if (Gdx.input.isKeyJustPressed(Input.Keys.F2)) {
 			EFDebug.debugBox2D = !EFDebug.debugBox2D;
-		}
-		
-		if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
-			inventoryHandler.toggle();
 		}
 	}
 	
@@ -192,9 +181,6 @@ public class GameLevel {
 	}
 	
 	public void drawUI(SpriteBatch batch, float delta) {
-		if (inventoryHandler.isInventoryOpen()) {
-			inventoryHandler.draw(batch, delta);
-		}
 		
 		playerHud.draw(batch, delta);
 	}

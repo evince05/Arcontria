@@ -1,0 +1,16 @@
+{
+	"quests": [
+	{
+		"name": "lumberjack",
+		"displayName": "Lumberjack",
+		"displayText": "Collect 50 Acrono Logs.",
+		"completedValue": 50
+	},
+	{
+		"name": "marathonmaster",
+		"displayName": "Marathon Master",
+		"displayText": "Travel 42.2km.",
+		"completedValue": 42195
+	}
+	]
+}

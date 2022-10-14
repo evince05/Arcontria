@@ -1,0 +1,18 @@
+{
+	"recipes": [
+	{
+		"searchName": "Vismada Longsword",
+		"ingredients": [
+		{
+			"material": "vismada_bar", "amount": 10
+		},
+		{
+			"material": "acrono_wood", "amount": 2
+		}
+		],
+		"result": {
+			"material": "vismada_longsword", "amount": 1
+		}
+	}
+	]
+}

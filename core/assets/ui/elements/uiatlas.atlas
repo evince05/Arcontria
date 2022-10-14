@@ -1,89 +1,131 @@
 
 uiatlas.png
-size: 512, 128
+size: 512, 256
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
 checkbox
   rotate: false
-  xy: 464, 84
+  xy: 494, 221
   size: 16, 8
   orig: 16, 8
   offset: 0, 0
   index: -1
 colorpickerdisplay
   rotate: false
-  xy: 244, 0
+  xy: 494, 238
   size: 18, 18
   orig: 18, 18
   offset: 0, 0
   index: -1
 colorpickerpane
   rotate: false
-  xy: 244, 28
+  xy: 252, 156
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 dialoguebox
   rotate: false
-  xy: 0, 16
+  xy: 0, 0
   size: 244, 112
   orig: 244, 112
   offset: 0, 0
   index: -1
 directionbuttons
   rotate: false
-  xy: 244, 18
+  xy: 430, 186
   size: 40, 10
   orig: 40, 10
   offset: 0, 0
   index: -1
 exitdialoguebtn
   rotate: false
-  xy: 486, 119
+  xy: 494, 229
   size: 18, 9
   orig: 18, 9
   offset: 0, 0
   index: -1
+itembox
+  rotate: false
+  xy: 352, 160
+  size: 36, 18
+  orig: 36, 18
+  offset: 0, 0
+  index: -1
+itemtooltip
+  rotate: false
+  xy: 476, 208
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: -1
 promptbox
   rotate: false
-  xy: 344, 92
+  xy: 352, 220
   size: 142, 36
   orig: 142, 36
   offset: 0, 0
   index: -1
-sliderdial
+recipesearchbox
   rotate: false
-  xy: 424, 60
+  xy: 352, 182
+  size: 78, 14
+  orig: 78, 14
+  offset: 0, 0
+  index: -1
+recipewindow
+  rotate: false
+  xy: 0, 112
+  size: 252, 144
+  orig: 252, 144
+  offset: 0, 0
+  index: -1
+sliderdialHor
+  rotate: false
+  xy: 332, 148
   size: 4, 8
   orig: 4, 8
   offset: 0, 0
   index: -1
-sliderpane
+sliderdialVer
   rotate: false
-  xy: 0, 12
+  xy: 244, 106
+  size: 6, 6
+  orig: 6, 6
+  offset: 0, 0
+  index: -1
+sliderpaneHor
+  rotate: false
+  xy: 352, 178
   size: 52, 4
   orig: 52, 4
   offset: 0, 0
   index: -1
+sliderpaneVer
+  rotate: false
+  xy: 472, 88
+  size: 4, 132
+  orig: 4, 132
+  offset: 0, 0
+  index: -1
 textfield
   rotate: false
-  xy: 344, 68
+  xy: 352, 196
   size: 120, 24
   orig: 120, 24
   offset: 0, 0
   index: -1
 tooltip
   rotate: false
-  xy: 344, 32
+  xy: 252, 120
   size: 64, 18
   orig: 64, 18
   offset: 0, 0
   index: -1
 tooltip-long
   rotate: false
-  xy: 344, 50
+  xy: 252, 138
   size: 80, 18
   orig: 80, 18
   offset: 0, 0

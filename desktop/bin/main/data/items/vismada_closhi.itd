@@ -1,0 +1,19 @@
+{
+	"name": "vismada_closhi",
+	"displayName": "Vismada Closhi",
+	"maxStackSize": 1,
+	"lore": [
+		"The Vismada Closhi provides the comfort of a",
+		"warm tunic and the protection of pure vismada."
+	],
+	"consumable": false,
+	"equipable": true,
+	"equipableStats": [
+	{
+		"buff": "defense", "amount": 2
+	},
+	{
+		"buff": "happiness", "amount": 1
+	}
+	]
+}

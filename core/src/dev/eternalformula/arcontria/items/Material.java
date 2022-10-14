@@ -1,5 +1,7 @@
 package dev.eternalformula.arcontria.items;
 
+import java.util.List;
+
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.model.data.ModelMaterial.MaterialType;
@@ -8,70 +10,69 @@ import dev.eternalformula.arcontria.util.Assets;
 
 public enum Material {
 	
-	BATTLE_AXE("Battle Axe", "battle_axe", 0, MaterialType.WEAPON),
-	BUTCHER_KNIFE("Butcher Knife", "butcher_knife", 1, MaterialType.WEAPON),
-	DECONSTRUCTOR("Deconstructor", "deconstructor", 2, MaterialType.TOOL),
-	ORE_1("Ore 1", "ore_1", 3, MaterialType.GENERIC),
-	ORE_2("Ore 2", "ore_2", 4, MaterialType.GENERIC),
-	POTION_BOTTLE("Potion Bottle", "potion_bottle", 5, MaterialType.GENERIC),
-	POTION_OF_DAMAGE("Potion of Damage", "potion_of_damage", 6, MaterialType.POTION),
-	POTION_OF_HEALING("Potion of Healing", "potion_of_healing", 7, MaterialType.POTION),
-	POTION_OF_POISON("Potion of Poision", "potion_of_poison", 8, MaterialType.POTION),
-	POTION_OF_SPEED("Potion of Speed", "potion_of_speed", 9, MaterialType.POTION),
-	RUSTY_LONGSWORD("Rusty Longsword", "rusty_longsword", 10, MaterialType.WEAPON),
-	RUSTY_SHORTSWORD("Rusty Shortsword", "rusty_shortsword", 11, MaterialType.WEAPON),
-	RUSTY_SWORD("Rusty Sword", "rusty_sword", 12, MaterialType.WEAPON),
-	STONE("Stone", "stone", 13, MaterialType.GENERIC);
+	ACRONO_WOOD("data/items/acrono_wood.itd"),
+	CHEST("data/items/chest.itd"),
+	LOCARUM_BAR("data/items/locarum_bar.itd"),
+	LOCARUM_ORE("data/items/locarum_ore.itd"),
+	RUDIAM_BAR("data/items/rudiam_bar.itd"),
+	RUDIAM_ORE("data/items/rudiam_ore.itd"),
+	VISMADA_BAR("data/items/vismada_bar.itd"),
+	VISMADA_CLOBO("data/items/vismada_clobo.itd"),
+	VISMADA_CLOCA("data/items/vismada_cloca.itd"),
+	VISMADA_CLOSHI("data/items/vismada_closhi.itd"),
+	VISMADA_ORE("data/items/vismada_ore.itd"),
+	VISMADA_LONGSWORD("data/items/vismada_longsword.itd");
 	
-	private static final int MAX_STACK_SIZE_GENERIC = 999;
-	private static final int MAX_STACK_SIZE_TOOLS = 1;
-	private static final int MAX_STACK_SIZE_POTIONS = 1;
-	private static final int MAX_STACK_SIZE_WEAPONS = 1;
+	int id;
 	
-	private String name;
-	private String textureName;
-	private int id;
-	private MaterialType type;
+	String name;
+	String displayName;
+	List<String> lore;
 	
-	Material(String displayName, String textureName, int id, MaterialType type) {
-		this.name = displayName;
-		this.textureName = textureName;
-		this.id = id;
-		this.type = type;
-	}
+	int maxStackSize;
+	int durability;
 	
-	public String getName() {
-		return name;
-	}
+	boolean hasDurability;
+	boolean isConsumable;
+	boolean isEquipable;
 	
-	public TextureRegion getIcon() {
-		return Assets.get("textures/items/itematlas.atlas", TextureAtlas.class)
-				.findRegion(textureName);
+	Material(String itemDataFile){
+		MaterialLoader.loadMaterial(this, itemDataFile);
 	}
 	
 	public int getId() {
 		return id;
 	}
 	
-	public int getMaxStackSize() {
-		return type.getMaxStackSize();
+	public String getName() {
+		return name;
 	}
 	
-	public enum MaterialType {
-		GENERIC(MAX_STACK_SIZE_GENERIC),
-		WEAPON(MAX_STACK_SIZE_WEAPONS),
-		TOOL(MAX_STACK_SIZE_TOOLS),
-		POTION(MAX_STACK_SIZE_POTIONS);
+	public String getDisplayName() {
+		return displayName;
+	}
+	
+	public List<String> getLore() {
+		return lore;
+	}
+	
+	public TextureRegion getIcon() {
+		TextureAtlas uiAtlas = Assets.get("textures/items/itematlas.atlas", TextureAtlas.class);
+		TextureRegion icon = uiAtlas.findRegion(name);
 		
-		private int maxStackSize;
-		
-		MaterialType(int maxStackSize) {
-			this.maxStackSize = maxStackSize;
-		}
-		
-		public int getMaxStackSize() {
-			return maxStackSize;
-		}
-	};
+		return icon != null ? icon : uiAtlas.findRegion("item_null"); 
+	}
+	
+	public int getMaxStackSize() {
+		return maxStackSize;
+	}
+	
+	public boolean isConsumable() {
+		return isConsumable;
+	}
+	
+	public boolean isEquipable() {
+		return isEquipable;
+	}
 
 }

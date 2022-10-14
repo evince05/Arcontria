@@ -44,5 +44,10 @@ public class FontUtil {
 		LAYOUT.setText(font, text);
 		return LAYOUT.width;
 	}
+	
+	public static float getHeight(BitmapFont font, String text) {
+		LAYOUT.setText(font, text);
+		return LAYOUT.height;
+	}
 
 }
